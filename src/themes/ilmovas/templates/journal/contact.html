@@ -1,0 +1,151 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Contact" %}{% endblock %}
+
+{% block body %}
+<div class="max-w-[1280px] mx-auto px-8 pt-8 pb-16">
+
+  <!-- Page Header -->
+  <header class="mb-10 border-r-4 border-gold pr-5">
+    <h1 class="text-4xl font-bold text-primary mb-2">{% trans 'تواصل معنا' %}</h1>
+    <p class="text-text-soft text-base leading-relaxed max-w-2xl">
+      {% trans 'نحن هنا لدعم المجتمع الأكاديمي. سواء كانت لديك أسئلة حول التقديمات أو النشر أو الدعم التقني، يسعدنا سماعك.' %}
+    </p>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- ═══ CONTACT FORM ── 8 cols ═══════════════════════════════ -->
+    <div class="lg:col-span-8">
+      <div class="bg-white border border-border-rule gold-border-top p-6">
+        <h2 class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-gold">mail</span>
+          {% trans 'إرسال رسالة' %}
+        </h2>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="bg-primary/10 border border-primary/20 text-primary p-4 mb-5 text-sm flex items-center gap-2">
+              <span class="material-symbols-outlined text-base">check_circle</span>
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        {% include "elements/forms/errors.html" with form=contact_form %}
+
+        <form method="POST" novalidate class="space-y-5">
+          {% csrf_token %}
+
+          <!-- Recipient -->
+          {% if contacts %}
+            <div>
+              <label class="block text-xs font-bold text-primary uppercase tracking-wide mb-2">
+                {% trans 'من تودّ التواصل معه؟' %}
+              </label>
+              <select name="recipient"
+                      class="w-full bg-ivory-dark border border-border-rule p-3 text-sm text-text-main outline-none focus:ring-1 focus:ring-gold">
+                {% for contact in contacts %}
+                  <option value="{{ contact.email }}">{{ contact.name }}{% if contact.role %} — {{ contact.role }}{% endif %}</option>
+                {% endfor %}
+              </select>
+            </div>
+          {% endif %}
+
+          <!-- Sender -->
+          <div>
+            <label class="block text-xs font-bold text-primary uppercase tracking-wide mb-2">
+              {% trans 'اسمك وبريدك الإلكتروني' %}
+            </label>
+            <input type="text" name="sender" placeholder="{% trans 'اسمك وعنوان بريدك الإلكتروني' %}"
+                   value="{{ contact_form.sender.value|default:'' }}"
+                   class="w-full bg-ivory-dark border border-border-rule p-3 text-sm outline-none focus:ring-1 focus:ring-gold">
+          </div>
+
+          <!-- Subject -->
+          <div>
+            <label class="block text-xs font-bold text-primary uppercase tracking-wide mb-2">
+              {% trans 'Subject' %}
+            </label>
+            <input type="text" name="subject" placeholder="{% trans 'موضوع الرسالة' %}"
+                   value="{{ contact_form.subject.value|default:'' }}"
+                   class="w-full bg-ivory-dark border border-border-rule p-3 text-sm outline-none focus:ring-1 focus:ring-gold">
+          </div>
+
+          <!-- Body -->
+          <div>
+            <label class="block text-xs font-bold text-primary uppercase tracking-wide mb-2">
+              {% trans 'الرسالة' %}
+            </label>
+            <textarea name="body" rows="6" placeholder="{% trans 'اكتب رسالتك هنا...' %}"
+                      class="w-full bg-ivory-dark border border-border-rule p-3 text-sm outline-none focus:ring-1 focus:ring-gold resize-none">{{ contact_form.body.value|default:'' }}</textarea>
+          </div>
+
+          <!-- Captcha -->
+          {% if contact_form.captcha %}
+            <div>{{ contact_form.captcha }}</div>
+          {% endif %}
+
+          <button type="submit"
+                  class="bg-primary text-white px-8 py-3 font-bold text-sm hover:bg-primary-mid transition-colors border-b-2 border-gold flex items-center gap-2">
+            <span class="material-symbols-outlined text-base">send</span>
+            {% trans 'إرسال الرسالة' %}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ═══ SIDEBAR ── 4 cols ════════════════════════════════════ -->
+    <aside class="lg:col-span-4 flex flex-col gap-5 lg:sticky lg:top-20">
+
+      <!-- Journal Contacts -->
+      {% if contacts %}
+        <div class="bg-white border border-border-rule gold-border-top p-5">
+          <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4">
+            {% if request.journal %}{% trans 'Journal Representatives' %}{% else %}{% trans 'Press Representatives' %}{% endif %}
+          </h3>
+          <ul class="space-y-4">
+            {% for contact in contacts %}
+              <li class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-primary flex-shrink-0 mt-0.5">person</span>
+                <div>
+                  <p class="font-bold text-text-main text-sm">{{ contact.name }}</p>
+                  {% if contact.role %}<p class="text-xs text-text-muted">{{ contact.role }}</p>{% endif %}
+                  {% if contact.email %}
+                    <a href="mailto:{{ contact.email }}" class="text-xs text-gold hover:underline">{{ contact.email }}</a>
+                  {% endif %}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- Contact Info from settings -->
+      {% if journal_settings.general.contact_info %}
+        <div class="bg-ivory-dark border border-border-rule p-5">
+          <h3 class="text-xs font-bold tracking-widest text-primary uppercase mb-3">{% trans 'معلومات التواصل' %}</h3>
+          <div class="text-sm text-text-soft leading-relaxed">{{ journal_settings.general.contact_info|safe }}</div>
+        </div>
+      {% endif %}
+
+      <!-- Working Hours -->
+      <div class="bg-primary p-5 text-white">
+        <h3 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-3">{% trans 'ساعات العمل' %}</h3>
+        <div class="space-y-2 text-sm text-white/80">
+          <div class="flex justify-between">
+            <span>{% trans 'الاثنين – الجمعة' %}</span>
+            <span class="font-bold">9:00 – 17:00</span>
+          </div>
+          <div class="flex justify-between">
+            <span>{% trans 'السبت – الأحد' %}</span>
+            <span class="text-white/40">{% trans 'مغلق' %}</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+</div>
+{% endblock %}

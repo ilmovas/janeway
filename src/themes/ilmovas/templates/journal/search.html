@@ -1,0 +1,187 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load i18n %}
+{% load hooks %}
+{% load dates %}
+
+{% hook 'filter_search' %}
+
+{% block title %}
+  {% if search_term %}{% trans 'نتائج البحث' %}: {{ search_term }}
+  {% elif keyword %}{% trans 'الكلمة المفتاحية' %}: {{ keyword }}
+  {% else %}{% trans 'البحث في المقالات' %}{% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="max-w-[1280px] mx-auto px-8 pt-8 pb-16">
+
+  <!-- Page header -->
+  <header class="mb-8 border-r-4 border-gold pr-5">
+    {% if search_term %}
+      <p class="text-xs text-text-muted uppercase tracking-widest mb-1">{% trans 'نتائج البحث عن' %}</p>
+      <h1 class="text-3xl font-bold text-primary">{{ search_term }}</h1>
+    {% elif keyword %}
+      <p class="text-xs text-text-muted uppercase tracking-widest mb-1">{% trans 'الكلمة المفتاحية' %}</p>
+      <h1 class="text-3xl font-bold text-primary">{{ keyword }}</h1>
+    {% else %}
+      <h1 class="text-3xl font-bold text-primary">{% trans 'البحث في المقالات' %}</h1>
+    {% endif %}
+    {% if articles %}
+      <p class="text-sm text-text-muted mt-2">
+        {{ articles|length }} {% trans 'نتيجة' %}
+      </p>
+    {% endif %}
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- ═══ RESULTS ── 8 cols ════════════════════════════════════ -->
+    <div class="lg:col-span-8">
+
+      {% if articles %}
+        <div class="space-y-4">
+          {% for article in articles %}
+            <article class="bg-white border border-border-rule p-5 group relative hover:border-gold transition-colors">
+              <div class="absolute top-0 right-0 w-1 h-full opacity-0 group-hover:opacity-100 transition-opacity bg-gold"></div>
+
+              <!-- Badges -->
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="bg-ivory-dark text-primary text-xs font-bold px-2 py-0.5 uppercase tracking-wide">{% trans 'وصول مفتوح' %}</span>
+                {% if article.section %}
+                  <span class="text-xs text-text-muted self-center">{{ article.section.name }}</span>
+                {% endif %}
+                {% if article.is_remote %}
+                  <span class="text-xs text-text-muted self-center flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs">open_in_new</span>
+                    {% trans 'خارجي' %}
+                  </span>
+                {% endif %}
+              </div>
+
+              <!-- Title -->
+              <h2 class="font-bold text-primary text-base mb-2 leading-snug">
+                <a href="{% if article.is_remote %}{{ article.remote_url }}{% else %}{% url 'article_view' 'id' article.pk %}{% endif %}"
+                   class="hover:text-gold transition-colors">
+                  {{ article.title|safe }}
+                </a>
+              </h2>
+
+              <!-- Meta -->
+              <div class="flex flex-wrap gap-3 text-xs text-text-muted mb-3">
+                {% if article.author_list %}
+                  <span class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs text-primary">person</span>
+                    {{ article.author_list }}
+                  </span>
+                {% endif %}
+                {% if article.date_published %}
+                  <span class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs text-primary">calendar_today</span>
+                    {{ article.date_published|date_human }}
+                  </span>
+                {% endif %}
+                {% if article.issue %}
+                  <span class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs text-primary">menu_book</span>
+                    {{ article.issue_title }}
+                  </span>
+                {% endif %}
+              </div>
+
+              <!-- Abstract -->
+              {% if article.abstract %}
+                <p class="text-xs text-text-muted leading-relaxed line-clamp-2 mb-3">
+                  {{ article.abstract|striptags|truncatechars:220 }}
+                </p>
+              {% endif %}
+
+              <!-- Actions -->
+              <a href="{% if article.is_remote %}{{ article.remote_url }}{% else %}{% url 'article_view' 'id' article.pk %}{% endif %}"
+                 class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-gold transition-colors">
+                {% trans 'قراءة المقال' %}
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+              </a>
+            </article>
+          {% endfor %}
+        </div>
+
+      {% elif search_term or keyword %}
+        <div class="text-center py-20 bg-white border border-border-rule">
+          <span class="material-symbols-outlined text-6xl text-text-muted block mb-4 opacity-30">search_off</span>
+          <p class="text-text-muted font-medium">{% trans 'لا توجد نتائج مطابقة لبحثك' %}</p>
+          <p class="text-xs text-text-muted mt-2">{% trans 'جرّب كلمات مفتاحية مختلفة' %}</p>
+        </div>
+
+      {% else %}
+        <div class="text-center py-20 bg-white border border-border-rule">
+          <span class="material-symbols-outlined text-6xl text-text-muted block mb-4 opacity-30">search</span>
+          <p class="text-text-muted font-medium">{% trans 'ابدأ بكتابة كلمة للبحث' %}</p>
+        </div>
+      {% endif %}
+
+    </div>
+
+    <!-- ═══ SIDEBAR ── 4 cols ════════════════════════════════════ -->
+    <aside class="lg:col-span-4 flex flex-col gap-5 lg:sticky lg:top-20">
+
+      <!-- Search Form -->
+      <div class="bg-white border border-border-rule gold-border-top p-5">
+        <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">search</span>
+          {% trans 'البحث في المقالات' %}
+        </h3>
+
+        {% if keyword %}
+          <div class="bg-ivory-dark border border-border-rule p-3 mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-gold text-sm">label</span>
+            <span class="text-xs text-text-soft">{% trans 'أنت تتصفح حسب الكلمة المفتاحية' %}:</span>
+            <strong class="text-xs text-primary">{{ keyword }}</strong>
+          </div>
+          <a href="{% url 'search' %}"
+             class="w-full flex items-center justify-center gap-2 text-xs font-bold text-primary border border-primary py-2 hover:bg-primary hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-sm">close</span>
+            {% trans 'إلغاء التصفية' %}
+          </a>
+        {% else %}
+          <form method="POST" action="{% url 'search' %}">
+            {% csrf_token %}
+            <div class="flex border border-border-rule overflow-hidden mb-3">
+              <input type="text"
+                     name="article_search"
+                     value="{{ search_term|default:'' }}"
+                     placeholder="{% trans 'الكلمات المفتاحية، المؤلفون...' %}"
+                     class="flex-grow px-3 py-2.5 text-sm bg-ivory-dark outline-none text-right"
+                     dir="rtl">
+              <button type="submit"
+                      class="bg-primary text-white px-4 hover:bg-primary-mid transition-colors">
+                <span class="material-symbols-outlined text-base">search</span>
+              </button>
+            </div>
+            <input type="hidden" name="sort" value="title">
+          </form>
+        {% endif %}
+      </div>
+
+      <!-- Keywords cloud -->
+      {% if all_keywords %}
+        <div class="bg-white border border-border-rule gold-border-top p-5">
+          <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">label</span>
+            {% trans 'الكلمات المفتاحية' %}
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            {% for kw in all_keywords %}
+              <a href="{% url 'search' %}?keyword={{ kw.word }}"
+                 class="text-xs px-2.5 py-1 border transition-colors
+                        {% if kw.word == keyword %}bg-primary text-white border-primary{% else %}border-border-rule text-text-soft hover:border-gold hover:text-primary{% endif %}">
+                {{ kw.word }}
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+    </aside>
+  </div>
+</div>
+{% endblock body %}

@@ -1,0 +1,227 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load next_url %}
+
+{% block title %}{% trans 'التقديمات' %}{% endblock %}
+
+{% block body %}
+<div class="max-w-[1280px] mx-auto px-8 pt-8 pb-16">
+
+  <!-- Page Header -->
+  <header class="mb-10 border-r-4 border-gold pr-5">
+    <h1 class="text-4xl font-bold text-primary mb-2">{% trans 'قدّم بحثك' %}</h1>
+    <p class="text-text-soft text-base leading-relaxed max-w-2xl">
+      {% trans 'نرحب بالمساهمات الأكاديمية الأصيلة في جميع المجالات. يجب ألا تكون التقديمات منشورة مسبقاً أو قيد المراجعة في مكان آخر.' %}
+    </p>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- ═══ MAIN CONTENT ── 8 cols ══════════════════════════════ -->
+    <div class="lg:col-span-8 space-y-8">
+
+      {% if journal_settings.general.disable_journal_submission %}
+        <div class="bg-ivory-dark border-r-4 border-gold p-5">
+          <p class="text-text-main">{{ journal_settings.general.disable_journal_submission_message|safe }}</p>
+        </div>
+      {% endif %}
+
+      {% if journal_settings.general.submission_intro_text %}
+        <div class="prose max-w-none text-text-soft leading-relaxed">
+          {{ journal_settings.general.submission_intro_text|safe }}
+        </div>
+      {% endif %}
+
+      <!-- Submission Checklist -->
+      <div class="bg-white border border-border-rule gold-border-top p-6">
+        <h2 class="text-xl font-bold text-primary mb-5 flex items-center gap-2">
+          <span class="material-symbols-outlined text-gold">checklist</span>
+          {% trans 'قائمة التحقق للتقديم' %}
+        </h2>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-gold mt-0.5 flex-shrink-0">check_circle</span>
+            <span class="text-sm text-text-soft">{% trans 'يجب ألا يكون العمل منشوراً مسبقاً أو قيد المراجعة في مكان آخر' %}</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-gold mt-0.5 flex-shrink-0">check_circle</span>
+            <span class="text-sm text-text-soft">{% trans 'ملف المخطوطة بصيغة OpenOffice أو Word أو RTF أو WordPerfect' %}</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-gold mt-0.5 flex-shrink-0">check_circle</span>
+            <span class="text-sm text-text-soft">{% trans 'المراجع تتضمن الروابط عند توفرها' %}</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-gold mt-0.5 flex-shrink-0">check_circle</span>
+            <span class="text-sm text-text-soft">{% trans 'نص بمسافة مفردة، خط 12 نقطة، مائل بدلاً من التسطير' %}</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-gold mt-0.5 flex-shrink-0">check_circle</span>
+            <span class="text-sm text-text-soft">{% trans 'ملخص بحد أقصى 250 كلمة مع 5–8 كلمات مفتاحية' %}</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-gold mt-0.5 flex-shrink-0">check_circle</span>
+            <span class="text-sm text-text-soft">{% trans 'يُقدَّم بالعربية أو الإنجليزية مع الاهتمام بالدقة اللغوية' %}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Word Count Guidelines -->
+      <div class="bg-white border border-border-rule gold-border-top p-6">
+        <h2 class="text-xl font-bold text-primary mb-5 flex items-center gap-2">
+          <span class="material-symbols-outlined text-gold">format_list_numbered</span>
+          {% trans 'أنواع المخطوطات وعدد الكلمات' %}
+        </h2>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center py-3 border-b border-border-rule">
+            <div>
+              <p class="font-bold text-text-main text-sm">{% trans 'بحث أصيل' %}</p>
+              <p class="text-xs text-text-muted">{% trans 'بما في ذلك المراجع والملاحق' %}</p>
+            </div>
+            <span class="text-gold font-bold text-sm whitespace-nowrap">6,000 – 10,000 {% trans 'كلمة' %}</span>
+          </div>
+          <div class="flex justify-between items-center py-3 border-b border-border-rule">
+            <div>
+              <p class="font-bold text-text-main text-sm">{% trans 'مقالة مراجعة' %}</p>
+              <p class="text-xs text-text-muted">{% trans 'مراجعة منهجية أو سردية' %}</p>
+            </div>
+            <span class="text-gold font-bold text-sm whitespace-nowrap">8,000 – 12,000 {% trans 'كلمة' %}</span>
+          </div>
+          <div class="flex justify-between items-center py-3">
+            <div>
+              <p class="font-bold text-text-main text-sm">{% trans 'مراجعة كتاب' %}</p>
+              <p class="text-xs text-text-muted">{% trans 'تحليل نقدي لعمل منشور' %}</p>
+            </div>
+            <span class="text-gold font-bold text-sm whitespace-nowrap">{% trans 'بحد أقصى' %} 2,000 {% trans 'كلمة' %}</span>
+          </div>
+        </div>
+        <p class="text-xs text-text-muted mt-4 border-r-2 border-gold pr-3">
+          {% trans 'التقديمات التي لا تلتزم بالتنسيق الموحّد للمجلة ستُرفض تلقائياً قبل مرحلة التحكيم.' %}
+        </p>
+      </div>
+
+      <!-- Submission items from Janeway settings -->
+      {% for item in submission_items %}
+        {% if item.title == 'licences' %}
+          <div class="bg-white border border-border-rule gold-border-top p-6">
+            <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-gold">gavel</span>
+              {% trans 'التراخيص' %}
+            </h2>
+            <p class="text-sm text-text-soft mb-4">{% trans 'التراخيص المسموح بها:' %}</p>
+            {% include "elements/license_block.html" %}
+          </div>
+        {% elif item.title == 'sections' %}
+          <div class="bg-white border border-border-rule gold-border-top p-6">
+            {% include "elements/section_block.html" %}
+          </div>
+        {% elif item.get_display_text %}
+          <div class="bg-white border border-border-rule gold-border-top p-6">
+            {% if item.title == 'Publication Cycle' %}
+              <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-gold">autorenew</span>{% trans 'دورة النشر' %}
+              </h2>
+            {% elif item.title == 'Publication Fees' %}
+              <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-gold">payments</span>{% trans 'رسوم النشر' %}
+              </h2>
+            {% elif item.title == 'Focus and Scope' %}
+              <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-gold">target</span>{% trans 'النطاق والأهداف' %}
+              </h2>
+            {% elif item.title == 'Copyright Notice' %}
+              <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-gold">copyright</span>{% trans 'إشعار حقوق النشر' %}
+              </h2>
+            {% elif item.title == 'Peer Review' %}
+              <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-gold">rate_review</span>{% trans 'التحكيم العلمي' %}
+              </h2>
+            {% elif item.title == 'About' %}
+              <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-gold">info</span>{% trans 'عن المجلة' %}
+              </h2>
+            {% else %}
+              <h2 class="text-xl font-bold text-primary mb-4">{{ item.title }}</h2>
+            {% endif %}
+            <div class="prose max-w-none text-text-soft text-sm leading-relaxed">{{ item.get_display_text|safe }}</div>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+
+    <!-- ═══ SIDEBAR ── 4 cols ════════════════════════════════════ -->
+    <aside class="lg:col-span-4 flex flex-col gap-5 lg:sticky lg:top-20">
+
+      <!-- Submit CTA -->
+      <div class="bg-primary p-6 text-white border-b-4 border-gold">
+        <h3 class="text-lg font-bold mb-2">{% trans 'جاهز للتقديم؟' %}</h3>
+        <p class="text-sm text-white/80 leading-relaxed mb-5">
+          {% trans 'سجّل دخولك أو أنشئ حساباً لبدء تقديمك عبر منصتنا الآمنة.' %}
+        </p>
+        {% if journal_settings.general.disable_journal_submission %}
+          <p class="text-sm text-white/60">{% trans 'التقديمات مغلقة حالياً.' %}</p>
+        {% else %}
+          {% if not request.user.is_authenticated %}
+            <div class="space-y-3">
+              <a href="{% url_with_return 'core_register' %}"
+                 class="w-full bg-gold text-primary font-bold py-3 flex items-center justify-center gap-2 hover:bg-gold-light transition-colors text-sm">
+                <span class="material-symbols-outlined text-base">person_add</span>
+                {% trans 'التسجيل' %}
+              </a>
+              <a href="{% url_with_return 'core_login' %}"
+                 class="w-full border border-white/30 text-white font-bold py-3 flex items-center justify-center gap-2 hover:bg-white/10 transition-colors text-sm">
+                <span class="material-symbols-outlined text-base">login</span>
+                {% trans 'تسجيل الدخول' %}
+              </a>
+            </div>
+          {% else %}
+            <a href="{% url 'submission_start' %}"
+               class="w-full bg-gold text-primary font-bold py-3 flex items-center justify-center gap-2 hover:bg-gold-light transition-colors text-sm">
+              <span class="material-symbols-outlined text-base">upload_file</span>
+              {% trans 'ابدأ التقديم' %}
+            </a>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <!-- Open Access Info -->
+      <div class="bg-white border border-border-rule gold-border-top p-5">
+        <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4">{% trans 'وصول مفتوح' %}</h3>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-base flex-shrink-0">lock_open</span>
+            <span class="text-xs text-text-soft">{% trans 'بدون رسوم معالجة للمؤلفين' %}</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-base flex-shrink-0">visibility</span>
+            <span class="text-xs text-text-soft">{% trans 'تحكيم مزدوج مجهول الهوية' %}</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-base flex-shrink-0">security</span>
+            <span class="text-xs text-text-soft">{% trans 'حماية البيانات المشفرة والالتزام بأخلاقيات النشر' %}</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-base flex-shrink-0">schedule</span>
+            <span class="text-xs text-text-soft">{% trans 'البيانات الشخصية تُستخدم حصراً لأغراض المجلة' %}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Contact Editor -->
+      <div class="bg-ivory-dark border border-border-rule p-5">
+        <h3 class="text-xs font-bold tracking-widest text-primary uppercase mb-3">{% trans 'أسئلة؟' %}</h3>
+        <p class="text-sm text-text-soft mb-4">{% trans 'تواصل مع هيئة التحرير للمساعدة في تقديم بحثك.' %}</p>
+        <a href="{% url 'contact' %}"
+           class="flex items-center gap-2 text-sm font-bold text-primary hover:text-gold transition-colors">
+          <span class="material-symbols-outlined text-base">mail</span>
+          {% trans 'تواصل مع المحرر' %}
+        </a>
+      </div>
+
+    </aside>
+  </div>
+</div>
+{% endblock %}

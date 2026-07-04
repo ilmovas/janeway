@@ -1,0 +1,147 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'إمكانية الوصول' %}{% endblock %}
+
+{% block body %}
+<div class="max-w-[1280px] mx-auto px-8 pt-8 pb-16">
+
+  <!-- Page Header -->
+  <header class="mb-10 border-r-4 border-gold pr-5">
+    <h1 class="text-4xl font-bold text-primary mb-2">{% trans 'إمكانية الوصول' %}</h1>
+    <p class="text-sm text-text-muted">{% trans 'التزامنا بإتاحة المحتوى لجميع المستخدمين' %}</p>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- ═══ MAIN ── 8 cols ════════════════════════════════════ -->
+    <div class="lg:col-span-8 flex flex-col gap-6">
+
+      <!-- Journal a11y info -->
+      {% load settings %}
+      {% if request.press.allow_journal_a11y_info %}
+        {% with a11y_info=request.journal|setting:'a11y_public_info' %}
+          {% if a11y_info %}
+            <div class="bg-white border border-border-rule gold-border-top p-6">
+              <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-gold">menu_book</span>
+                {{ request.journal.name }}
+              </h2>
+              <div class="text-sm text-text-soft leading-relaxed prose max-w-none">
+                {{ a11y_info|safe }}
+              </div>
+            </div>
+          {% endif %}
+        {% endwith %}
+      {% endif %}
+
+      <!-- Press a11y info -->
+      {% with a11y_info=press.a11y_info %}
+        {% if a11y_info %}
+          <div class="bg-white border border-border-rule gold-border-top p-6">
+            <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-gold">corporate_fare</span>
+              {{ press.name }}
+            </h2>
+            <div class="text-sm text-text-soft leading-relaxed prose max-w-none">
+              {{ a11y_info|safe }}
+            </div>
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <!-- Janeway platform info -->
+      <div class="bg-white border border-border-rule gold-border-top p-6">
+        <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-gold">settings</span>
+          {% trans 'منصة Janeway' %}
+        </h2>
+        <div class="text-sm text-text-soft leading-relaxed space-y-4">
+          <p>
+            {% blocktrans %}
+              هذا الموقع مبني على منصة Janeway، وهي منصة إلكترونية لنشر المجلات والنصوص الأولية ووقائع المؤتمرات والكتب.
+            {% endblocktrans %}
+          </p>
+          <p>
+            {% blocktrans %}
+              تعمل Janeway على خطة تحسين إمكانية الوصول من ثلاث مراحل. ركّزت المرحلة الأولى على الصفحات التي يمكن عرضها دون حساب. أما المرحلة الثانية الجارية حالياً فتُحدّث صفحات الحسابات، وتُخطّط المرحلة الثالثة لتطوير أدوات تحسين إمكانية وصول محتوى المستخدمين.
+            {% endblocktrans %}
+          </p>
+          <p>
+            {% blocktrans %}
+              تُجري Janeway تدقيقاً دورياً بمزيج من الاختبار اليدوي والآلي وفق معيار WCAG 2.2 AA.
+            {% endblocktrans %}
+          </p>
+          <a href="https://github.com/orgs/openlibhums/projects/49/views/1?pane=info"
+             target="_blank" rel="noopener"
+             class="inline-flex items-center gap-2 text-sm font-bold text-primary hover:text-gold transition-colors">
+            <span class="material-symbols-outlined text-base">open_in_new</span>
+            {% trans 'مشروع إمكانية الوصول على GitHub' %}
+          </a>
+        </div>
+      </div>
+
+      <!-- VPAT data -->
+      {% include "common/elements/a11y/vpat.html" with vpat_data=vpat_data theme="olh" %}
+
+    </div>
+
+    <!-- ═══ SIDEBAR ── 4 cols ════════════════════════════════════ -->
+    <aside class="lg:col-span-4 flex flex-col gap-5 lg:sticky lg:top-20">
+
+      <!-- Commitment card -->
+      <div class="bg-primary text-white p-5 border-b-4 border-gold">
+        <h3 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-4">{% trans 'التزامنا' %}</h3>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3 border-b border-white/10 pb-3">
+            <span class="material-symbols-outlined text-gold text-base flex-shrink-0 mt-0.5">check_circle</span>
+            <span class="text-xs text-white/80">{% trans 'معيار WCAG 2.2 AA' %}</span>
+          </li>
+          <li class="flex items-start gap-3 border-b border-white/10 pb-3">
+            <span class="material-symbols-outlined text-gold text-base flex-shrink-0 mt-0.5">check_circle</span>
+            <span class="text-xs text-white/80">{% trans 'تدقيق دوري مستمر' %}</span>
+          </li>
+          <li class="flex items-start gap-3 border-b border-white/10 pb-3">
+            <span class="material-symbols-outlined text-gold text-base flex-shrink-0 mt-0.5">check_circle</span>
+            <span class="text-xs text-white/80">{% trans 'نصوص بديلة للصور' %}</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-gold text-base flex-shrink-0 mt-0.5">check_circle</span>
+            <span class="text-xs text-white/80">{% trans 'تنقل كامل بلوحة المفاتيح' %}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Report issue -->
+      <div class="bg-white border border-border-rule gold-border-top p-5">
+        <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-3">{% trans 'الإبلاغ عن مشكلة' %}</h3>
+        <p class="text-xs text-text-soft mb-4 leading-relaxed">
+          {% trans 'إذا واجهت صعوبة في الوصول إلى أي محتوى، يُرجى الإبلاغ عنها مباشرةً للمطوّرين.' %}
+        </p>
+        <a href="https://github.com/BirkbeckCTP/janeway/issues"
+           target="_blank" rel="noopener"
+           class="w-full flex items-center justify-center gap-2 bg-primary text-white text-xs font-bold py-3 hover:bg-primary-mid transition-colors border-b-2 border-gold">
+          <span class="material-symbols-outlined text-sm">bug_report</span>
+          {% trans 'الإبلاغ على GitHub' %}
+        </a>
+      </div>
+
+      <!-- Contact -->
+      {% if request.journal.nav_contact %}
+        <div class="bg-ivory-dark border border-border-rule p-5">
+          <h3 class="text-xs font-bold tracking-widest text-primary uppercase mb-3">{% trans 'تواصل معنا' %}</h3>
+          <p class="text-xs text-text-soft mb-4 leading-relaxed">
+            {% trans 'للاستفسار عن إمكانية الوصول أو طلب تنسيق بديل.' %}
+          </p>
+          <a href="{% url 'contact' %}"
+             class="w-full flex items-center justify-center gap-2 border border-primary text-primary text-xs font-bold py-2.5 hover:bg-primary hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-sm">mail</span>
+            {% trans 'راسلنا' %}
+          </a>
+        </div>
+      {% endif %}
+
+    </aside>
+  </div>
+</div>
+{% endblock body %}

@@ -1,0 +1,140 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load dates %}
+
+{% block title %}{% trans "Articles" %}{% endblock %}
+
+{% block body %}
+<div class="max-w-[1280px] mx-auto px-8 pt-8 pb-16">
+
+  <!-- Page header -->
+  <header class="mb-8 border-r-4 border-gold pr-5">
+    <h1 class="text-3xl font-bold text-primary mb-1">{% trans 'المقالات المنشورة' %}</h1>
+  </header>
+
+  <!-- Search bar -->
+  <div class="bg-ivory-dark border border-border-rule p-5 mb-8">
+    <form method="POST" action="{% url 'search' %}">
+      {% csrf_token %}
+      <div class="flex flex-col md:flex-row gap-4 items-end">
+        <div class="flex-grow">
+          <label class="block text-xs font-bold text-primary mb-2 uppercase tracking-wide">{% trans 'البحث في المقالات' %}</label>
+          <div class="relative">
+            <input type="search" name="article_search"
+                   placeholder="{% trans 'الكلمات المفتاحية، المؤلفون، المواضيع...' %}"
+                   class="w-full bg-white border border-border-rule p-3 text-sm outline-none focus:ring-1 focus:ring-gold">
+            <span class="material-symbols-outlined absolute left-3 top-3 text-primary">search</span>
+          </div>
+        </div>
+        <input type="hidden" name="sort" value="title">
+        <button type="submit"
+                class="bg-primary text-white px-8 py-3 font-bold text-sm hover:bg-primary-mid transition-colors border-b-2 border-gold whitespace-nowrap">
+          {% trans 'بحث' %}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- ═══ ARTICLES ── 8 cols ══════════════════════════════════ -->
+    <div class="lg:col-span-8">
+      <div class="flex justify-between items-center mb-5 pb-3 border-b border-border-rule">
+        <h2 class="text-lg font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined text-gold">article</span>
+          {% trans 'المقالات' %}
+        </h2>
+      </div>
+
+      <div class="space-y-5">
+        {% for article in object_list %}
+          <article class="article-card bg-white border border-border-rule p-5 relative group"
+                   style="transition: transform 0.2s ease, box-shadow 0.2s ease;">
+            <div class="absolute top-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                 style="background: linear-gradient(to left, #C4922A, #0D4F3C);"></div>
+
+            <div class="flex flex-wrap gap-2 mb-3">
+              <span class="bg-ivory-dark text-primary text-xs font-bold px-2 py-0.5 uppercase tracking-wide">{% trans 'وصول مفتوح' %}</span>
+              {% if article.section %}
+                <span class="text-primary text-xs font-bold border-r border-border-rule pr-2 mr-1">{{ article.section.name }}</span>
+              {% endif %}
+            </div>
+
+            <h3 class="text-lg font-bold text-primary mb-2 leading-snug group-hover:text-primary-mid transition-colors">
+              <a href="{% url 'article_view' 'id' article.pk %}">{{ article.title|safe }}</a>
+            </h3>
+
+            <div class="text-sm text-text-soft mb-3 flex flex-wrap items-center gap-4">
+              {% if article.author_list %}
+                <span class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm text-primary">person</span>
+                  {{ article.author_list }}
+                </span>
+              {% endif %}
+              {% if article.date_published %}
+                <span class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm text-primary">calendar_today</span>
+                  {{ article.date_published|date_human }}
+                </span>
+              {% endif %}
+            </div>
+
+            {% if article.abstract %}
+              <p class="text-sm text-text-soft leading-relaxed mb-5 line-clamp-3">{{ article.abstract|striptags|truncatechars:250 }}</p>
+            {% endif %}
+
+            <div class="flex items-center gap-3">
+              <a href="{% url 'article_view' 'id' article.pk %}"
+                 class="bg-primary text-white px-4 py-2 text-sm font-bold flex items-center gap-2 hover:bg-primary-mid transition-colors">
+                {% trans 'عرض المقال' %}
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+              </a>
+              {% with galley=article.pdfs.0 %}{% if galley %}
+                <a href="{% url 'article_download_galley' article.id galley.id %}"
+                   class="border border-primary text-primary px-4 py-2 text-sm font-bold flex items-center gap-2 hover:bg-ivory-dark transition-colors">
+                  <span class="material-symbols-outlined text-sm">download</span> PDF
+                </a>
+              {% endif %}{% endwith %}
+            </div>
+          </article>
+        {% empty %}
+          <div class="text-center py-16 text-text-muted">
+            <span class="material-symbols-outlined text-6xl block mb-4 opacity-30">article</span>
+            <p>{% trans 'لم تُنشر مقالات بعد.' %}</p>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Pagination -->
+      {% include "common/elements/pagination.html" %}
+    </div>
+
+    <!-- ═══ SIDEBAR ── 4 cols ════════════════════════════════════ -->
+    <aside class="lg:col-span-4 flex flex-col gap-5 lg:sticky lg:top-20">
+
+      <!-- Submit CTA -->
+      <div class="bg-primary p-5 text-white border-b-4 border-gold">
+        <h3 class="text-base font-bold mb-2">{% trans 'شارك بحثك' %}</h3>
+        <p class="text-sm text-white/80 leading-relaxed mb-4">{% trans 'نرحب بالمساهمات الأكاديمية في جميع المجالات.' %}</p>
+        <a href="{% url 'submission_start' %}"
+           class="w-full bg-gold text-primary font-bold py-3 flex items-center justify-center gap-2 hover:bg-gold-light transition-colors text-sm">
+          <span class="material-symbols-outlined text-base">upload_file</span>
+          {% trans 'تقديم مقال' %}
+        </a>
+      </div>
+
+      <!-- Filters -->
+      {% include "elements/journal/article_list_filters.html" %}
+
+    </aside>
+  </div>
+</div>
+
+<style>
+  .article-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(13,79,60,0.08);
+  }
+</style>
+{% endblock %}

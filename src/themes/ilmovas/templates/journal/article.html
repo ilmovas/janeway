@@ -1,0 +1,341 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load hooks %}
+{% load i18n %}
+{% load dates %}
+
+{% block page_title %}{{ article.title|safe|striptags }}{% endblock %}
+
+{% block head %}
+  <link href="{% static "common/lightbox/css/lightbox.css" %}" rel="stylesheet">
+  {% include "elements/article_meta_tags.html" %}
+{% endblock %}
+
+{% block body %}
+<div class="max-w-[1280px] mx-auto px-8 pt-8 pb-16">
+
+  <!-- Breadcrumbs -->
+  <nav aria-label="Breadcrumb" class="flex items-center gap-1 mb-8 text-xs font-bold text-primary tracking-wide">
+    <a href="{% url 'website_index' %}" class="hover:text-gold transition-colors">{% trans 'الرئيسية' %}</a>
+    <span class="material-symbols-outlined text-sm text-text-muted">chevron_left</span>
+    <a href="{% url 'journal_issues' %}" class="hover:text-gold transition-colors">{% trans 'الأرشيف' %}</a>
+    {% if article.issue %}
+      <span class="material-symbols-outlined text-sm text-text-muted">chevron_left</span>
+      <a href="{{ article.issue.url }}" class="hover:text-gold transition-colors">{{ article.issue.display_title }}</a>
+    {% endif %}
+    <span class="material-symbols-outlined text-sm text-text-muted">chevron_left</span>
+    <span class="text-text-muted font-normal">{% trans 'المقال' %}</span>
+  </nav>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+
+    <!-- ═══ MAIN CONTENT — 8 cols ═══════════════════════════════ -->
+    <article class="lg:col-span-8" id="content">
+
+      <!-- Header -->
+      <header class="mb-8">
+        {% if article.section %}
+          <div class="inline-block bg-ivory-dark text-primary text-xs font-bold tracking-widest uppercase px-4 py-1 mb-4">
+            {{ article.section.name }}
+          </div>
+        {% endif %}
+
+        <h1 class="text-3xl md:text-4xl font-bold text-primary leading-tight mb-5">
+          {{ article.title|safe }}
+        </h1>
+
+        <!-- Authors -->
+        <div class="flex flex-wrap items-center gap-4 text-text-soft text-sm mb-4">
+          {% for author in article.frozen_authors.all %}
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-primary text-base">person</span>
+              <span class="{% if forloop.first %}font-bold{% endif %}">{{ author.full_name }}</span>
+            </div>
+          {% endfor %}
+          {% if article.correspondence_author.institution %}
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-primary text-base">school</span>
+              <span>{{ article.correspondence_author.institution }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Meta row -->
+        <div class="flex flex-wrap items-center gap-4 text-xs text-text-muted border-t border-border-rule pt-4">
+          {% if article.date_published %}
+            <span class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">calendar_today</span>
+              {{ article.date_published|date_human }}
+            </span>
+          {% endif %}
+          {% if article.peer_reviewed %}
+            <span class="flex items-center gap-1 text-primary font-bold">
+              <span class="material-symbols-outlined text-sm">verified</span>
+              {% trans 'محكّم' %}
+            </span>
+          {% endif %}
+          {% if not request.journal.disable_metrics_display %}
+            {% if article.metrics.views %}
+              <span class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">visibility</span>
+                {{ article.metrics.views }} {% trans 'views' %}
+              </span>
+            {% endif %}
+            {% if article.metrics.downloads %}
+              <span class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">download</span>
+                {{ article.metrics.downloads }} {% trans 'downloads' %}
+              </span>
+            {% endif %}
+          {% endif %}
+        </div>
+      </header>
+
+      <!-- Hero Image -->
+      {% if not journal_settings.article.disable_article_large_image and article.best_large_image_url %}
+        <div class="relative w-full aspect-video mb-8 overflow-hidden border border-border-rule gold-border-top">
+          <img src="{{ article.best_large_image_url }}"
+               alt="{{ article.best_large_image_alt_text }}"
+               class="w-full h-full object-cover">
+        </div>
+      {% endif %}
+
+      <!-- Abstract -->
+      {% if article.abstract %}
+        <section class="mb-10 pr-6 border-r-4 border-gold">
+          <h2 class="text-xl font-bold text-primary mb-4">{% trans 'الملخص' %}</h2>
+          <div class="text-base text-text-soft leading-relaxed text-justify">
+            {{ article.abstract|safe }}
+          </div>
+        </section>
+      {% endif %}
+
+      <!-- Keywords -->
+      {% if article.keywords.all %}
+        <section class="mb-10">
+          <h2 class="text-base font-bold text-primary mb-3">{% trans 'الكلمات المفتاحية' %}</h2>
+          <div class="flex flex-wrap gap-2">
+            {% for kw in article.keywords.all %}
+              <span class="bg-ivory-dark border border-border-rule px-4 py-1 text-sm text-text-soft hover:border-gold transition-colors cursor-pointer">
+                {{ kw }}
+              </span>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+
+      <!-- Full article content -->
+      {% if article_content %}
+        <section class="mb-10 prose max-w-none text-text-main leading-relaxed" id="main_article">
+          <div itemprop="articleBody">
+            {{ article_content|safe }}
+            {% hook 'article_content_block' %}
+            <div id="article_footer_block">{% hook 'article_footer_block' %}</div>
+          </div>
+        </section>
+      {% endif %}
+
+      {% hook 'article_content' %}
+
+      <!-- Publisher notes -->
+      {% if article.publisher_notes.all %}
+        <div class="bg-ivory-dark border border-border-rule p-5 mb-8">
+          <h2 class="font-bold text-primary mb-2">{% trans 'ملاحظات الناشر' %}</h2>
+          <ul class="list-disc list-inside text-sm text-text-soft space-y-1">
+            {% for note in article.publisher_notes.all %}
+              <li>{{ note.text|safe }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- Rights -->
+      {% if article.rights %}
+        <p class="text-sm text-text-muted mb-8"><strong>{% trans 'الحقوق' %}:</strong> {{ article.rights|safe }}</p>
+      {% endif %}
+
+      <!-- Funders -->
+      {% include "elements/funder_info_for_readers.html" %}
+
+      <!-- Citation modals triggers -->
+      {% if article.is_published or proofing %}
+        {% if not journal_settings.article.suppress_how_to_cite %}
+          {% include "elements/journal/cite.html" %}
+        {% endif %}
+      {% endif %}
+    </article>
+
+    <!-- ═══ SIDEBAR — 4 cols ══════════════════════════════════════ -->
+    <aside class="lg:col-span-4 space-y-5 lg:sticky lg:top-20">
+
+      <!-- PDF Download -->
+      {% if article.is_published or proofing %}
+        {% if galleys %}
+          {% for galley in galleys %}
+            {% if galley.file.mime_type == 'application/pdf' %}
+              <a href="{% url 'article_download_galley' article.id galley.id %}"
+                 class="w-full bg-primary text-white py-3 font-bold flex items-center justify-center gap-2 hover:bg-primary-mid transition-colors border-b-2 border-gold block text-center">
+                <span class="material-symbols-outlined">download</span>
+                {% trans 'تنزيل PDF' %}
+              </a>
+            {% endif %}
+          {% endfor %}
+
+          <!-- All files -->
+          <div class="stitch-card bg-white border border-border-rule gold-border-top p-5">
+            <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4">{% trans 'الملفات' %}</h3>
+            <ul class="space-y-2">
+              {% for galley in galleys %}
+                <li>
+                  {% if galley.file.mime_type == 'application/pdf' and journal.view_pdf_button %}
+                    <a href="{% url 'article_view_galley' article.id galley.id %}" target="_blank"
+                       class="flex items-center gap-2 text-sm text-primary hover:text-gold transition-colors">
+                      <span class="material-symbols-outlined text-sm">open_in_new</span>
+                      {% trans 'عرض' %} {{ galley.label }}
+                    </a>
+                  {% endif %}
+                  <a href="{% url 'article_download_galley' article.id galley.id %}"
+                     class="flex items-center gap-2 text-sm text-text-soft hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-sm">download</span>
+                    {{ galley.label }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      <!-- Article Metadata -->
+      <div class="relative stitch-card bg-white border border-border-rule gold-border-top p-5">
+        <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-5 pb-3 border-b border-border-rule">{% trans 'معلومات المقال' %}</h3>
+        <div class="space-y-4 text-sm">
+
+          {% with article.get_doi_url as doi_url %}
+            {% if doi_url %}
+              <div>
+                <span class="text-xs text-text-muted font-bold block mb-1 uppercase tracking-wide">DOI</span>
+                <a href="{{ doi_url }}" class="text-primary hover:text-gold underline break-all text-xs">{{ doi_url }}</a>
+              </div>
+            {% endif %}
+          {% endwith %}
+
+          <div class="grid grid-cols-2 gap-4">
+            {% if article.date_published %}
+              <div>
+                <span class="text-xs text-text-muted font-bold block mb-1 uppercase tracking-wide">{% trans 'مُنشور' %}</span>
+                <span class="font-medium">{{ article.date_published|date_human }}</span>
+              </div>
+            {% endif %}
+            {% if article.issue %}
+              <div>
+                <span class="text-xs text-text-muted font-bold block mb-1 uppercase tracking-wide">{% trans 'العدد' %}</span>
+                <a href="{{ article.issue.url }}" class="font-medium text-primary hover:text-gold transition-colors">{{ article.issue.display_title }}</a>
+              </div>
+            {% endif %}
+          </div>
+
+          {% if article.license %}
+            <div>
+              <span class="text-xs text-text-muted font-bold block mb-1 uppercase tracking-wide">{% trans 'الترخيص' %}</span>
+              <a href="{{ article.license.url }}" target="_blank" class="flex items-center gap-1 text-primary hover:text-gold transition-colors">
+                <span class="material-symbols-outlined text-sm">balance</span>
+                {{ article.license.name }}
+              </a>
+            </div>
+          {% endif %}
+
+          {% if article.page_range %}
+            <div>
+              <span class="text-xs text-text-muted font-bold block mb-1 uppercase tracking-wide">{% trans 'الصفحات' %}</span>
+              <span class="font-medium">{{ article.page_range }}</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Quote callout -->
+      <div class="bg-primary p-5 text-white border-r-4 border-gold relative overflow-hidden">
+        <div class="absolute left-3 top-2 text-[80px] leading-none text-gold/20 font-serif select-none">"</div>
+        <p class="text-sm text-white/85 italic leading-relaxed relative z-10">
+          {% trans 'المعرفة جسر نعبره نحو مستقبل أكثر إنارة وتعاوناً.' %}
+        </p>
+      </div>
+
+      <!-- Citations -->
+      {% if article.is_published or proofing %}
+        {% if not journal_settings.article.suppress_how_to_cite %}
+          <div class="stitch-card bg-white border border-border-rule gold-border-top p-5">
+            <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4">{% trans 'اقتبس هذا المقال' %}</h3>
+            <div class="bg-ivory-dark border border-border-rule p-3 text-xs text-text-muted mb-3 leading-relaxed" id="cite-text">
+              {% for author in article.frozen_authors.all %}{{ author.last_name }}{% if not forloop.last %}, {% endif %}{% endfor %} ({{ article.date_published.year }}). {{ article.title|safe|striptags }}. {{ request.journal.name }}{% if article.issue %}, {{ article.issue.display_title }}{% endif %}.{% if article.get_doi_url %} https://doi.org/{{ article.identifier.identifier }}{% endif %}
+            </div>
+            <button onclick="navigator.clipboard.writeText(document.getElementById('cite-text').innerText)"
+                    class="w-full flex items-center justify-center gap-2 text-sm text-primary border border-primary py-2 hover:bg-primary hover:text-white transition-colors font-bold">
+              <span class="material-symbols-outlined text-sm">content_copy</span>
+              {% trans 'نسخ الاقتباس' %}
+            </button>
+            <div class="mt-3 flex gap-2 flex-wrap">
+              <a href="{% url 'serve_article_ris' 'id' article.pk %}" class="text-xs text-text-muted hover:text-primary transition-colors flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">download</span> RIS
+              </a>
+              <a href="{% url 'serve_article_bib' 'id' article.pk %}" class="text-xs text-text-muted hover:text-primary transition-colors flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">download</span> BibTeX
+              </a>
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      <!-- Author details -->
+      <div class="stitch-card bg-white border border-border-rule gold-border-top p-5">
+        <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4">{% trans 'المؤلفون' %}</h3>
+        {% include "elements/journal/article_authors_full.html" %}
+      </div>
+
+      <!-- Altmetric -->
+      {% include "common/elements/altmetric_badges.html" with article=article class='section' %}
+
+      <!-- Share -->
+      {% include "elements/journal/share.html" %}
+
+      {% hook 'article_sidebar' article %}
+
+    </aside>
+  </div>
+</div>
+
+<!-- Modals -->
+{% include "elements/journal/citation_modals.html" with article=article %}
+{% include "elements/journal/summary_modal.html" %}
+{% include "elements/public_reviews.html" %}
+{% for table in tables_in_galley %}
+  {% include "elements/journal/table_modal.html" with content=table.content tableid=table.id %}
+{% endfor %}
+{% endblock body %}
+
+{% block js %}
+<script src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>
+{# Ilmovas: MathJax 3 CHTML subset — self-hosted, no CDN. See ILMOVAS_THEME_NOTES.md #}
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    },
+    options: { enableMenu: false },
+  };
+</script>
+<script defer src="{% static 'ilmovas/js/mathjax/es5/tex-mml-chtml.js' %}"></script>
+{% hook 'article_js_block' %}
+<script src="{% static 'common/js/table-expansion.js' %}"></script>
+<script>
+  initTableExpansion({
+    modalSelector: '.reveal',
+    linkTemplate: '<button type="button" data-open="table-{id}" aria-describedby="{id}-label">{% trans "View Larger Table" %}</button>',
+  });
+</script>
+<script src="{% static "common/lightbox/js/lightbox.js" %}"></script>
+<script src="{% static "common/js/clipboard.js" %}"></script>
+<script src="{% static "common/js/reversable-links.js" %}"></script>
+{% endblock js %}

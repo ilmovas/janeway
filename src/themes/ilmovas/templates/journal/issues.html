@@ -1,0 +1,166 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block page_title %}{% trans "Archive" %}{% endblock %}
+
+{% block body %}
+<div class="max-w-[1280px] mx-auto px-8 pt-8 pb-16">
+
+  <!-- Page Header -->
+  <header class="mb-10 border-r-4 border-gold pr-5">
+    <h1 class="text-4xl font-bold text-primary mb-2">{% trans 'أرشيف الأعداد' %}</h1>
+    <p class="text-text-soft text-base leading-relaxed max-w-2xl">
+      {% trans 'تصفح الأرشيف الكامل للأبحاث الأكاديمية المحكّمة، منظمةً حسب المجلد والسنة.' %}
+    </p>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- ═══ SIDEBAR ── 3 cols ════════════════════════════════════ -->
+    <aside class="lg:col-span-3 lg:sticky lg:top-20 flex flex-col gap-5">
+
+      <!-- Filter by year -->
+      {% if issues %}
+        <div class="bg-ivory-dark/70 border border-border-rule p-5">
+          <h3 class="text-xs font-bold tracking-widest text-primary uppercase mb-4">{% trans 'تصفية حسب السنة' %}</h3>
+          <ul class="space-y-1">
+            {% regroup issues by date.year as issues_by_year %}
+            {% for year_group in issues_by_year %}
+              <li>
+                <a href="#year-{{ year_group.grouper }}"
+                   class="block text-sm py-1.5 pr-3 text-text-soft hover:text-gold transition-colors border-r-2 border-transparent hover:border-gold">
+                  {{ year_group.grouper }}
+                  <span class="text-text-muted text-xs">({{ year_group.list|length }})</span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- Subscribe CTA -->
+      <div class="bg-primary p-5 text-white">
+        <h3 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-3">{% trans 'ابقَ على اطلاع' %}</h3>
+        <p class="text-sm text-white/75 leading-relaxed mb-4">{% trans 'اشترك لتلقي إشعارات عند نشر أعداد جديدة.' %}</p>
+        {% if not request.user.is_authenticated %}
+          <a href="{% url 'core_register' %}"
+             class="block w-full bg-gold text-primary text-sm font-bold py-2 text-center hover:bg-gold-light transition-colors">
+            {% trans 'اشترك الآن' %}
+          </a>
+        {% else %}
+          <p class="text-xs text-white/50">{% trans 'تم اشتراكك.' %}</p>
+        {% endif %}
+      </div>
+
+      <!-- Journal info -->
+      <div class="bg-ivory-dark border border-border-rule p-4">
+        <h3 class="text-xs font-bold tracking-widest text-text-muted uppercase mb-3">{% trans 'Journal Info' %}</h3>
+        {% if request.journal.issn %}
+          <p class="text-xs text-text-soft mb-1">e-ISSN: <span class="font-mono font-bold">{{ request.journal.issn }}</span></p>
+        {% endif %}
+        {% if request.journal.print_issn %}
+          <p class="text-xs text-text-soft">p-ISSN: <span class="font-mono font-bold">{{ request.journal.print_issn }}</span></p>
+        {% endif %}
+        {% if issues %}
+          <p class="text-xs text-text-muted mt-2">{{ issues|length }} {% trans 'issues' %}</p>
+        {% endif %}
+      </div>
+    </aside>
+
+    <!-- ═══ ISSUES GRID ── 9 cols ════════════════════════════════ -->
+    <div class="lg:col-span-9">
+      {% if issues %}
+        {% regroup issues by date.year as issues_by_year %}
+        {% for year_group in issues_by_year %}
+          <section class="mb-12" id="year-{{ year_group.grouper }}">
+            <!-- Year heading -->
+            <div class="flex items-center gap-4 mb-6">
+              <h2 class="text-xl font-bold text-primary whitespace-nowrap">
+                {% trans 'المجلد' %} ({{ year_group.grouper }})
+              </h2>
+              <div class="flex-grow h-px bg-border-rule"></div>
+              {% if forloop.first %}
+                <span class="text-xs bg-gold text-primary font-bold px-3 py-1 whitespace-nowrap">{% trans 'الحالي' %}</span>
+              {% endif %}
+            </div>
+
+            <!-- Issue cards grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+              {% for issue in year_group.list %}
+                <div class="issue-card relative bg-white border border-border-rule flex flex-col group"
+                     style="transition: transform 0.25s ease, box-shadow 0.25s ease;">
+                  <!-- Gold top border on hover -->
+                  <div class="absolute top-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                       style="background: linear-gradient(to left, #C4922A, #0D4F3C);"></div>
+
+                  <!-- Cover image -->
+                  <a href="{% url 'journal_issue' issue.id %}" class="block overflow-hidden aspect-[3/4] border-b border-border-rule/30">
+                    {% if issue.cover_image %}
+                      <img src="{{ issue.cover_image.url }}" alt="{{ issue.display_title }}"
+                           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    {% elif journal.default_cover_image %}
+                      <img src="{{ journal.default_cover_image.url }}" alt="{{ issue.display_title }}"
+                           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    {% else %}
+                      <div class="w-full h-full bg-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white/30 text-6xl">menu_book</span>
+                      </div>
+                    {% endif %}
+                    {% if forloop.first and forloop.parentloop.first %}
+                      <div class="absolute top-2 right-2 bg-gold text-primary text-xs font-bold px-2 py-1">
+                        {% trans 'الأحدث' %}
+                      </div>
+                    {% endif %}
+                  </a>
+
+                  <!-- Info -->
+                  <div class="p-4 flex flex-col flex-1">
+                    <div class="flex justify-between items-start mb-2">
+                      <span class="text-xs font-bold text-gold">{{ issue.display_title }}</span>
+                      {% if issue.date %}
+                        <span class="text-xs text-text-muted">{{ issue.date|date:"Y" }}</span>
+                      {% endif %}
+                    </div>
+                    {% if issue.issue_title %}
+                      <h3 class="text-sm font-bold text-text-main leading-snug mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                        {{ issue.issue_title }}
+                      </h3>
+                    {% endif %}
+                    <p class="text-xs text-text-muted mt-auto">
+                      {{ issue.get_sorted_articles.count }} {% trans 'articles' %}
+                    </p>
+                  </div>
+
+                  <!-- Footer -->
+                  <div class="px-4 pb-4 pt-3 border-t border-border-rule flex justify-between items-center">
+                    <a href="{% url 'journal_issue' issue.id %}"
+                       class="text-sm font-bold text-primary flex items-center gap-1 hover:text-gold transition-colors">
+                      {% trans 'تصفح العدد' %}
+                      <span class="material-symbols-outlined text-base group-hover:translate-x-[-4px] transition-transform">arrow_back</span>
+                    </a>
+                    <span class="material-symbols-outlined text-primary/30">menu_book</span>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </section>
+        {% endfor %}
+
+      {% else %}
+        <div class="text-center py-20 text-text-muted">
+          <span class="material-symbols-outlined text-6xl block mb-4 opacity-30">inbox</span>
+          <p class="text-lg">{% trans 'لم تُنشر أعداد في هذه المجلة بعد.' %}</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .issue-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(13,79,60,0.10);
+  }
+</style>
+{% endblock %}

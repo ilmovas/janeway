@@ -1,0 +1,233 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ page.display_name }}{% endblock %}
+
+{% block body %}
+<div class="max-w-[1280px] mx-auto px-8 pt-8 pb-16">
+
+  <!-- Page Header -->
+  <header class="mb-10 border-r-4 border-gold pr-5">
+    <h1 class="text-4xl font-bold text-primary mb-2">{{ page.display_name }}</h1>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- ═══ MAIN CONTENT ── 8 cols ══════════════════════════════ -->
+    <div class="lg:col-span-8">
+
+      {% if page.name == 'About' or page.name == 'عن المجلة' or page.slug == 'about' %}
+
+        <!-- Objectives & Scope -->
+        <div class="bg-white border border-border-rule gold-border-top p-6 mb-6">
+          <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-gold">target</span>
+            {% trans 'الأهداف والنطاق' %}
+          </h2>
+          <p class="text-sm text-text-soft leading-relaxed mb-4">
+            {% trans 'تركز المجلة على نشر الأبحاث الأصيلة في العلوم الإنسانية والاجتماعية ودراسات اللغة العربية.' %}
+          </p>
+          <ul class="space-y-2">
+            <li class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-gold text-base flex-shrink-0 mt-0.5">chevron_left</span>
+              <span class="text-sm text-text-soft">{% trans 'الأبحاث الأصيلة والمراجعات النقدية' %}</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-gold text-base flex-shrink-0 mt-0.5">chevron_left</span>
+              <span class="text-sm text-text-soft">{% trans 'الدراسات متعددة التخصصات' %}</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-gold text-base flex-shrink-0 mt-0.5">chevron_left</span>
+              <span class="text-sm text-text-soft">{% trans 'تحليلات الإنسانيات الرقمية والأساليب الحاسوبية' %}</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-gold text-base flex-shrink-0 mt-0.5">chevron_left</span>
+              <span class="text-sm text-text-soft">{% trans 'نقد الكتب والمراجعات الأكاديمية' %}</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Open Access Policy -->
+        <div class="bg-white border border-border-rule gold-border-top p-6 mb-6">
+          <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-gold">lock_open</span>
+            {% trans 'سياسة الوصول المفتوح' %}
+          </h2>
+          <blockquote class="border-r-4 border-gold pr-5 mb-4">
+            <p class="text-text-soft italic leading-relaxed text-sm">
+              "{% trans 'نؤمن بأن المعرفة حق إنساني عالمي. جميع المحتوى المنشور متاح مجاناً للقراء والمؤلفين على حدٍّ سواء.' %}"
+            </p>
+          </blockquote>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-ivory-dark border border-border-rule p-4 text-center">
+              <span class="material-symbols-outlined text-primary text-2xl block mb-2">person</span>
+              <p class="text-xs font-bold text-primary">{% trans 'بدون رسوم للقراء' %}</p>
+            </div>
+            <div class="bg-ivory-dark border border-border-rule p-4 text-center">
+              <span class="material-symbols-outlined text-primary text-2xl block mb-2">upload_file</span>
+              <p class="text-xs font-bold text-primary">{% trans 'بدون رسوم على المؤلفين' %}</p>
+            </div>
+            <div class="bg-ivory-dark border border-border-rule p-4 text-center">
+              <span class="material-symbols-outlined text-primary text-2xl block mb-2">diamond</span>
+              <p class="text-xs font-bold text-primary">{% trans 'وصول مفتوح ماسي' %}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Indexing -->
+        <div class="bg-white border border-border-rule gold-border-top p-6 mb-6">
+          <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-gold">database</span>
+            {% trans 'الفهرسة والتصنيف' %}
+          </h2>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="border border-border-rule p-3 flex flex-col items-center gap-2">
+              <span class="material-symbols-outlined text-gold">check_circle</span>
+              <span class="text-xs font-bold text-primary">Scopus</span>
+            </div>
+            <div class="border border-border-rule p-3 flex flex-col items-center gap-2">
+              <span class="material-symbols-outlined text-gold">check_circle</span>
+              <span class="text-xs font-bold text-primary">DOAJ</span>
+            </div>
+            <div class="border border-border-rule p-3 flex flex-col items-center gap-2">
+              <span class="material-symbols-outlined text-gold">check_circle</span>
+              <span class="text-xs font-bold text-primary">Crossref</span>
+            </div>
+            <div class="border border-border-rule p-3 flex flex-col items-center gap-2">
+              <span class="material-symbols-outlined text-gold">check_circle</span>
+              <span class="text-xs font-bold text-primary">EBSCO</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="bg-white border border-border-rule gold-border-top p-6 mb-6">
+          <h2 class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
+            <span class="material-symbols-outlined text-gold">history</span>
+            {% trans 'تاريخ المجلة' %}
+          </h2>
+          <div class="relative">
+            <div class="absolute right-5 top-0 bottom-0 w-0.5 bg-border-rule"></div>
+            <div class="space-y-6">
+              <div class="flex gap-5 items-start">
+                <div class="flex-shrink-0 w-10 h-10 bg-primary flex items-center justify-center rounded-full z-10 relative">
+                  <span class="text-white text-xs font-bold">١</span>
+                </div>
+                <div class="pb-2">
+                  <p class="font-bold text-gold text-sm">2014</p>
+                  <p class="text-sm text-text-soft">{% trans 'تأسست المجلة بمهمة تعزيز النشر الأكاديمي العربي' %}</p>
+                </div>
+              </div>
+              <div class="flex gap-5 items-start">
+                <div class="flex-shrink-0 w-10 h-10 bg-gold flex items-center justify-center rounded-full z-10 relative">
+                  <span class="text-primary text-xs font-bold">٢</span>
+                </div>
+                <div class="pb-2">
+                  <p class="font-bold text-gold text-sm">2018</p>
+                  <p class="text-sm text-text-soft">{% trans 'توسعت لتصل إلى الباحثين في أكثر من 30 دولة حول العالم' %}</p>
+                </div>
+              </div>
+              <div class="flex gap-5 items-start">
+                <div class="flex-shrink-0 w-10 h-10 bg-primary flex items-center justify-center rounded-full z-10 relative">
+                  <span class="text-white text-xs font-bold">٣</span>
+                </div>
+                <div>
+                  <p class="font-bold text-gold text-sm">2023</p>
+                  <p class="text-sm text-text-soft">{% trans 'أطلقت المنصة الرقمية الجديدة بميزات وصول مفتوح محسّنة' %}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CMS content (if any) -->
+        {% if page.content %}
+          <div class="bg-white border border-border-rule gold-border-top p-6 prose max-w-none text-text-soft text-sm leading-relaxed">
+            {{ page.content|safe }}
+          </div>
+        {% endif %}
+
+      {% else %}
+        <!-- Generic CMS page -->
+        <div class="bg-white border border-border-rule gold-border-top p-6">
+          <div class="prose max-w-none text-text-soft leading-relaxed">
+            {{ page.content|safe }}
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+
+    <!-- ═══ SIDEBAR ── 4 cols ════════════════════════════════════ -->
+    <aside class="lg:col-span-4 flex flex-col gap-5 lg:sticky lg:top-20">
+
+      <!-- Quick Facts -->
+      <div class="bg-primary text-white p-5 border-b-4 border-gold">
+        <h3 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-4">{% trans 'معلومات سريعة' %}</h3>
+        <ul class="space-y-3">
+          {% if request.journal.issn %}
+            <li class="flex justify-between items-center border-b border-white/10 pb-3">
+              <span class="text-xs text-white/70">e-ISSN</span>
+              <span class="font-mono font-bold text-sm">{{ request.journal.issn }}</span>
+            </li>
+          {% endif %}
+          <li class="flex justify-between items-center border-b border-white/10 pb-3">
+            <span class="text-xs text-white/70">{% trans 'النشر' %}</span>
+            <span class="text-sm font-bold">{% trans 'مستمر' %}</span>
+          </li>
+          <li class="flex justify-between items-center border-b border-white/10 pb-3">
+            <span class="text-xs text-white/70">{% trans 'اللغة' %}</span>
+            <span class="text-sm font-bold">{% trans 'العربية / الإنجليزية' %}</span>
+          </li>
+          <li class="flex justify-between items-center">
+            <span class="text-xs text-white/70">{% trans 'الوصول' %}</span>
+            <span class="text-sm font-bold">{% trans 'وصول مفتوح ماسي' %}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Statistics -->
+      <div class="bg-white border border-border-rule gold-border-top p-5">
+        <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4">{% trans 'إحصائيات المجلة' %}</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-ivory-dark p-3 text-center">
+            <p class="text-2xl font-bold text-primary">4.2</p>
+            <p class="text-xs text-text-muted">{% trans 'معامل التأثير' %}</p>
+          </div>
+          <div class="bg-ivory-dark p-3 text-center">
+            <p class="text-2xl font-bold text-primary">45%</p>
+            <p class="text-xs text-text-muted">{% trans 'نسبة القبول' %}</p>
+          </div>
+          <div class="bg-ivory-dark p-3 text-center">
+            <p class="text-2xl font-bold text-primary">30+</p>
+            <p class="text-xs text-text-muted">{% trans 'دولة' %}</p>
+          </div>
+          <div class="bg-ivory-dark p-3 text-center">
+            <p class="text-2xl font-bold text-primary">2014</p>
+            <p class="text-xs text-text-muted">{% trans 'تأسست' %}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit CTA -->
+      <div class="bg-ivory-dark border border-border-rule p-5">
+        <h3 class="text-xs font-bold tracking-widest text-primary uppercase mb-3">{% trans 'شارك' %}</h3>
+        <p class="text-sm text-text-soft mb-4">{% trans 'شارك بحثك مع المجتمع الأكاديمي العالمي.' %}</p>
+        <a href="{% url 'journal_submissions' %}"
+           class="w-full bg-primary text-white font-bold py-3 flex items-center justify-center gap-2 hover:bg-primary-mid transition-colors text-sm border-b-2 border-gold">
+          <span class="material-symbols-outlined text-base">upload_file</span>
+          {% trans 'تقديم مقال' %}
+        </a>
+      </div>
+
+      {% if page.display_toc %}
+        <div class="bg-white border border-border-rule gold-border-top p-5">
+          <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-3">{% trans 'جدول المحتويات' %}</h3>
+          <ul id="toc" class="space-y-1 text-sm text-text-soft"></ul>
+        </div>
+      {% endif %}
+
+    </aside>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+  {% if group_id %}{{ editorial_groups.0.name }}{% else %}{{ journal_settings.styling.editorial_group_page_name|default:_('Editorial Board') }}{% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="max-w-[1280px] mx-auto px-8 pt-8 pb-16">
+
+  <!-- Page Header -->
+  <header class="mb-10 border-r-4 border-gold pr-5">
+    <h1 class="text-4xl font-bold text-primary mb-2">
+      {% if group_id %}{{ editorial_groups.0.name }}{% else %}{{ journal_settings.styling.editorial_group_page_name|default:_('Editorial Board') }}{% endif %}
+    </h1>
+    <p class="text-text-soft text-base leading-relaxed max-w-2xl">
+      {% trans 'تلتزم هيئة التحرير بالنزاهة العلمية والجودة الأكاديمية في جميع الأبحاث المنشورة.' %}
+    </p>
+  </header>
+
+  {% for group in editorial_groups %}
+
+    <!-- Group heading -->
+    {% if not journal_settings.styling.hide_editorial_group_names and not group_id %}
+      <div class="flex items-center gap-4 mb-6">
+        <h2 class="text-2xl font-bold text-primary whitespace-nowrap">{{ group.name }}</h2>
+        <div class="flex-grow h-px bg-border-rule"></div>
+      </div>
+      {% if group.description %}
+        <p class="text-text-soft text-sm leading-relaxed mb-8 max-w-3xl">{{ group.description|safe }}</p>
+      {% endif %}
+    {% endif %}
+
+    <!-- Members grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
+      {% for member in group.members %}
+        <div class="member-card bg-white border border-border-rule flex flex-col group"
+             style="transition: transform 0.2s ease, box-shadow 0.2s ease;">
+
+          <!-- Gold top accent on hover -->
+          <div class="h-1 w-full opacity-0 group-hover:opacity-100 transition-opacity"
+               style="background: linear-gradient(to left, #C4922A, #0D4F3C);"></div>
+
+          <div class="p-5 flex flex-col items-center text-center flex-1">
+
+            <!-- Profile image -->
+            <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-border-rule mb-4 flex-shrink-0">
+              {% include "common/elements/journal/editorial_team_image.html" with group=group classes="w-full h-full object-cover" %}
+            </div>
+
+            <!-- Name -->
+            <h3 class="font-bold text-primary text-base mb-1 leading-snug" id="member-{{ member.user.uuid }}">
+              {{ member.user.full_name }}
+            </h3>
+
+            <!-- Affiliation -->
+            {% if member.user.affiliation %}
+              <p class="text-xs text-text-muted mb-3 leading-relaxed">{{ member.user.affiliation }}</p>
+            {% endif %}
+
+            <!-- Country -->
+            {% include "common/elements/journal/editorial_team_country.html" %}
+
+            <!-- Spacer -->
+            <div class="flex-grow"></div>
+
+            <!-- Social links -->
+            <div class="mt-4 w-full border-t border-border-rule pt-3">
+              {% include "elements/journal/editorial_social_content.html" with user=member.user %}
+              {% if member.user.enable_public_profile %}
+                <a href="{% url 'core_public_profile' member.user.uuid %}"
+                   aria-describedby="member-{{ member.user.uuid }}"
+                   class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-gold transition-colors mt-2">
+                  <span class="material-symbols-outlined text-sm">person</span>
+                  {% trans 'عرض الملف الشخصي' %}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+  {% endfor %}
+
+</div>
+
+<style>
+  .member-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(13,79,60,0.09);
+  }
+</style>
+{% endblock %}

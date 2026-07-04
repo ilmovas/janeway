@@ -1,0 +1,90 @@
+{% load i18n %}
+{% load static %}
+
+{% if facet_form.fields %}
+<div class="bg-white border border-border-rule gold-border-top">
+  <!-- Header -->
+  <div class="bg-primary text-white px-4 py-3 flex items-center justify-between">
+    <h2 class="text-xs font-bold tracking-widest text-gold-light uppercase flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm">tune</span>
+      {% trans 'تصفية' %}
+    </h2>
+    <button type="button" id="filter-toggle-{{ filter_context }}"
+            class="md:hidden text-white/70 hover:text-white transition-colors">
+      <span class="material-symbols-outlined text-sm">expand_more</span>
+    </button>
+  </div>
+
+  <!-- Form -->
+  <form method="GET" id="{{ facet_form.id }}-{{ filter_context }}" class="p-4 space-y-5">
+    {% for field in facet_form %}
+      <div class="filter-group">
+        <!-- Field label -->
+        <p class="text-xs font-bold text-primary uppercase tracking-wide mb-2 flex items-center gap-1">
+          <span class="w-2 h-2 bg-gold inline-block flex-shrink-0"></span>
+          {{ field.label }}
+        </p>
+
+        {% if field.field.widget.input_type == 'date' or 'date' in field.html_name %}
+          <!-- Date input -->
+          <input type="date"
+                 name="{{ field.html_name }}"
+                 id="{{ field.auto_id }}"
+                 {% if field.value %}value="{{ field.value }}"{% endif %}
+                 class="w-full bg-ivory-dark border border-border-rule px-3 py-2 text-sm text-text-main outline-none focus:ring-1 focus:ring-gold focus:border-gold"
+                 style="direction:ltr;text-align:left;">
+
+        {% elif field.field.widget.input_type == 'checkbox' or 'CheckboxSelect' in field.field.widget|stringformat:'s' %}
+          <!-- Checkboxes -->
+          <div class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+            {% for choice_value, choice_label in field.field.choices %}
+              <label class="flex items-center gap-2 cursor-pointer group">
+                <input type="checkbox"
+                       name="{{ field.html_name }}"
+                       value="{{ choice_value }}"
+                       {% if choice_value|stringformat:'s' in field.value|default_if_none:'' or choice_value in field.value|default:'' %}checked{% endif %}
+                       class="w-4 h-4 accent-primary cursor-pointer">
+                <span class="text-xs text-text-soft group-hover:text-primary transition-colors leading-tight">
+                  {{ choice_label }}
+                </span>
+              </label>
+            {% endfor %}
+          </div>
+
+        {% else %}
+          <!-- Generic input -->
+          {{ field }}
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <!-- Action buttons -->
+    <div class="pt-3 border-t border-border-rule space-y-2">
+      <div class="flex gap-2">
+        <button type="button" id="select-all-btn-{{ filter_context }}"
+                class="flex-1 text-xs font-bold text-primary border border-primary py-1.5 hover:bg-primary hover:text-white transition-colors">
+          {% trans 'اختر الكل' %}
+        </button>
+        <button type="button" id="clear-all-btn-{{ filter_context }}"
+                class="flex-1 text-xs font-bold text-text-muted border border-border-rule py-1.5 hover:bg-ivory-dark transition-colors">
+          {% trans 'مسح الكل' %}
+        </button>
+      </div>
+      <button type="submit"
+              class="w-full bg-primary text-white text-xs font-bold py-2.5 hover:bg-primary-mid transition-colors border-b-2 border-gold flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-sm">check</span>
+        {% trans 'تطبيق' %}
+      </button>
+    </div>
+  </form>
+</div>
+
+<script src="{% static 'common/js/form-toggle-all.js' %}"></script>
+<script>
+  initFormToggleButtons(
+    'select-all-btn-{{ filter_context }}',
+    'clear-all-btn-{{ filter_context }}',
+    '{{ facet_form.id }}-{{ filter_context }}'
+  );
+</script>
+{% endif %}

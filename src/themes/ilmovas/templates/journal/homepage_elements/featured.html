@@ -1,0 +1,67 @@
+{% load static %}
+{% load i18n %}
+{% load uuid %}
+
+{% if featured_articles %}
+{% with fa=featured_articles.0 article=featured_articles.0.article %}
+<section class="relative w-full bg-primary text-white overflow-hidden">
+  <!-- gold top stripe -->
+  <div class="absolute top-0 left-0 right-0 h-1" style="background:linear-gradient(90deg,#E8C46A,#C4922A,#E8C46A);"></div>
+  <!-- subtle pattern -->
+  <div class="absolute inset-0 opacity-5" style="background-image:repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%);background-size:24px 24px;"></div>
+
+  <div class="relative max-w-[1280px] mx-auto px-8 py-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+
+    <!-- Image — يمين في RTL (أول في HTML) -->
+    <div class="order-1">
+      {% if article.best_large_image_url %}
+        <a href="{% if article.is_remote %}{{ article.remote_url }}{% else %}{% url 'article_view' 'id' article.pk %}{% endif %}">
+          <img src="{{ article.best_large_image_url }}"
+               alt="{{ article.title|safe }}"
+               class="w-full max-h-80 object-cover border-4 border-white/10 shadow-2xl">
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- Text — يسار في RTL -->
+    <div class="order-2">
+      <div class="inline-flex items-center gap-2 border border-gold/50 text-gold text-xs font-bold tracking-widest uppercase px-3 py-1 mb-5">
+        <span class="material-symbols-outlined text-sm">star</span>
+        {% trans 'مقال مميز' %}
+      </div>
+
+      <h2 class="text-2xl md:text-3xl font-bold leading-tight mb-4">
+        <a href="{% if article.is_remote %}{{ article.remote_url }}{% else %}{% url 'article_view' 'id' article.pk %}{% endif %}"
+           class="hover:text-gold transition-colors">
+          {{ article.title|safe }}
+        </a>
+      </h2>
+
+      {% if article.abstract %}
+        <p class="text-white/75 text-sm leading-relaxed mb-6 line-clamp-3">{{ article.abstract|striptags|truncatechars:280 }}</p>
+      {% endif %}
+
+      {% if article.author_list %}
+        <p class="text-xs text-white/50 mb-6">{{ article.author_list }}</p>
+      {% endif %}
+
+      <div class="flex flex-wrap gap-3">
+        <a href="{% if article.is_remote %}{{ article.remote_url }}{% else %}{% url 'article_view' 'id' article.pk %}{% endif %}"
+           class="inline-flex items-center gap-2 bg-white text-primary font-bold text-sm px-5 py-2.5 hover:bg-ivory transition-colors">
+          <span class="material-symbols-outlined text-base">open_in_new</span>
+          {% trans 'قراءة المقال كاملاً' %}
+        </a>
+        {% if article.pdfs %}
+          <a href="{{ article.pdfs.0.self_public_download_url }}"
+             class="inline-flex items-center gap-2 border border-white/30 text-white font-medium text-sm px-5 py-2.5 hover:bg-white/10 transition-colors">
+            <span class="material-symbols-outlined text-base">download</span>
+            {% trans 'تنزيل PDF' %}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endwith %}
+{% endif %}

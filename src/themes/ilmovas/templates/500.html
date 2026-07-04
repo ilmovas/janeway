@@ -1,0 +1,27 @@
+{% load static %}
+{% load i18n %}
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans 'Server Error' %}</title>
+    <link href="{% static 'ilmovas/css/local-fonts.css' %}" rel="stylesheet">
+    <link href="{% static 'ilmovas/css/app.css' %}" rel="stylesheet">
+    <link href="{% static 'common/css/common.css' %}" rel="stylesheet">
+    <style>
+      body { font-family: 'Tajawal', sans-serif; background: #fcf9f3; color: #1c1c18; margin: 0; padding: 2rem; }
+      main { max-width: 640px; margin: 4rem auto; }
+      h1 { color: #0D4F3C; margin-bottom: 0.5rem; }
+      p { color: #4A4A4A; line-height: 1.6; }
+    </style>
+</head>
+<body>
+<main>
+    <h1>{% trans 'Server Error' %}</h1>
+    <p>{% trans 'A server error has occurred' %}</p>
+</main>
+</body>
+</html>

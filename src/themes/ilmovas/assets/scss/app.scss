@@ -1,0 +1,677 @@
+@charset 'utf-8';
+
+@import 'fonts';
+
+@import 'foundation';
+
+@import "variables";
+@import "mixins";
+
+@import 'motion-ui';
+@import 'settings';
+
+@include foundation-global-styles;
+@include foundation-grid;
+@include foundation-typography;
+@include foundation-button;
+@include foundation-forms;
+@include foundation-visibility-classes;
+@include foundation-float-classes;
+@include foundation-accordion;
+@include foundation-accordion-menu;
+@include foundation-badge;
+@include foundation-breadcrumbs;
+@include foundation-button-group;
+@include foundation-callout;
+@include foundation-close-button;
+@include foundation-drilldown-menu;
+@include foundation-dropdown;
+@include foundation-dropdown-menu;
+@include foundation-flex-video;
+@include foundation-label;
+@include foundation-media-object;
+@include foundation-menu;
+@include foundation-menu-icon;
+@include foundation-off-canvas;
+@include foundation-orbit;
+@include foundation-pagination;
+@include foundation-progress-bar;
+@include foundation-slider;
+@include foundation-sticky;
+@include foundation-reveal;
+@include foundation-switch;
+@include foundation-table;
+@include foundation-tabs;
+@include foundation-thumbnail;
+@include foundation-title-bar;
+@include foundation-tooltip;
+@include foundation-top-bar;
+
+@include motion-ui-transitions;
+@include motion-ui-animations;
+
+@import 'timeline';
+@import 'toastr';
+@import 'issue';
+@import 'tabs';
+@import 'tagit';
+
+:root {
+  --primary-dark-color: #{$primary-dark-color};
+  --very-dark-primary-color: #{$very-dark-primary-color};
+  --primary-light-color: #{$primary-light-color};
+  --accent-gold: #{$accent-gold};
+  --accent-gold-light: #{$accent-gold-light};
+  --border-color: #{$border-color};
+
+  --topbar-background-color: #{$topbar-background-color};
+  --menu-background-color: #{$menu-background-color};
+  --menu-alternative-background-color: #{$menu-alternative-background-color};
+  --menu-foreground-color: #{$menu-foreground-color};
+
+  --link-color: #{$link-color};
+  --toc-link-color: #{$toc-link-color};
+
+  --figure-caption-background-color: #{$figure-caption-background-color};
+  --figure-caption-color: #{$figure-caption-color};
+
+}
+
+body {
+  background-color: #F7F4EE;
+  color: #1C1C1C;
+  font-family: 'Tajawal', sans-serif;
+}
+
+// RTL Support
+[dir="rtl"] {
+  body {
+    text-align: right;
+  }
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--accent-gold);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-gold);
+    text-underline-offset: 4px;
+  }
+}
+
+.wrapper {
+	min-height: 100%;
+	margin-bottom: (-$footer-height);
+    position: relative;
+    z-index: 0;
+
+  &:after {
+    content: "";
+    display: block;
+  	height: $footer-height;
+  }
+}
+.main-footer {
+	height: $footer-height;
+    position: relative;
+    z-index: 0;
+    background-color: var(--primary-dark-color);
+    color: #FFFFFF;
+
+    a {
+      color: var(--accent-gold);
+      &:hover {
+        color: var(--accent-gold-light);
+      }
+    }
+}
+
+header {
+  .top-bar {
+    background-color: var(--topbar-background-color);
+    border-bottom: 2px solid var(--border-color);
+
+    .menu-foreground {
+        color: var(--menu-foreground-color);
+    }
+  }
+
+  #main-menu {
+    background-color: var(--menu-background-color);
+    li a {
+      color: var(--menu-foreground-color);
+      font-weight: 500;
+      &:hover {
+        color: var(--accent-gold);
+      }
+    }
+    li.active a {
+      color: var(--accent-gold);
+      border-bottom: 2px solid var(--accent-gold);
+    }
+  }
+}
+
+.button {
+  background-color: var(--primary-dark-color);
+  color: #FFFFFF;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+
+  &:hover, &:focus {
+    background-color: var(--primary-light-color);
+    color: #FFFFFF;
+  }
+
+  &.secondary {
+    background-color: var(--accent-gold);
+    &:hover {
+      background-color: var(--accent-gold-light);
+    }
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary-dark-color);
+  font-family: 'Tajawal', sans-serif;
+  font-weight: 700;
+}
+
+.box, .card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-top: 4px solid var(--accent-gold);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 2rem;
+  
+  &::before {
+    content: "";
+    display: block;
+    height: 4px;
+    background: linear-gradient(to right, var(--accent-gold), var(--primary-dark-color));
+  }
+}
+
+div.caption span.label {
+  background-color: var(--figure-caption-background-color);
+  color: var(--figure-caption-color);
+  padding: 0.5rem 1rem;
+}
+
+.summary {
+  .top { background: var(--primary-dark-color); }
+  .bottom { background: var(--primary-light-color); }
+}
+
+// ═══════════════════════════════════════════════════
+// STITCH DESIGN — الثيم المستنسخ من Stitch
+// ═══════════════════════════════════════════════════
+
+// ── Global ──────────────────────────────────────────
+html, body {
+  background-color: #fcf9f3;
+  color: #1c1c18;
+  font-family: 'Tajawal', sans-serif;
+  scroll-behavior: smooth;
+}
+
+// Gold gradient top border — used on cards
+@mixin gold-top-border {
+  border-top: 4px solid transparent;
+  border-image: linear-gradient(90deg, #E8C46A 0%, #0D4F3C 100%) 1;
+}
+
+// ── Navigation (Stitch: fixed, ivory bg, gold border) ──
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  .main.top-bar {
+    background-color: #fcf9f3;
+    border-bottom: 1px solid #D9CFB6;
+    height: $topbar-height;
+    box-shadow: 0 1px 6px rgba(13,79,60,0.06);
+  }
+
+  .top-bar-left svg,
+  .top-bar-left img {
+    max-height: $topbar-height;
+  }
+
+  #main-menu {
+    background-color: #fcf9f3;
+
+    li a {
+      font-family: 'Tajawal', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: #404944;
+      position: relative;
+      transition: color 0.2s ease;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        right: 0;
+        width: 0;
+        height: 2px;
+        background-color: #E8C46A;
+        transition: width 0.3s ease;
+      }
+
+      &:hover {
+        color: #C4922A;
+        &::after { width: 100%; }
+      }
+    }
+
+    li.active > a {
+      color: #C4922A;
+      &::after { width: 100%; }
+    }
+  }
+
+  // Login button — green pill
+  .button.login,
+  a.button[href*="login"],
+  a.button[href*="register"] {
+    background-color: #0D4F3C;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0;
+    transition: background-color 0.2s ease;
+
+    &:hover { background-color: #146B52; }
+  }
+}
+
+// ── Hero / Orbit (Stitch: deep green bg, white text) ──
+.orbit,
+#orbitsection,
+.olh-banner,
+.dark-primary-bg {
+  background-color: #0D4F3C;
+  color: #FFFFFF;
+
+  h1, h2, h3, p { color: #FFFFFF; }
+
+  .orbit-caption {
+    background-color: rgba(13,79,60,0.88);
+    color: #FFFFFF;
+
+    h3 { font-size: 2rem; font-weight: 700; }
+    p  { font-size: 1.1rem; opacity: 0.9; }
+    a  { color: #E8C46A; border-bottom: 1px solid #E8C46A; }
+  }
+
+  // Gold badge / eyebrow label
+  .eyebrow, .orbit-label {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: linear-gradient(to left, #E8C46A, #C4922A);
+    color: #0D4F3C;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  // Hero buttons
+  .button {
+    &.white-btn {
+      background: #FFFFFF;
+      color: #0D4F3C;
+      font-weight: 700;
+      &:hover { background: #E8C46A; }
+    }
+    &.outline-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.4);
+      color: #FFFFFF;
+      &:hover { background: rgba(255,255,255,0.1); }
+    }
+  }
+}
+
+// ── Article / Issue Cards (Stitch: white, gold top border) ──
+.box,
+.box.article,
+article.box,
+.card {
+  background: #FFFFFF;
+  border: 1px solid #D9CFB6;
+  @include gold-top-border;
+  box-shadow: 0 2px 8px rgba(13,79,60,0.05);
+  margin-bottom: 1.5rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &::before { display: none; } // remove old pseudo border
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(13,79,60,0.12);
+  }
+
+  .content { padding: 1.25rem; }
+
+  h2, h3 {
+    color: #0D4F3C;
+    font-family: 'Tajawal', sans-serif;
+    font-weight: 700;
+  }
+
+  // Open access / review type badge
+  .article-type-badge,
+  span.label {
+    background-color: #fec65a;
+    color: #7c5800;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  // Read more button inside card
+  .button {
+    background-color: #0D4F3C;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #E8C46A;
+      transform: scaleX(0);
+      transition: transform 0.2s ease;
+    }
+    &:hover {
+      background-color: #003728;
+      &::after { transform: scaleX(1); }
+    }
+  }
+}
+
+// ── Sidebar (Stitch: white panels with ivory headers) ──
+#content .side-info,
+aside {
+  h2, h3 {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0D4F3C;
+    background-color: #EDE8DE;
+    padding: 0.75rem 1rem;
+    margin: 0 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section {
+    background: #FFFFFF;
+    border: 1px solid #D9CFB6;
+    margin-bottom: 1.5rem;
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  // News items — gold right border accent
+  .news-item,
+  .sidebar-news-item {
+    border-right: 4px solid #E8C46A;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #D9CFB6;
+
+    span.date { font-size: 12px; color: #888; display: block; margin-bottom: 0.25rem; }
+    a { font-size: 14px; font-weight: 600; color: #1c1c18; &:hover { color: #C4922A; } }
+  }
+
+  // Call for papers block — green bg
+  .call-for-papers {
+    background: #0D4F3C;
+    color: #FFFFFF;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+
+    h3 { background: none; color: #E8C46A; padding: 0; margin-bottom: 0.75rem; }
+    p  { color: rgba(255,255,255,0.88); font-size: 14px; margin-bottom: 1rem; }
+
+    .button {
+      width: 100%;
+      background: #E8C46A;
+      color: #0D4F3C;
+      font-weight: 700;
+      text-align: center;
+      padding: 0.75rem;
+      &:hover { background: #fec65a; }
+    }
+  }
+}
+
+// ── Section headings ──────────────────────────────────
+.section-heading,
+main section h2:first-child {
+  font-family: 'Tajawal', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0D4F3C;
+  border-bottom: 1px solid #D9CFB6;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+
+  a.view-all {
+    float: left;
+    font-size: 14px;
+    font-weight: 500;
+    color: #C4922A;
+    &:hover { text-decoration: underline; }
+  }
+}
+
+// ── Stats strip ───────────────────────────────────────
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 520px) { grid-template-columns: 1fr; }
+
+  .stat-card {
+    background: #FFFFFF;
+    border: 1px solid #D9CFB6;
+    @include gold-top-border;
+    padding: 1.5rem 1rem;
+    text-align: center;
+
+    .stat-num {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: #0D4F3C;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .stat-label { font-size: 13px; color: #4A4A4A; line-height: 1.6; }
+  }
+}
+
+// ── Summary strip (article metrics) ──────────────────
+.summary {
+  .top    { background: #0D4F3C; }
+  .bottom { background: #146B52; }
+  p { font-family: 'Tajawal', sans-serif; }
+}
+
+// ── Figure captions ───────────────────────────────────
+div.caption span.label {
+  background-color: #0D4F3C;
+  color: #FFFFFF;
+  padding: 0.4rem 0.9rem;
+  font-size: 13px;
+}
+
+// ── Buttons (global) ─────────────────────────────────
+.button {
+  font-family: 'Tajawal', sans-serif;
+  font-weight: 700;
+  background-color: #0D4F3C;
+  color: #FFFFFF;
+  border-radius: 0;
+  transition: background-color 0.2s ease;
+
+  &:hover, &:focus { background-color: #146B52; color: #FFFFFF; }
+
+  &.secondary {
+    background-color: #C4922A;
+    color: #FFFFFF;
+    &:hover { background-color: #E8C46A; color: #0D4F3C; }
+  }
+
+  &.success { background-color: #0D4F3C; }
+}
+
+// ── Footer (Stitch: deep green, white text, gold links) ──
+footer,
+.main-footer {
+  background-color: #0D4F3C;
+  color: rgba(255,255,255,0.85);
+  padding: 3rem 0 1.5rem;
+
+  h4 {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: #E8C46A;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  p, li, li a, a {
+    color: rgba(255,255,255,0.78);
+    font-size: 14px;
+  }
+
+  ul li a {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+
+    &:hover { color: #FFFFFF; }
+  }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 1.25rem;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 2rem;
+  }
+
+  // social icon links
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; height: 40px;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.78);
+    margin-left: 0.5rem;
+    transition: all 0.2s ease;
+
+    &:hover { background: #FFFFFF; color: #0D4F3C; border-color: #FFFFFF; }
+  }
+}
+
+// ── Table of contents (article sidebar) ───────────────
+#toc a {
+  color: #0D4F3C;
+  font-size: 14px;
+  &:hover { color: #C4922A; }
+}
+
+// ── Mini bar (breadcrumb / secondary nav) ─────────────
+.mini-bar {
+  background: #EDE8DE;
+  border-bottom: 1px solid #D9CFB6;
+
+  ul.menu li {
+    a, button {
+      color: #1c1c18;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    &:hover { background: #D9CFB6; }
+  }
+}
+
+// ── Focus indicator (WCAG) ───────────────────────────
+:root {
+  --focus-light: #F9F9F9;
+  --focus-dark:  #0D4F3C;
+  --focus-ring-size: 4px;
+}
+
+*:focus-visible {
+  outline: 2px var(--focus-light) solid;
+  outline-offset: 0;
+  box-shadow: 0 0 0 var(--focus-ring-size) var(--focus-dark);
+}
+
+// ── Misc utils ────────────────────────────────────────
+.news-item-block {
+  border-bottom: 1px solid #D9CFB6;
+  padding-bottom: 1rem;
+  margin: 1rem 0 0;
+}
+
+.inline-list-bar li:not(:last-child)::after {
+  content: " | ";
+  margin-left: 0.5rem;
+}
+
+.orbit-caption {
+  color: #E8C46A;
+  background-color: color-mix(in srgb, #0D4F3C 90%, transparent);
+}
+
+.orbit-bullets button {
+  min-width: 24px;
+  min-height: 24px;
+}
+
+// keyword chips
+.keywords-list li a,
+.tags-list li a {
+  display: inline-block;
+  background: rgba(196,146,42,0.12);
+  color: #7c5800;
+  border: 1px solid rgba(196,146,42,0.35);
+  border-radius: 999px;
+  padding: 0.15rem 0.65rem;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0.2rem 0.15rem;
+  transition: background 0.15s;
+
+  &:hover { background: rgba(196,146,42,0.25); color: #0D4F3C; text-decoration: none; }
+}

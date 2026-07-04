@@ -1,0 +1,234 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ user.full_name }} — {% trans "Profile" %}{% endblock %}
+
+{% block body %}
+<div class="max-w-[1280px] mx-auto px-8 pt-8 pb-16">
+
+  <!-- Breadcrumb -->
+  <nav class="text-xs text-text-muted mb-6 flex items-center gap-2">
+    <a href="{% url 'website_index' %}" class="hover:text-gold transition-colors">{% trans 'الرئيسية' %}</a>
+    <span class="material-symbols-outlined text-sm">chevron_left</span>
+    <a href="{% url 'editorial_team' %}" class="hover:text-gold transition-colors">{% trans 'هيئة التحرير' %}</a>
+    <span class="material-symbols-outlined text-sm">chevron_left</span>
+    <span class="text-text-main font-medium">{{ user.full_name }}</span>
+  </nav>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- ═══ SIDEBAR ── 4 cols ════════════════════════════════════ -->
+    <aside class="lg:col-span-4 flex flex-col gap-5 lg:sticky lg:top-20">
+
+      <!-- Profile Card -->
+      <div class="bg-white border border-border-rule overflow-hidden">
+        <!-- Header band -->
+        <div class="bg-primary h-24 relative">
+          <div class="absolute inset-0 opacity-10">
+            <span class="material-symbols-outlined text-[160px] text-white absolute -right-8 -bottom-4">person</span>
+          </div>
+        </div>
+        <div class="px-6 pb-6 -mt-12 relative">
+          <!-- Avatar -->
+          <div class="w-24 h-24 rounded-full border-4 border-white bg-ivory-dark overflow-hidden shadow mb-4">
+            {% include "common/elements/profile_image.html" with classes="w-full h-full object-cover" user=user %}
+          </div>
+
+          <h1 class="text-xl font-bold text-primary mb-1">{{ user.full_name }}</h1>
+
+          {% if user.primary_affiliation %}
+            <p class="text-sm text-text-soft mb-2">{{ user.primary_affiliation }}</p>
+          {% endif %}
+
+          <!-- Roles -->
+          {% if roles %}
+            <div class="flex flex-wrap gap-1 mt-2">
+              {% for role in roles %}
+                <span class="bg-ivory-dark text-primary text-xs font-bold px-2 py-0.5 uppercase tracking-wide">
+                  {{ role.role.name }}
+                </span>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <!-- Editorial groups -->
+          {% if editorial_groups %}
+            <div class="mt-3 pt-3 border-t border-border-rule flex flex-col gap-1">
+              {% for membership in editorial_groups %}
+                <p class="text-xs text-text-muted flex items-center gap-1">
+                  <span class="material-symbols-outlined text-gold text-sm">shield</span>
+                  {{ membership.group.name }}
+                </p>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <!-- Staff groups -->
+          {% if staff_groups %}
+            <div class="mt-3 pt-3 border-t border-border-rule">
+              <p class="text-xs text-text-muted flex items-center gap-1">
+                <span class="material-symbols-outlined text-gold text-sm">badge</span>
+                {{ staff_groups.first.job_title }}
+              </p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Social Links -->
+      {% if user.orcid or user.twitter or user.linkedin_url %}
+        <div class="bg-white border border-border-rule gold-border-top p-5">
+          <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4">{% trans 'الروابط الأكاديمية' %}</h3>
+          <div class="flex flex-col gap-1">
+            {% if user.orcid %}
+              <a href="https://orcid.org/{{ user.orcid }}" target="_blank" rel="noopener"
+                 class="flex items-center gap-3 text-sm text-text-soft hover:text-primary transition-colors py-2 border-b border-border-rule">
+                <span class="material-symbols-outlined text-gold text-base">person_pin</span>
+                ORCID: {{ user.orcid }}
+              </a>
+            {% endif %}
+            {% if user.twitter %}
+              <a href="https://twitter.com/{{ user.twitter }}" target="_blank" rel="noopener"
+                 class="flex items-center gap-3 text-sm text-text-soft hover:text-primary transition-colors py-2 border-b border-border-rule">
+                <span class="material-symbols-outlined text-gold text-base">alternate_email</span>
+                @{{ user.twitter }}
+              </a>
+            {% endif %}
+            {% if user.linkedin_url %}
+              <a href="{{ user.linkedin_url }}" target="_blank" rel="noopener"
+                 class="flex items-center gap-3 text-sm text-text-soft hover:text-primary transition-colors py-2">
+                <span class="material-symbols-outlined text-gold text-base">work</span>
+                LinkedIn
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Stats -->
+      {% if user.published_articles %}
+        <div class="bg-primary text-white p-5 border-b-4 border-gold">
+          <h3 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-4">{% trans 'الإحصائيات' %}</h3>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-white/10 p-3 text-center">
+              <p class="text-2xl font-bold">{{ user.published_articles|length }}</p>
+              <p class="text-xs text-white/70">{% trans 'المنشورات' %}</p>
+            </div>
+            {% if roles %}
+              <div class="bg-white/10 p-3 text-center">
+                <p class="text-2xl font-bold">{{ roles|length }}</p>
+                <p class="text-xs text-white/70">{% trans 'الأدوار' %}</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+    </aside>
+
+    <!-- ═══ MAIN ── 8 cols ═══════════════════════════════════════ -->
+    <div class="lg:col-span-8 flex flex-col gap-6">
+
+      <!-- Biography -->
+      {% if user.biography %}
+        <div class="bg-white border border-border-rule gold-border-top p-6">
+          <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-gold">info</span>
+            {% trans 'السيرة الذاتية' %}
+          </h2>
+          <div class="text-sm text-text-soft leading-relaxed prose max-w-none">
+            {{ user.biography|safe }}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Affiliations -->
+      {% if user.affiliations %}
+        <div class="bg-white border border-border-rule gold-border-top p-6">
+          <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-gold">business</span>
+            {% trans 'الانتماءات' %}
+          </h2>
+          <ul class="space-y-2">
+            {% for affiliation in user.affiliations %}
+              <li class="flex items-start gap-3 pb-2 border-b border-border-rule last:border-0">
+                <span class="material-symbols-outlined text-gold text-base flex-shrink-0 mt-0.5">
+                  {% if affiliation.is_primary %}star{% else %}chevron_left{% endif %}
+                </span>
+                <div>
+                  <p class="text-sm font-medium text-text-main">{{ affiliation.name }}</p>
+                  {% if affiliation.department %}
+                    <p class="text-xs text-text-muted">{{ affiliation.department }}</p>
+                  {% endif %}
+                  {% if affiliation.country %}
+                    <p class="text-xs text-text-muted">{{ affiliation.country }}</p>
+                  {% endif %}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- Publications -->
+      {% if user.published_articles %}
+        <div class="bg-white border border-border-rule gold-border-top p-6">
+          <h2 class="text-lg font-bold text-primary mb-5 flex items-center gap-2">
+            <span class="material-symbols-outlined text-gold">article</span>
+            {% trans 'المقالات المنشورة' %}
+            <span class="text-xs font-normal text-text-muted bg-ivory-dark px-2 py-0.5 mr-1">{{ user.published_articles|length }}</span>
+          </h2>
+
+          <div class="space-y-4">
+            {% for article in user.published_articles %}
+              <article class="border border-border-rule p-4 group relative hover:border-gold transition-colors">
+                <div class="absolute top-0 right-0 w-1 h-full opacity-0 group-hover:opacity-100 transition-opacity bg-gold"></div>
+
+                <div class="flex flex-wrap gap-2 mb-2">
+                  <span class="bg-ivory-dark text-primary text-xs font-bold px-2 py-0.5 uppercase tracking-wide">{% trans 'وصول مفتوح' %}</span>
+                  {% if article.section %}
+                    <span class="text-xs text-text-muted self-center">{{ article.section.name }}</span>
+                  {% endif %}
+                </div>
+
+                <h3 class="font-bold text-primary text-sm mb-2 leading-snug">
+                  <a href="{% url 'article_view' 'id' article.pk %}" class="hover:text-gold transition-colors">
+                    {{ article.title|safe }}
+                  </a>
+                </h3>
+
+                <div class="flex flex-wrap gap-3 text-xs text-text-muted mb-3">
+                  {% if article.date_published %}
+                    <span class="flex items-center gap-1">
+                      <span class="material-symbols-outlined text-xs text-primary">calendar_today</span>
+                      {{ article.date_published|date:"Y" }}
+                    </span>
+                  {% endif %}
+                  {% if article.doi %}
+                    <span class="font-mono">DOI: {{ article.doi }}</span>
+                  {% endif %}
+                </div>
+
+                <a href="{% url 'article_view' 'id' article.pk %}"
+                   class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-gold transition-colors">
+                  {% trans 'قراءة المقال' %}
+                  <span class="material-symbols-outlined text-sm">arrow_back</span>
+                </a>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if not user.biography and not user.published_articles %}
+        <div class="text-center py-16 text-text-muted bg-white border border-border-rule">
+          <span class="material-symbols-outlined text-6xl block mb-4 opacity-30">person</span>
+          <p class="text-sm">{% trans 'لا توجد معلومات متاحة لهذا الملف الشخصي.' %}</p>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

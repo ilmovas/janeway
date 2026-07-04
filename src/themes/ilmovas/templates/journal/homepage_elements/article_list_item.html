@@ -1,0 +1,41 @@
+{% load static %}
+{% load i18n %}
+{% load settings %}
+{% load uuid %}
+
+{% setting_var request.journal 'disable_article_large_image' as disable_image %}
+{% get_uuid4 as item_id %}
+
+<article class="stitch-card bg-white border border-border-rule gold-border-top flex flex-col h-full relative group">
+  <a href="{% if article.is_remote %}{{ article.remote_url }}{% else %}{% url 'article_view' 'id' article.pk %}{% endif %}"
+     class="absolute inset-0 z-10"
+     aria-labelledby="title-{{ item_id }}"
+     aria-describedby="byline-{{ item_id }}">
+  </a>
+
+  {% if not disable_image and article.best_large_image_url %}
+    <div class="overflow-hidden h-40">
+      <img src="{{ article.best_large_image_url }}"
+           alt="{{ article.best_large_image_alt_text }}"
+           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+    </div>
+  {% endif %}
+
+  <div class="p-5 flex flex-col flex-1">
+    <p id="byline-{{ item_id }}" class="text-xs text-text-muted mb-2 font-medium">{{ article.author_list }}</p>
+    <h3 id="title-{{ item_id }}" class="text-base font-bold text-text-main leading-snug mb-3 line-clamp-3 group-hover:text-primary transition-colors">
+      {{ article.title|safe|truncatechars:150 }}
+    </h3>
+    {% if article.abstract %}
+      <p class="text-sm text-text-soft leading-relaxed line-clamp-3 flex-1">{{ article.abstract|striptags|truncatechars:180 }}</p>
+    {% endif %}
+    <div class="flex items-center justify-between mt-4 pt-3 border-t border-border-rule">
+      {% if article.section %}
+        <span class="text-xs bg-ivory-dark text-primary px-2 py-1 font-medium">{{ article.section.name }}</span>
+      {% else %}
+        <span></span>
+      {% endif %}
+      <span class="material-symbols-outlined text-gold text-sm group-hover:translate-x-1 transition-transform">arrow_back</span>
+    </div>
+  </div>
+</article>

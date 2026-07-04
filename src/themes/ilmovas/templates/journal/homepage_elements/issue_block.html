@@ -1,0 +1,156 @@
+{% load i18n %}
+{% load dates %}
+
+<!-- ═══ FEATURED HERO ════════════════════════════════════════════ -->
+{% if articles %}
+{% with article=articles.0 %}
+<section class="relative w-full bg-primary text-white overflow-hidden">
+  <div class="absolute top-0 left-0 right-0 h-1" style="background:linear-gradient(90deg,#E8C46A,#C4922A,#E8C46A);"></div>
+  <div class="absolute inset-0 opacity-5" style="background-image:repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%);background-size:24px 24px;"></div>
+
+  <div class="relative max-w-[1280px] mx-auto px-8 py-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+
+    <!-- Image RIGHT in RTL -->
+    <div>
+      {% if article.best_large_image_url %}
+        <a href="{% if article.is_remote %}{{ article.remote_url }}{% else %}{% url 'article_view' 'id' article.pk %}{% endif %}">
+          <img src="{{ article.best_large_image_url }}"
+               alt="{{ article.title|safe }}"
+               class="w-full max-h-80 object-cover border-4 border-white/10 shadow-2xl">
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- Text LEFT in RTL -->
+    <div>
+      <div class="inline-flex items-center gap-2 border border-gold/50 text-gold text-xs font-bold tracking-widest uppercase px-3 py-1 mb-5">
+        <span class="material-symbols-outlined text-sm">star</span>
+        {% trans 'مقال مميز' %}
+      </div>
+      <h2 class="text-2xl md:text-3xl font-bold leading-tight mb-4">
+        <a href="{% if article.is_remote %}{{ article.remote_url }}{% else %}{% url 'article_view' 'id' article.pk %}{% endif %}" class="hover:text-gold transition-colors">
+          {{ article.title|safe }}
+        </a>
+      </h2>
+      {% if article.abstract %}
+        <p class="text-white/75 text-sm leading-relaxed mb-6 line-clamp-3">{{ article.abstract|striptags|truncatechars:280 }}</p>
+      {% endif %}
+      {% if article.author_list %}
+        <p class="text-xs text-white/50 mb-6">{{ article.author_list }}</p>
+      {% endif %}
+      <div class="flex flex-wrap gap-3">
+        <a href="{% if article.is_remote %}{{ article.remote_url }}{% else %}{% url 'article_view' 'id' article.pk %}{% endif %}"
+           class="inline-flex items-center gap-2 bg-white text-primary font-bold text-sm px-5 py-2.5 hover:bg-ivory transition-colors">
+          <span class="material-symbols-outlined text-base">open_in_new</span>
+          {% trans 'قراءة المقال كاملاً' %}
+        </a>
+        {% if article.pdfs %}
+          <a href="{{ article.pdfs.0.self_public_download_url }}"
+             class="inline-flex items-center gap-2 border border-white/30 text-white font-medium text-sm px-5 py-2.5 hover:bg-white/10 transition-colors">
+            <span class="material-symbols-outlined text-base">download</span>
+            {% trans 'تنزيل PDF' %}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endwith %}
+{% endif %}
+
+<!-- ═══ CONTENT GRID ═════════════════════════════════════════════ -->
+<div class="max-w-[1280px] mx-auto px-8 py-10">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+    <!-- ── ARTICLES ── 8 cols — أولاً = يمين في RTL ──────────────── -->
+    <div class="lg:col-span-8">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold text-text-main">{% trans 'أحدث الأبحاث المنشورة' %}</h2>
+        <a href="{% url 'journal_articles' %}" class="text-sm text-gold font-medium hover:text-primary transition-colors flex items-center gap-1">
+          {% trans 'عرض الكل' %} <span class="material-symbols-outlined text-sm">arrow_back</span>
+        </a>
+      </div>
+      {% if articles %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {% for article in articles %}
+            {% include "journal/homepage_elements/article_list_item.html" with article=article %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-text-muted text-sm">{% trans 'لا توجد مقالات بعد.' %}</p>
+      {% endif %}
+    </div>
+
+    <!-- ── SIDEBAR ── 4 cols — ثانياً = يسار في RTL ──────────────── -->
+    <aside class="lg:col-span-4 flex flex-col gap-5">
+
+      {% if issue %}
+        <div class="stitch-card bg-white border border-border-rule gold-border-top p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined text-gold text-base">auto_stories</span>
+            <h3 class="text-xs font-bold tracking-widest text-gold uppercase">{% trans 'العدد الحالي' %}</h3>
+          </div>
+          {% if issue.hero_image_url %}
+            <a href="{{ issue.url }}">
+              <img src="{{ issue.hero_image_url }}" alt="{{ issue.display_title }}" class="w-full aspect-video object-cover mb-3">
+            </a>
+          {% endif %}
+          <p class="font-bold text-text-main text-sm mb-1">{{ issue.display_title }}</p>
+          {% if issue.date %}<p class="text-xs text-text-muted mb-3">{{ issue.date }}</p>{% endif %}
+          <a href="{{ issue.url }}" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-gold transition-colors">
+            {% trans 'تصفح العدد' %} <span class="material-symbols-outlined text-sm">arrow_back</span>
+          </a>
+        </div>
+      {% endif %}
+
+      {% if news_items %}
+        <div class="stitch-card bg-white border border-border-rule gold-border-top p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-gold text-base">newspaper</span>
+              <h3 class="text-xs font-bold tracking-widest text-gold uppercase">{% trans 'آخر الأخبار' %}</h3>
+            </div>
+            <a href="{% url 'core_news_list' %}" class="text-xs text-text-muted hover:text-primary transition-colors">{% trans 'All' %}</a>
+          </div>
+          <ul class="space-y-3 divide-y divide-border-rule">
+            {% for item in news_items|slice:":4" %}
+              <li class="{% if not forloop.first %}pt-3{% endif %}">
+                <p class="text-xs text-text-muted mb-1">{{ item.posted|date_human }}</p>
+                <a href="{% url 'core_news_item' item.pk %}" class="text-sm font-medium text-text-main hover:text-primary transition-colors leading-snug line-clamp-2 block">
+                  {{ item.title|safe }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {% if not journal_settings.general.disable_journal_submission %}
+        <div class="bg-primary p-5 text-white">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined text-gold text-base">upload_file</span>
+            <h3 class="text-xs font-bold tracking-widest text-gold-light uppercase">{% trans 'دعوة للمساهمة' %}</h3>
+          </div>
+          <p class="text-sm text-white/75 leading-relaxed mb-4">{% trans 'نرحب بتقديمات الأبحاث الأصيلة.' %}</p>
+          <a href="{% url 'submission_start' %}" class="inline-flex items-center gap-2 bg-gold text-primary font-bold text-sm px-4 py-2 hover:bg-gold-light transition-colors w-full justify-center">
+            <span class="material-symbols-outlined text-base">send</span>
+            {% trans 'قدّم الآن' %}
+          </a>
+        </div>
+      {% endif %}
+
+      {% if request.journal.issn or request.journal.print_issn %}
+        <div class="bg-ivory-dark border border-border-rule p-4">
+          <h3 class="text-xs font-bold tracking-widest text-text-muted uppercase mb-3">{% trans 'Journal Info' %}</h3>
+          {% if request.journal.issn %}
+            <p class="text-xs text-text-soft mb-1">e-ISSN: <span class="font-mono font-bold">{{ request.journal.issn }}</span></p>
+          {% endif %}
+          {% if request.journal.print_issn %}
+            <p class="text-xs text-text-soft">p-ISSN: <span class="font-mono font-bold">{{ request.journal.print_issn }}</span></p>
+          {% endif %}
+        </div>
+      {% endif %}
+
+    </aside>
+  </div>
+</div>

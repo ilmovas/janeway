@@ -1,0 +1,222 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load dates %}
+
+{% block title %}{{ issue.display_title }}{% endblock %}
+
+{% block body %}
+<div class="max-w-[1280px] mx-auto px-8 pt-8 pb-16">
+
+  <!-- Breadcrumb -->
+  <nav class="text-xs text-text-muted mb-6 flex items-center gap-2">
+    <a href="{% url 'website_index' %}" class="hover:text-gold transition-colors">{% trans 'الرئيسية' %}</a>
+    <span class="material-symbols-outlined text-sm">chevron_left</span>
+    <a href="{% url 'journal_issues' %}" class="hover:text-gold transition-colors">{% trans 'الأرشيف' %}</a>
+    <span class="material-symbols-outlined text-sm">chevron_left</span>
+    <span class="text-text-main font-medium">{{ issue.display_title }}</span>
+  </nav>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- ═══ MAIN ── 9 cols ═══════════════════════════════════════ -->
+    <div class="lg:col-span-9">
+
+      <!-- Issue header -->
+      <div class="bg-primary text-white p-8 mb-8 border-b-4 border-gold relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5">
+          <span class="material-symbols-outlined text-[200px] text-white absolute -left-8 -bottom-8">menu_book</span>
+        </div>
+        <div class="relative z-10">
+          <span class="text-gold text-xs font-bold tracking-widest uppercase mb-3 block">{% trans 'العدد' %}</span>
+          <h1 class="text-3xl font-bold mb-3 leading-snug">{{ issue.display_title }}</h1>
+          {% if issue.issue_title %}
+            <p class="text-white/80 text-lg mb-4">{{ issue.issue_title }}</p>
+          {% endif %}
+          <div class="flex flex-wrap gap-4 text-sm text-white/70">
+            {% if issue.date %}
+              <span class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">calendar_today</span>
+                {{ issue.date|date:"Y" }}
+              </span>
+            {% endif %}
+            <span class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">article</span>
+              {{ issue.get_sorted_articles.count }} {% trans 'articles' %}
+            </span>
+            {% if issue.doi %}
+              <span class="flex items-center gap-1 font-mono text-xs">
+                <span class="material-symbols-outlined text-sm">link</span>
+                DOI: {{ issue.doi }}
+              </span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      {% if issue.issue_description %}
+        <div class="bg-ivory-dark border-r-4 border-gold p-5 mb-8 text-sm text-text-soft leading-relaxed">
+          {{ issue.issue_description|safe }}
+        </div>
+      {% endif %}
+
+      <!-- Articles grouped by section -->
+      {% regroup articles by section as section_groups %}
+      {% for section_group in section_groups %}
+        <div class="mb-10">
+          {% if section_group.grouper %}
+            <div class="flex items-center gap-4 mb-5">
+              <h2 class="text-lg font-bold text-primary whitespace-nowrap">{{ section_group.grouper.name }}</h2>
+              <div class="flex-grow h-px bg-border-rule"></div>
+            </div>
+          {% endif %}
+
+          <div class="space-y-4">
+            {% for article in section_group.list %}
+              <article class="article-row bg-white border border-border-rule p-5 flex gap-5 group relative"
+                       style="transition: transform 0.2s, box-shadow 0.2s;">
+                <div class="absolute top-0 right-0 w-1 h-full opacity-0 group-hover:opacity-100 transition-opacity bg-gold"></div>
+
+                <!-- Number -->
+                <div class="flex-shrink-0 w-10 h-10 bg-ivory-dark border border-border-rule flex items-center justify-center text-gold font-bold text-sm">
+                  {{ forloop.counter }}
+                </div>
+
+                <div class="flex-grow min-w-0">
+                  <div class="flex flex-wrap gap-2 mb-2">
+                    <span class="bg-ivory-dark text-primary text-xs font-bold px-2 py-0.5 uppercase tracking-wide">{% trans 'وصول مفتوح' %}</span>
+                    {% if article.section %}
+                      <span class="text-xs text-text-muted">{{ article.section.name }}</span>
+                    {% endif %}
+                  </div>
+
+                  <h3 class="font-bold text-primary text-base mb-1 leading-snug group-hover:text-primary-mid transition-colors">
+                    <a href="{% url 'article_view' 'id' article.pk %}">{{ article.title|safe }}</a>
+                  </h3>
+
+                  <div class="text-sm text-text-muted flex flex-wrap gap-3 mb-3">
+                    {% if article.author_list %}
+                      <span class="flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm text-primary">person</span>
+                        {{ article.author_list }}
+                      </span>
+                    {% endif %}
+                    {% if article.date_published %}
+                      <span class="flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm text-primary">calendar_today</span>
+                        {{ article.date_published|date_human }}
+                      </span>
+                    {% endif %}
+                  </div>
+
+                  {% if article.abstract %}
+                    <p class="text-xs text-text-muted leading-relaxed line-clamp-2 mb-3">{{ article.abstract|striptags|truncatechars:200 }}</p>
+                  {% endif %}
+
+                  <div class="flex gap-3">
+                    <a href="{% url 'article_view' 'id' article.pk %}"
+                       class="text-xs font-bold text-primary flex items-center gap-1 hover:text-gold transition-colors">
+                      {% trans 'قراءة المقال' %}
+                      <span class="material-symbols-outlined text-sm">arrow_back</span>
+                    </a>
+                    {% with galley=article.pdfs.0 %}{% if galley %}
+                      <a href="{% url 'article_download_galley' article.id galley.id %}"
+                         class="text-xs font-bold text-text-muted flex items-center gap-1 hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-sm">download</span> PDF
+                      </a>
+                    {% endif %}{% endwith %}
+                  </div>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      {% empty %}
+        <div class="text-center py-16 text-text-muted">
+          <span class="material-symbols-outlined text-6xl block mb-4 opacity-30">article</span>
+          <p>{% trans 'لا توجد مقالات في هذا العدد بعد.' %}</p>
+        </div>
+      {% endfor %}
+
+      <!-- Pagination -->
+      {% if articles.has_other_pages %}
+        <div class="flex justify-center gap-2 mt-8">
+          {% if articles.has_previous %}
+            <a href="?page={{ articles.previous_page_number }}"
+               class="px-4 py-2 border border-border-rule text-sm hover:bg-primary hover:text-white hover:border-primary transition-colors">‹</a>
+          {% endif %}
+          {% for i in articles.paginator.page_range %}
+            <a href="?page={{ i }}"
+               class="px-4 py-2 border text-sm transition-colors {% if i == articles.number %}bg-primary text-white border-primary{% else %}border-border-rule hover:bg-ivory-dark{% endif %}">{{ i }}</a>
+          {% endfor %}
+          {% if articles.has_next %}
+            <a href="?page={{ articles.next_page_number }}"
+               class="px-4 py-2 border border-border-rule text-sm hover:bg-primary hover:text-white hover:border-primary transition-colors">›</a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+    </div>
+
+    <!-- ═══ SIDEBAR ── 3 cols ════════════════════════════════════ -->
+    <aside class="lg:col-span-3 flex flex-col gap-5 lg:sticky lg:top-20">
+
+      <!-- Issue cover -->
+      {% if issue.cover_image %}
+        <div class="border border-border-rule overflow-hidden">
+          <img src="{{ issue.cover_image.url }}" alt="{{ issue.display_title }}" class="w-full">
+        </div>
+      {% endif %}
+
+      <!-- Download Issue -->
+      {% if issue.large_image %}
+        <a href="{% url 'journal_issue_download_galley' issue.id issue.large_image.id %}"
+           class="w-full bg-primary text-white font-bold py-3 flex items-center justify-center gap-2 hover:bg-primary-mid transition-colors border-b-2 border-gold text-sm">
+          <span class="material-symbols-outlined text-base">download</span>
+          {% trans 'تنزيل العدد' %}
+        </a>
+      {% endif %}
+
+      <!-- Issue editors -->
+      {% if editors %}
+        <div class="bg-white border border-border-rule gold-border-top p-4">
+          <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-3">{% trans 'محررو العدد' %}</h3>
+          <ul class="space-y-2">
+            {% for editor in editors %}
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-base">person</span>
+                <span class="text-sm text-text-main">{{ editor.account.full_name }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- Other Issues -->
+      {% if issues %}
+        <div class="bg-ivory-dark border border-border-rule p-4">
+          <h3 class="text-xs font-bold tracking-widest text-primary uppercase mb-3">{% trans 'أعداد أخرى' %}</h3>
+          <ul class="space-y-1">
+            {% for other_issue in issues|slice:":8" %}
+              <li>
+                <a href="{% url 'journal_issue' other_issue.id %}"
+                   class="block text-sm py-1.5 pr-3 {% if other_issue.id == issue.id %}text-gold font-bold border-r-2 border-gold{% else %}text-text-soft hover:text-primary border-r-2 border-transparent hover:border-gold{% endif %} transition-colors">
+                  {{ other_issue.display_title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+    </aside>
+  </div>
+</div>
+
+<style>
+  .article-row:hover {
+    transform: translateX(-3px);
+    box-shadow: 4px 0 12px rgba(13,79,60,0.07);
+  }
+</style>
+{% endblock %}
