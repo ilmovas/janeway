@@ -8171,3 +8171,116 @@ msgstr "تواصل مع هيئة التحرير للمساعدة في تقديم
 
 msgid "Contact the Editor"
 msgstr "تواصل مع المحرر"
+
+# ilmovas Batch-2b cms/page.html
+msgid "The journal focuses on publishing original research in the humanities, social sciences, and Arabic language studies."
+msgstr "تركز المجلة على نشر الأبحاث الأصيلة في العلوم الإنسانية والاجتماعية ودراسات اللغة العربية."
+
+msgid "Original research and critical reviews"
+msgstr "الأبحاث الأصيلة والمراجعات النقدية"
+
+msgid "Interdisciplinary studies"
+msgstr "الدراسات متعددة التخصصات"
+
+msgid "Digital humanities and computational methods"
+msgstr "تحليلات الإنسانيات الرقمية والأساليب الحاسوبية"
+
+msgid "Book reviews and academic commentary"
+msgstr "نقد الكتب والمراجعات الأكاديمية"
+
+msgid "Open Access Policy"
+msgstr "سياسة الوصول المفتوح"
+
+msgid "We believe that knowledge is a universal human right. All published content is freely available to readers and authors alike."
+msgstr "نؤمن بأن المعرفة حق إنساني عالمي. جميع المحتوى المنشور متاح مجاناً للقراء والمؤلفين على حدٍّ سواء."
+
+msgid "No fees for readers"
+msgstr "بدون رسوم للقراء"
+
+msgid "No fees for authors"
+msgstr "بدون رسوم على المؤلفين"
+
+msgid "Diamond Open Access"
+msgstr "وصول مفتوح ماسي"
+
+msgid "Indexing and Classification"
+msgstr "الفهرسة والتصنيف"
+
+msgid "Journal History"
+msgstr "تاريخ المجلة"
+
+msgid "The journal was founded to advance Arabic academic publishing"
+msgstr "تأسست المجلة بمهمة تعزيز النشر الأكاديمي العربي"
+
+msgid "Expanded to reach researchers in more than 30 countries worldwide"
+msgstr "توسعت لتصل إلى الباحثين في أكثر من 30 دولة حول العالم"
+
+msgid "Launched a new digital platform with enhanced open access features"
+msgstr "أطلقت المنصة الرقمية الجديدة بميزات وصول مفتوح محسّنة"
+
+msgid "Quick Facts"
+msgstr "معلومات سريعة"
+
+msgid "Continuous"
+msgstr "مستمر"
+
+msgid "Arabic / English"
+msgstr "العربية / الإنجليزية"
+
+msgid "Access"
+msgstr "الوصول"
+
+msgid "Journal Statistics"
+msgstr "إحصائيات المجلة"
+
+msgid "Impact Factor"
+msgstr "معامل التأثير"
+
+msgid "Acceptance Rate"
+msgstr "نسبة القبول"
+
+msgid "Countries"
+msgstr "دولة"
+
+msgid "Founded"
+msgstr "تأسست"
+
+msgid "Contribute"
+msgstr "شارك"
+
+msgid "Share your research with the global academic community."
+msgstr "شارك بحثك مع المجتمع الأكاديمي العالمي."
+
+# ilmovas Batch-2c homepage_elements
+msgid "Featured Slides"
+msgstr "عرض شرائح"
+
+msgid "Featured Article"
+msgstr "مقال مميز"
+
+msgid "Read Full Article"
+msgstr "قراءة المقال كاملاً"
+
+msgid "Download PDF"
+msgstr "تنزيل PDF"
+
+msgid "Latest Published Research"
+msgstr "أحدث الأبحاث المنشورة"
+
+msgid "View All"
+msgstr "عرض الكل"
+
+msgid "No articles yet."
+msgstr "لا توجد مقالات بعد."
+
+msgid "Browse Issue"
+msgstr "تصفح العدد"
+
+msgid "Call for Contributions"
+msgstr "دعوة للمساهمة"
+
+msgid "We welcome original research submissions."
+msgstr "نرحب بتقديمات الأبحاث الأصيلة."
+
+msgid "Submit Now"
+msgstr "قدّم الآن"

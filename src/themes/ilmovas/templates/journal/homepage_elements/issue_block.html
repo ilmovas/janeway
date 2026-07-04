@@ -25,7 +25,7 @@
     <div>
       <div class="inline-flex items-center gap-2 border border-gold/50 text-gold text-xs font-bold tracking-widest uppercase px-3 py-1 mb-5">
         <span class="material-symbols-outlined text-sm">star</span>
-        {% trans 'مقال مميز' %}
+        {% trans 'Featured Article' %}
       </div>
       <h2 class="text-2xl md:text-3xl font-bold leading-tight mb-4">
         <a href="{% if article.is_remote %}{{ article.remote_url }}{% else %}{% url 'article_view' 'id' article.pk %}{% endif %}" class="hover:text-gold transition-colors">
@@ -42,13 +42,13 @@
         <a href="{% if article.is_remote %}{{ article.remote_url }}{% else %}{% url 'article_view' 'id' article.pk %}{% endif %}"
            class="inline-flex items-center gap-2 bg-white text-primary font-bold text-sm px-5 py-2.5 hover:bg-ivory transition-colors">
           <span class="material-symbols-outlined text-base">open_in_new</span>
-          {% trans 'قراءة المقال كاملاً' %}
+          {% trans 'Read Full Article' %}
         </a>
         {% if article.pdfs %}
           <a href="{{ article.pdfs.0.self_public_download_url }}"
              class="inline-flex items-center gap-2 border border-white/30 text-white font-medium text-sm px-5 py-2.5 hover:bg-white/10 transition-colors">
             <span class="material-symbols-outlined text-base">download</span>
-            {% trans 'تنزيل PDF' %}
+            {% trans 'Download PDF' %}
           </a>
         {% endif %}
       </div>
@@ -65,9 +65,9 @@
     <!-- ── ARTICLES ── 8 cols — أولاً = يمين في RTL ──────────────── -->
     <div class="lg:col-span-8">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-bold text-text-main">{% trans 'أحدث الأبحاث المنشورة' %}</h2>
+        <h2 class="text-xl font-bold text-text-main">{% trans 'Latest Published Research' %}</h2>
         <a href="{% url 'journal_articles' %}" class="text-sm text-gold font-medium hover:text-primary transition-colors flex items-center gap-1">
-          {% trans 'عرض الكل' %} <span class="material-symbols-outlined text-sm">arrow_back</span>
+          {% trans 'View All' %} <span class="material-symbols-outlined text-sm">arrow_back</span>
         </a>
       </div>
       {% if articles %}
@@ -77,7 +77,7 @@
           {% endfor %}
         </div>
       {% else %}
-        <p class="text-text-muted text-sm">{% trans 'لا توجد مقالات بعد.' %}</p>
+        <p class="text-text-muted text-sm">{% trans 'No articles yet.' %}</p>
       {% endif %}
     </div>
 
@@ -98,7 +98,7 @@
           <p class="font-bold text-text-main text-sm mb-1">{{ issue.display_title }}</p>
           {% if issue.date %}<p class="text-xs text-text-muted mb-3">{{ issue.date }}</p>{% endif %}
           <a href="{{ issue.url }}" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-gold transition-colors">
-            {% trans 'تصفح العدد' %} <span class="material-symbols-outlined text-sm">arrow_back</span>
+            {% trans 'Browse Issue' %} <span class="material-symbols-outlined text-sm">arrow_back</span>
           </a>
         </div>
       {% endif %}
@@ -129,12 +129,12 @@
         <div class="bg-primary p-5 text-white">
           <div class="flex items-center gap-2 mb-3">
             <span class="material-symbols-outlined text-gold text-base">upload_file</span>
-            <h3 class="text-xs font-bold tracking-widest text-gold-light uppercase">{% trans 'دعوة للمساهمة' %}</h3>
+            <h3 class="text-xs font-bold tracking-widest text-gold-light uppercase">{% trans 'Call for Contributions' %}</h3>
           </div>
-          <p class="text-sm text-white/75 leading-relaxed mb-4">{% trans 'نرحب بتقديمات الأبحاث الأصيلة.' %}</p>
+          <p class="text-sm text-white/75 leading-relaxed mb-4">{% trans 'We welcome original research submissions.' %}</p>
           <a href="{% url 'submission_start' %}" class="inline-flex items-center gap-2 bg-gold text-primary font-bold text-sm px-4 py-2 hover:bg-gold-light transition-colors w-full justify-center">
             <span class="material-symbols-outlined text-base">send</span>
-            {% trans 'قدّم الآن' %}
+            {% trans 'Submit Now' %}
           </a>
         </div>
       {% endif %}

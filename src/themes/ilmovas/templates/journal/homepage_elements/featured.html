@@ -27,7 +27,7 @@
     <div class="order-2">
       <div class="inline-flex items-center gap-2 border border-gold/50 text-gold text-xs font-bold tracking-widest uppercase px-3 py-1 mb-5">
         <span class="material-symbols-outlined text-sm">star</span>
-        {% trans 'مقال مميز' %}
+        {% trans 'Featured Article' %}
       </div>
 
       <h2 class="text-2xl md:text-3xl font-bold leading-tight mb-4">
@@ -49,13 +49,13 @@
         <a href="{% if article.is_remote %}{{ article.remote_url }}{% else %}{% url 'article_view' 'id' article.pk %}{% endif %}"
            class="inline-flex items-center gap-2 bg-white text-primary font-bold text-sm px-5 py-2.5 hover:bg-ivory transition-colors">
           <span class="material-symbols-outlined text-base">open_in_new</span>
-          {% trans 'قراءة المقال كاملاً' %}
+          {% trans 'Read Full Article' %}
         </a>
         {% if article.pdfs %}
           <a href="{{ article.pdfs.0.self_public_download_url }}"
              class="inline-flex items-center gap-2 border border-white/30 text-white font-medium text-sm px-5 py-2.5 hover:bg-white/10 transition-colors">
             <span class="material-symbols-outlined text-base">download</span>
-            {% trans 'تنزيل PDF' %}
+            {% trans 'Download PDF' %}
           </a>
         {% endif %}
       </div>
