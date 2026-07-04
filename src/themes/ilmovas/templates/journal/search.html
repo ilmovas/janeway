@@ -7,8 +7,8 @@
 {% hook 'filter_search' %}
 
 {% block title %}
-  {% if search_term %}{% trans 'نتائج البحث' %}: {{ search_term }}
-  {% elif keyword %}{% trans 'الكلمة المفتاحية' %}: {{ keyword }}
+  {% if search_term %}{% trans 'Search results' %}: {{ search_term }}
+  {% elif keyword %}{% trans 'Keyword' %}: {{ keyword }}
   {% else %}{% trans 'البحث في المقالات' %}{% endif %}
 {% endblock %}
 
@@ -21,7 +21,7 @@
       <p class="text-xs text-text-muted uppercase tracking-widest mb-1">{% trans 'نتائج البحث عن' %}</p>
       <h1 class="text-3xl font-bold text-primary">{{ search_term }}</h1>
     {% elif keyword %}
-      <p class="text-xs text-text-muted uppercase tracking-widest mb-1">{% trans 'الكلمة المفتاحية' %}</p>
+      <p class="text-xs text-text-muted uppercase tracking-widest mb-1">{% trans 'Keyword' %}</p>
       <h1 class="text-3xl font-bold text-primary">{{ keyword }}</h1>
     {% else %}
       <h1 class="text-3xl font-bold text-primary">{% trans 'البحث في المقالات' %}</h1>
@@ -167,7 +167,7 @@
         <div class="bg-white border border-border-rule gold-border-top p-5">
           <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4 flex items-center gap-2">
             <span class="material-symbols-outlined text-sm">label</span>
-            {% trans 'الكلمات المفتاحية' %}
+            {% trans 'Keywords' %}
           </h3>
           <div class="flex flex-wrap gap-2">
             {% for kw in all_keywords %}

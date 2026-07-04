@@ -185,7 +185,7 @@
                     <ul>
                         {% for version in preprint.preprintversion_set.all %}
                             <li><a href="{% url 'repository_file_download' preprint.id version.file.id %}" >
-                                {% trans 'الإصدار' %} {{ version.version }} - {{ version.date_time|date_human }}
+                                {% trans 'Version' %} {{ version.version }} - {{ version.date_time|date_human }}
                                 {% include "elements/icons/link_download.html" %} 
                             </a></li>
                             {% empty %}

@@ -10,7 +10,7 @@
 
   <!-- Breadcrumb -->
   <nav class="text-xs text-text-muted mb-6 flex items-center gap-2">
-    <a href="{% url 'website_index' %}" class="hover:text-gold transition-colors">{% trans 'الرئيسية' %}</a>
+    <a href="{% url 'website_index' %}" class="hover:text-gold transition-colors">{% trans 'Home' %}</a>
     <span class="material-symbols-outlined text-sm">chevron_left</span>
     <a href="{% url 'journal_issues' %}" class="hover:text-gold transition-colors">{% trans 'الأرشيف' %}</a>
     <span class="material-symbols-outlined text-sm">chevron_left</span>
@@ -28,7 +28,7 @@
           <span class="material-symbols-outlined text-[200px] text-white absolute -left-8 -bottom-8">menu_book</span>
         </div>
         <div class="relative z-10">
-          <span class="text-gold text-xs font-bold tracking-widest uppercase mb-3 block">{% trans 'العدد' %}</span>
+          <span class="text-gold text-xs font-bold tracking-widest uppercase mb-3 block">{% trans 'Issue' %}</span>
           <h1 class="text-3xl font-bold mb-3 leading-snug">{{ issue.display_title }}</h1>
           {% if issue.issue_title %}
             <p class="text-white/80 text-lg mb-4">{{ issue.issue_title }}</p>

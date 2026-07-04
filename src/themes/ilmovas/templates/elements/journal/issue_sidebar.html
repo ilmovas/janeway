@@ -5,7 +5,7 @@
         <div class="section side-info">
             {% if issue.galley %}
                 <section class="no-pad" aria-labelledby="downloads-title">
-                    <h2 id="downloads-title">{% trans 'التنزيلات' %}</h2>
+                    <h2 id="downloads-title">{% trans 'Downloads' %}</h2>
                     <p>
                         <a href="{% url 'journal_issue_download_galley' issue.pk issue.galley.pk %}">
                             (PDF)

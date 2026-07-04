@@ -161,7 +161,7 @@
     <!-- Nav links (left side in RTL) -->
     <div class="hidden md:flex items-center gap-6">
       {% if request.journal.nav_home %}
-        <a href="{% url 'website_index' %}" class="nav-link text-sm font-medium text-text-soft hover:text-gold transition-colors">{% trans 'الرئيسية' %}</a>
+        <a href="{% url 'website_index' %}" class="nav-link text-sm font-medium text-text-soft hover:text-gold transition-colors">{% trans 'Home' %}</a>
       {% endif %}
       {% for item in navigation_items %}
         {% if not item.has_sub_nav and not item.for_footer %}
@@ -170,17 +170,17 @@
         {% endif %}
       {% endfor %}
       {% if request.journal.nav_articles %}
-        <a href="{% url 'journal_articles' %}" class="nav-link text-sm font-medium text-text-soft hover:text-gold transition-colors">{% trans 'المقالات' %}</a>
+        <a href="{% url 'journal_articles' %}" class="nav-link text-sm font-medium text-text-soft hover:text-gold transition-colors">{% trans 'Articles' %}</a>
       {% endif %}
       {% if request.journal.nav_issues %}
-        <a href="{% url 'journal_issues' %}" class="nav-link text-sm font-medium text-text-soft hover:text-gold transition-colors">{% trans 'الأعداد' %}</a>
+        <a href="{% url 'journal_issues' %}" class="nav-link text-sm font-medium text-text-soft hover:text-gold transition-colors">{% trans 'Issues' %}</a>
       {% endif %}
-      <a href="{% url 'editorial_team' %}" class="nav-link text-sm font-medium text-text-soft hover:text-gold transition-colors">{% trans 'هيئة التحرير' %}</a>
+      <a href="{% url 'editorial_team' %}" class="nav-link text-sm font-medium text-text-soft hover:text-gold transition-colors">{% trans 'Editorial Team' %}</a>
       {% if request.journal.nav_sub %}
-        <a href="{% url 'journal_submissions' %}" class="nav-link text-sm font-medium text-text-soft hover:text-gold transition-colors">{% trans 'التقديم' %}</a>
+        <a href="{% url 'journal_submissions' %}" class="nav-link text-sm font-medium text-text-soft hover:text-gold transition-colors">{% trans 'Submission' %}</a>
       {% endif %}
       {% if request.journal.nav_contact %}
-        <a href="{% url 'contact' %}" class="nav-link text-sm font-medium text-text-soft hover:text-gold transition-colors">{% trans 'تواصل معنا' %}</a>
+        <a href="{% url 'contact' %}" class="nav-link text-sm font-medium text-text-soft hover:text-gold transition-colors">{% trans 'Contact us' %}</a>
       {% endif %}
       {% hook 'nav_block' %}
 
@@ -211,7 +211,7 @@
         <form method="POST" action="{% url 'search' %}" class="hidden md:flex items-center border border-border-rule px-3 py-1 bg-white">
           {% csrf_token %}
           <i class="fa fa-search text-text-muted text-sm ml-2"></i>
-          <input type="search" name="article_search" placeholder="{% trans 'بحث' %}" class="outline-none bg-transparent text-sm w-32 {% if CURRENT_LANG == 'en' %}text-left{% else %}text-right{% endif %}" dir="{% if CURRENT_LANG == 'en' %}ltr{% else %}rtl{% endif %}">
+          <input type="search" name="article_search" placeholder="{% trans 'Search' %}" class="outline-none bg-transparent text-sm w-32 {% if CURRENT_LANG == 'en' %}text-left{% else %}text-right{% endif %}" dir="{% if CURRENT_LANG == 'en' %}ltr{% else %}rtl{% endif %}">
           <input type="hidden" name="sort" value="title">
         </form>
       {% endif %}
@@ -223,16 +223,16 @@
             <span class="hidden lg:inline">{{ request.user.full_name|truncatechars:16 }}</span>
           </button>
           <div class="absolute left-0 top-full bg-white border border-border-rule shadow-lg w-48 hidden group-hover:block z-50">
-            <a href="{% url 'core_dashboard' %}" class="block px-4 py-2 text-sm hover:bg-ivory text-right">{% trans 'لوحة التحكم' %}</a>
-            <a href="{% url 'core_edit_profile' %}" class="block px-4 py-2 text-sm hover:bg-ivory text-right">{% trans 'الملف الشخصي' %}</a>
+            <a href="{% url 'core_dashboard' %}" class="block px-4 py-2 text-sm hover:bg-ivory text-right">{% trans 'Dashboard' %}</a>
+            <a href="{% url 'core_edit_profile' %}" class="block px-4 py-2 text-sm hover:bg-ivory text-right">{% trans 'Profile' %}</a>
             <hr class="border-border-rule">
-            <a href="{% url 'core_logout' %}" class="block px-4 py-2 text-sm hover:bg-ivory text-right">{% trans 'تسجيل الخروج' %}</a>
+            <a href="{% url 'core_logout' %}" class="block px-4 py-2 text-sm hover:bg-ivory text-right">{% trans 'Logout' %}</a>
           </div>
         </div>
       {% else %}
         <a href="{% url 'core_login' %}" class="flex items-center gap-2 bg-primary text-white text-sm font-bold px-4 py-2 hover:bg-primary-mid transition-colors border-b-2 border-gold">
           <span class="material-symbols-outlined text-base">login</span>
-          <span>{% trans 'تسجيل الدخول' %}</span>
+          <span>{% trans 'Log In' %}</span>
         </a>
       {% endif %}
 
@@ -246,7 +246,7 @@
   <!-- Mobile menu -->
   <div class="hidden md:hidden bg-ivory border-t border-border-rule px-6 py-4 space-y-3" id="mobile-menu">
     {% if request.journal.nav_home %}
-      <a href="{% url 'website_index' %}" class="block text-sm font-medium text-text-soft">{% trans 'الرئيسية' %}</a>
+      <a href="{% url 'website_index' %}" class="block text-sm font-medium text-text-soft">{% trans 'Home' %}</a>
     {% endif %}
     {% for item in navigation_items %}
       {% if not item.has_sub_nav and not item.for_footer %}
@@ -254,13 +254,13 @@
       {% endif %}
     {% endfor %}
     {% if request.journal.nav_articles %}
-      <a href="{% url 'journal_articles' %}" class="block text-sm font-medium text-text-soft">{% trans 'المقالات' %}</a>
+      <a href="{% url 'journal_articles' %}" class="block text-sm font-medium text-text-soft">{% trans 'Articles' %}</a>
     {% endif %}
     {% if request.journal.nav_issues %}
-      <a href="{% url 'journal_issues' %}" class="block text-sm font-medium text-text-soft">{% trans 'الأعداد' %}</a>
+      <a href="{% url 'journal_issues' %}" class="block text-sm font-medium text-text-soft">{% trans 'Issues' %}</a>
     {% endif %}
     {% if not request.user.is_authenticated %}
-      <a href="{% url 'core_login' %}" class="block bg-primary text-white text-center py-2 font-bold">{% trans 'تسجيل الدخول' %}</a>
+      <a href="{% url 'core_login' %}" class="block bg-primary text-white text-center py-2 font-bold">{% trans 'Log In' %}</a>
     {% endif %}
     <!-- Language switcher (mobile) -->
     <form action="{% url 'set_language' %}" method="post" class="pt-2 border-t border-border-rule">
@@ -309,13 +309,13 @@
         <h4 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-4">{% trans 'روابط سريعة' %}</h4>
         <ul class="space-y-2">
           {% if request.journal.nav_articles %}
-            <li><a href="{% url 'journal_articles' %}" class="text-sm text-white/75 hover:text-white transition-colors">{% trans 'المقالات' %}</a></li>
+            <li><a href="{% url 'journal_articles' %}" class="text-sm text-white/75 hover:text-white transition-colors">{% trans 'Articles' %}</a></li>
           {% endif %}
           {% if request.journal.nav_issues %}
-            <li><a href="{% url 'journal_issues' %}" class="text-sm text-white/75 hover:text-white transition-colors">{% trans 'الأعداد' %}</a></li>
+            <li><a href="{% url 'journal_issues' %}" class="text-sm text-white/75 hover:text-white transition-colors">{% trans 'Issues' %}</a></li>
           {% endif %}
           {% if request.journal.nav_sub %}
-            <li><a href="{% url 'journal_submissions' %}" class="text-sm text-white/75 hover:text-white transition-colors">{% trans 'التقديم' %}</a></li>
+            <li><a href="{% url 'journal_submissions' %}" class="text-sm text-white/75 hover:text-white transition-colors">{% trans 'Submission' %}</a></li>
           {% endif %}
         </ul>
       </div>
@@ -325,9 +325,9 @@
         <h4 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-4">{% trans 'السياسات' %}</h4>
         <ul class="space-y-2">
           {% if journal_settings.general.privacy_policy_url %}
-            <li><a href="{{ journal_settings.general.privacy_policy_url }}" class="text-sm text-white/75 hover:text-white transition-colors">{% trans 'سياسة الخصوصية' %}</a></li>
+            <li><a href="{{ journal_settings.general.privacy_policy_url }}" class="text-sm text-white/75 hover:text-white transition-colors">{% trans 'Privacy Policy' %}</a></li>
           {% endif %}
-          <li><a href="{% url 'accessibility' %}" class="text-sm text-white/75 hover:text-white transition-colors">{% trans 'إمكانية الوصول' %}</a></li>
+          <li><a href="{% url 'accessibility' %}" class="text-sm text-white/75 hover:text-white transition-colors">{% trans 'Accessibility' %}</a></li>
           {% for item in journal.press.navigation_items %}
             {% if item.for_footer and item.extend_to_journals %}
               <li><a href="{{ item.link }}" class="text-sm text-white/75 hover:text-white transition-colors">{{ item.link_name }}</a></li>
@@ -338,11 +338,11 @@
 
       <!-- Contact -->
       <div>
-        <h4 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-4">{% trans 'تواصل معنا' %}</h4>
+        <h4 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-4">{% trans 'Contact us' %}</h4>
         {% if request.journal.nav_contact %}
           <a href="{% url 'contact' %}" class="inline-flex items-center gap-2 border border-white/20 px-3 py-2 text-sm text-white/75 hover:bg-white hover:text-primary transition-all">
             <span class="material-symbols-outlined text-base">mail</span>
-            {% trans 'تواصل معنا' %}
+            {% trans 'Contact us' %}
           </a>
         {% endif %}
         {% if journal_settings.general.publisher_name %}

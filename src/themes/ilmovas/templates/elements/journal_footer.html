@@ -5,7 +5,7 @@
     {% if request.journal.issn %}<li>ISSN: {{ request.journal.issn }}</li>{% endif %}
     {% if request.journal.print_issn %} <li>Print ISSN: {{ request.journal.print_issn }}</li>{% endif %}
     {% if journal_settings.general.publisher_name %} 
-        <li>{% trans 'نُشر بواسطة' %}
+        <li>{% trans 'Published by' %}
         {% if journal_settings.general.publisher_url %}
             <a href="{{ journal_settings.general.publisher_url }}">
         {% endif %}
@@ -45,7 +45,7 @@
         {% if not request.user.is_authenticated %}
           <li>
             <a href="{% url 'core_login' %}">
-              {% trans 'تسجيل الدخول' %}
+              {% trans 'Log In' %}
             </a>
           </li>
         {% endif %}

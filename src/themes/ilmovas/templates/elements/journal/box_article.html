@@ -31,7 +31,7 @@
     <div id="{{ article.id }}-box-details" class="{% if not journal_settings.article.disable_article_thumbnails %}large-10{% endif %} columns end">
         {% if article.pinned %}
             <i aria-hidden="true" class="float-right fa fa-thumb-tack"></i>
-            <span class="sr-only">{% trans 'مثبت' %}</span>
+            <span class="sr-only">{% trans 'Pinned' %}</span>
         {% endif %}
 
             {% if level == "deep" %}

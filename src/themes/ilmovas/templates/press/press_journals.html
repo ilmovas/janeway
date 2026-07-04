@@ -13,7 +13,7 @@
     <section id="content" class="no-padding">
         <div class="row">
             <div class="large-8 columns">
-                <h1> {{ press.name }} {% trans 'المجلات' %} </h1>
+                <h1> {{ press.name }} {% trans 'Journals' %} </h1>
                 {% for current_journal in journals %}
                     {% setting_var current_journal 'disable_journal_submission' as submission_disabled %}
                     <div class="large-12 columns border-right border-bottom journal-div">
@@ -52,7 +52,7 @@
                                             {{ current_journal.description_for_press|safe }}
                                             {% with keywords=current_journal.keywords.all %}
                                                 {% if keywords %}
-                                                <h3>{% trans 'التخصصات' %}</h3>
+                                                <h3>{% trans 'Disciplines' %}</h3>
                                                     <ul class="keyword-list">
                                                         {% for keyword in keywords %}
                                                             <li>
@@ -80,7 +80,7 @@
                                                             class="button"
                                                             target="_blank"
                                                             >
-                                                            <span>{% trans 'عرض' %}</span>
+                                                            <span>{% trans 'Show' %}</span>
                                                             {% include "elements/icons/link_external.html" %} 
                                                         </a>
                                                 {% else %}
@@ -89,10 +89,10 @@
                                                        class="button"><span>{% trans 'تقديم' %}</span></a>
                                                     {% endif %}
                                                     <a href="{% journal_base_url current_journal %}"
-                                                       class="button"><span>{% trans 'عرض' %}</span></a>
+                                                       class="button"><span>{% trans 'Show' %}</span></a>
                                                     {% if current_journal.current_issue %}
                                                     <a href="{% journal_base_url current_journal %}{% url 'current_issue' %}"
-                                                       class="button"><span>{% trans 'العدد الحالي' %}</span></a>
+                                                       class="button"><span>{% trans 'Current Issue' %}</span></a>
                                                     {% elif current_journal.serial_issues.count > 0 %}
                                                     <a href="{% journal_base_url current_journal %}{% url 'journal_issues' %}"
                                                        class="button"><span>{{ current_journal.issue_type_plural_name }}</span></a>
@@ -111,7 +111,7 @@
                 {% endfor %}
             </div>
             <div class="large-4 columns">
-                <section aria-label="{% trans 'تصفية' %}">
+                <section aria-label="{% trans 'Filter' %}">
                 <div>
                     <form>
                         <div class="section">

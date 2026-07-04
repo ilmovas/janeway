@@ -1,14 +1,14 @@
 {% extends "core/base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans 'إمكانية الوصول' %}{% endblock %}
+{% block title %}{% trans 'Accessibility' %}{% endblock %}
 
 {% block body %}
 <div class="max-w-[1280px] mx-auto px-8 pt-8 pb-16">
 
   <!-- Page Header -->
   <header class="mb-10 border-r-4 border-gold pr-5">
-    <h1 class="text-4xl font-bold text-primary mb-2">{% trans 'إمكانية الوصول' %}</h1>
+    <h1 class="text-4xl font-bold text-primary mb-2">{% trans 'Accessibility' %}</h1>
     <p class="text-sm text-text-muted">{% trans 'التزامنا بإتاحة المحتوى لجميع المستخدمين' %}</p>
   </header>
 
@@ -129,7 +129,7 @@
       <!-- Contact -->
       {% if request.journal.nav_contact %}
         <div class="bg-ivory-dark border border-border-rule p-5">
-          <h3 class="text-xs font-bold tracking-widest text-primary uppercase mb-3">{% trans 'تواصل معنا' %}</h3>
+          <h3 class="text-xs font-bold tracking-widest text-primary uppercase mb-3">{% trans 'Contact us' %}</h3>
           <p class="text-xs text-text-soft mb-4 leading-relaxed">
             {% trans 'للاستفسار عن إمكانية الوصول أو طلب تنسيق بديل.' %}
           </p>

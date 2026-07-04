@@ -8074,3 +8074,100 @@ msgstr "مقبول"
 #: utils/transactional_emails.py:398
 msgid "declined"
 msgstr "مرفوض"
+
+# ilmovas Batch-2a submissions.html
+msgid "Submit Your Research"
+msgstr "قدّم بحثك"
+
+msgid "We welcome original academic contributions in all fields. Submissions must not have been published previously or be under review elsewhere."
+msgstr "نرحب بالمساهمات الأكاديمية الأصيلة في جميع المجالات. يجب ألا تكون التقديمات منشورة مسبقاً أو قيد المراجعة في مكان آخر."
+
+msgid "The work must not have been published previously or be under review elsewhere"
+msgstr "يجب ألا يكون العمل منشوراً مسبقاً أو قيد المراجعة في مكان آخر"
+
+msgid "Manuscript file in OpenOffice, Word, RTF, or WordPerfect format"
+msgstr "ملف المخطوطة بصيغة OpenOffice أو Word أو RTF أو WordPerfect"
+
+msgid "References should include links where available"
+msgstr "المراجع تتضمن الروابط عند توفرها"
+
+msgid "Single-spaced text, 12-point font, italics instead of underlining"
+msgstr "نص بمسافة مفردة، خط 12 نقطة، مائل بدلاً من التسطير"
+
+msgid "Abstract of up to 250 words with 5–8 keywords"
+msgstr "ملخص بحد أقصى 250 كلمة مع 5–8 كلمات مفتاحية"
+
+msgid "Submissions may be in Arabic or English, with attention to linguistic accuracy"
+msgstr "يُقدَّم بالعربية أو الإنجليزية مع الاهتمام بالدقة اللغوية"
+
+msgid "Manuscript Types and Word Counts"
+msgstr "أنواع المخطوطات وعدد الكلمات"
+
+msgid "Original Research"
+msgstr "بحث أصيل"
+
+msgid "Including references and appendices"
+msgstr "بما في ذلك المراجع والملاحق"
+
+msgid "words"
+msgstr "كلمة"
+
+msgid "Review Article"
+msgstr "مقالة مراجعة"
+
+msgid "Systematic or narrative review"
+msgstr "مراجعة منهجية أو سردية"
+
+msgid "Book Review"
+msgstr "مراجعة كتاب"
+
+msgid "Critical analysis of a published work"
+msgstr "تحليل نقدي لعمل منشور"
+
+msgid "Maximum"
+msgstr "بحد أقصى"
+
+msgid "Submissions that do not follow the journal's formatting guidelines will be automatically rejected before peer review."
+msgstr "التقديمات التي لا تلتزم بالتنسيق الموحّد للمجلة ستُرفض تلقائياً قبل مرحلة التحكيم."
+
+msgid "Publication Cycle"
+msgstr "دورة النشر"
+
+msgid "Focus and Scope"
+msgstr "النطاق والأهداف"
+
+msgid "About the Journal"
+msgstr "عن المجلة"
+
+msgid "Ready to Submit?"
+msgstr "جاهز للتقديم؟"
+
+msgid "Log in or create an account to start your submission through our secure platform."
+msgstr "سجّل دخولك أو أنشئ حساباً لبدء تقديمك عبر منصتنا الآمنة."
+
+msgid "Submissions are currently closed."
+msgstr "التقديمات مغلقة حالياً."
+
+msgid "Open Access"
+msgstr "وصول مفتوح"
+
+msgid "No author processing charges"
+msgstr "بدون رسوم معالجة للمؤلفين"
+
+msgid "Double-blind peer review"
+msgstr "تحكيم مزدوج مجهول الهوية"
+
+msgid "Encrypted data protection and adherence to publication ethics"
+msgstr "حماية البيانات المشفرة والالتزام بأخلاقيات النشر"
+
+msgid "Personal data is used exclusively for journal purposes"
+msgstr "البيانات الشخصية تُستخدم حصراً لأغراض المجلة"
+
+msgid "Questions?"
+msgstr "أسئلة؟"
+
+msgid "Contact the editorial team for help with your submission."
+msgstr "تواصل مع هيئة التحرير للمساعدة في تقديم بحثك."
+
+msgid "Contact the Editor"
+msgstr "تواصل مع المحرر"

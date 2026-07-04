@@ -16,7 +16,7 @@
 
   <!-- Breadcrumbs -->
   <nav aria-label="Breadcrumb" class="flex items-center gap-1 mb-8 text-xs font-bold text-primary tracking-wide">
-    <a href="{% url 'website_index' %}" class="hover:text-gold transition-colors">{% trans 'الرئيسية' %}</a>
+    <a href="{% url 'website_index' %}" class="hover:text-gold transition-colors">{% trans 'Home' %}</a>
     <span class="material-symbols-outlined text-sm text-text-muted">chevron_left</span>
     <a href="{% url 'journal_issues' %}" class="hover:text-gold transition-colors">{% trans 'الأرشيف' %}</a>
     {% if article.issue %}
@@ -71,7 +71,7 @@
           {% if article.peer_reviewed %}
             <span class="flex items-center gap-1 text-primary font-bold">
               <span class="material-symbols-outlined text-sm">verified</span>
-              {% trans 'محكّم' %}
+              {% trans 'Peer Reviewed' %}
             </span>
           {% endif %}
           {% if not request.journal.disable_metrics_display %}
@@ -103,7 +103,7 @@
       <!-- Abstract -->
       {% if article.abstract %}
         <section class="mb-10 pr-6 border-r-4 border-gold">
-          <h2 class="text-xl font-bold text-primary mb-4">{% trans 'الملخص' %}</h2>
+          <h2 class="text-xl font-bold text-primary mb-4">{% trans 'Abstract' %}</h2>
           <div class="text-base text-text-soft leading-relaxed text-justify">
             {{ article.abstract|safe }}
           </div>
@@ -113,7 +113,7 @@
       <!-- Keywords -->
       {% if article.keywords.all %}
         <section class="mb-10">
-          <h2 class="text-base font-bold text-primary mb-3">{% trans 'الكلمات المفتاحية' %}</h2>
+          <h2 class="text-base font-bold text-primary mb-3">{% trans 'Keywords' %}</h2>
           <div class="flex flex-wrap gap-2">
             {% for kw in article.keywords.all %}
               <span class="bg-ivory-dark border border-border-rule px-4 py-1 text-sm text-text-soft hover:border-gold transition-colors cursor-pointer">
@@ -140,7 +140,7 @@
       <!-- Publisher notes -->
       {% if article.publisher_notes.all %}
         <div class="bg-ivory-dark border border-border-rule p-5 mb-8">
-          <h2 class="font-bold text-primary mb-2">{% trans 'ملاحظات الناشر' %}</h2>
+          <h2 class="font-bold text-primary mb-2">{% trans 'Publisher Notes' %}</h2>
           <ul class="list-disc list-inside text-sm text-text-soft space-y-1">
             {% for note in article.publisher_notes.all %}
               <li>{{ note.text|safe }}</li>
@@ -151,7 +151,7 @@
 
       <!-- Rights -->
       {% if article.rights %}
-        <p class="text-sm text-text-muted mb-8"><strong>{% trans 'الحقوق' %}:</strong> {{ article.rights|safe }}</p>
+        <p class="text-sm text-text-muted mb-8"><strong>{% trans 'Rights' %}:</strong> {{ article.rights|safe }}</p>
       {% endif %}
 
       <!-- Funders -->
@@ -183,7 +183,7 @@
 
           <!-- All files -->
           <div class="stitch-card bg-white border border-border-rule gold-border-top p-5">
-            <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4">{% trans 'الملفات' %}</h3>
+            <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4">{% trans 'Files' %}</h3>
             <ul class="space-y-2">
               {% for galley in galleys %}
                 <li>
@@ -191,7 +191,7 @@
                     <a href="{% url 'article_view_galley' article.id galley.id %}" target="_blank"
                        class="flex items-center gap-2 text-sm text-primary hover:text-gold transition-colors">
                       <span class="material-symbols-outlined text-sm">open_in_new</span>
-                      {% trans 'عرض' %} {{ galley.label }}
+                      {% trans 'Show' %} {{ galley.label }}
                     </a>
                   {% endif %}
                   <a href="{% url 'article_download_galley' article.id galley.id %}"
@@ -229,7 +229,7 @@
             {% endif %}
             {% if article.issue %}
               <div>
-                <span class="text-xs text-text-muted font-bold block mb-1 uppercase tracking-wide">{% trans 'العدد' %}</span>
+                <span class="text-xs text-text-muted font-bold block mb-1 uppercase tracking-wide">{% trans 'Issue' %}</span>
                 <a href="{{ article.issue.url }}" class="font-medium text-primary hover:text-gold transition-colors">{{ article.issue.display_title }}</a>
               </div>
             {% endif %}
@@ -237,7 +237,7 @@
 
           {% if article.license %}
             <div>
-              <span class="text-xs text-text-muted font-bold block mb-1 uppercase tracking-wide">{% trans 'الترخيص' %}</span>
+              <span class="text-xs text-text-muted font-bold block mb-1 uppercase tracking-wide">{% trans 'License' %}</span>
               <a href="{{ article.license.url }}" target="_blank" class="flex items-center gap-1 text-primary hover:text-gold transition-colors">
                 <span class="material-symbols-outlined text-sm">balance</span>
                 {{ article.license.name }}
@@ -247,7 +247,7 @@
 
           {% if article.page_range %}
             <div>
-              <span class="text-xs text-text-muted font-bold block mb-1 uppercase tracking-wide">{% trans 'الصفحات' %}</span>
+              <span class="text-xs text-text-muted font-bold block mb-1 uppercase tracking-wide">{% trans 'Pages' %}</span>
               <span class="font-medium">{{ article.page_range }}</span>
             </div>
           {% endif %}
@@ -289,7 +289,7 @@
 
       <!-- Author details -->
       <div class="stitch-card bg-white border border-border-rule gold-border-top p-5">
-        <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4">{% trans 'المؤلفون' %}</h3>
+        <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-4">{% trans 'Authors' %}</h3>
         {% include "elements/journal/article_authors_full.html" %}
       </div>
 

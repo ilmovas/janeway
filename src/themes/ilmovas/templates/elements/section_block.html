@@ -2,17 +2,17 @@
 
 <h2 class="text-xl font-bold text-primary mb-5 flex items-center gap-2">
   <span class="material-symbols-outlined text-gold">category</span>
-  {% trans 'الأقسام' %}
+  {% trans 'Sections' %}
 </h2>
 
 <div class="overflow-x-auto">
   <table class="w-full text-sm border-collapse">
     <thead>
       <tr class="bg-primary text-white">
-        <th scope="col" class="text-right px-4 py-3 text-xs font-bold tracking-wide">{% trans 'القسم أو نوع المقالة' %}</th>
-        <th scope="col" class="text-center px-4 py-3 text-xs font-bold tracking-wide">{% trans 'التقديمات العامة' %}</th>
-        <th scope="col" class="text-center px-4 py-3 text-xs font-bold tracking-wide">{% trans 'محكّم' %}</th>
-        <th scope="col" class="text-center px-4 py-3 text-xs font-bold tracking-wide">{% trans 'مفهرس' %}</th>
+        <th scope="col" class="text-right px-4 py-3 text-xs font-bold tracking-wide">{% trans 'Section or article type' %}</th>
+        <th scope="col" class="text-center px-4 py-3 text-xs font-bold tracking-wide">{% trans 'Public Submissions' %}</th>
+        <th scope="col" class="text-center px-4 py-3 text-xs font-bold tracking-wide">{% trans 'Peer Reviewed' %}</th>
+        <th scope="col" class="text-center px-4 py-3 text-xs font-bold tracking-wide">{% trans 'Indexed' %}</th>
       </tr>
     </thead>
     <tbody>
@@ -24,28 +24,28 @@
           <td class="text-center px-4 py-3">
             {% if section.public_submissions %}
               <span class="material-symbols-outlined text-primary text-lg" aria-hidden="true">check</span>
-              <span class="sr-only">{% trans 'نعم' %}</span>
+              <span class="sr-only">{% trans 'Yes' %}</span>
             {% else %}
               <span class="material-symbols-outlined text-text-muted text-lg" aria-hidden="true">close</span>
-              <span class="sr-only">{% trans 'لا' %}</span>
+              <span class="sr-only">{% trans 'No' %}</span>
             {% endif %}
           </td>
           <td class="text-center px-4 py-3">
             {% if section.number_of_reviewers > 0 %}
               <span class="material-symbols-outlined text-primary text-lg" aria-hidden="true">check</span>
-              <span class="sr-only">{% trans 'نعم' %}</span>
+              <span class="sr-only">{% trans 'Yes' %}</span>
             {% else %}
               <span class="material-symbols-outlined text-text-muted text-lg" aria-hidden="true">close</span>
-              <span class="sr-only">{% trans 'لا' %}</span>
+              <span class="sr-only">{% trans 'No' %}</span>
             {% endif %}
           </td>
           <td class="text-center px-4 py-3">
             {% if section.indexing %}
               <span class="material-symbols-outlined text-primary text-lg" aria-hidden="true">check</span>
-              <span class="sr-only">{% trans 'نعم' %}</span>
+              <span class="sr-only">{% trans 'Yes' %}</span>
             {% else %}
               <span class="material-symbols-outlined text-text-muted text-lg" aria-hidden="true">close</span>
-              <span class="sr-only">{% trans 'لا' %}</span>
+              <span class="sr-only">{% trans 'No' %}</span>
             {% endif %}
           </td>
         </tr>

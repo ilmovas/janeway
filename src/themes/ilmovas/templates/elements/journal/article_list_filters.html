@@ -7,7 +7,7 @@
   <div class="bg-primary text-white px-4 py-3 flex items-center justify-between">
     <h2 class="text-xs font-bold tracking-widest text-gold-light uppercase flex items-center gap-2">
       <span class="material-symbols-outlined text-sm">tune</span>
-      {% trans 'تصفية' %}
+      {% trans 'Filter' %}
     </h2>
     <button type="button" id="filter-toggle-{{ filter_context }}"
             class="md:hidden text-white/70 hover:text-white transition-colors">
@@ -67,13 +67,13 @@
         </button>
         <button type="button" id="clear-all-btn-{{ filter_context }}"
                 class="flex-1 text-xs font-bold text-text-muted border border-border-rule py-1.5 hover:bg-ivory-dark transition-colors">
-          {% trans 'مسح الكل' %}
+          {% trans 'Clear all' %}
         </button>
       </div>
       <button type="submit"
               class="w-full bg-primary text-white text-xs font-bold py-2.5 hover:bg-primary-mid transition-colors border-b-2 border-gold flex items-center justify-center gap-2">
         <span class="material-symbols-outlined text-sm">check</span>
-        {% trans 'تطبيق' %}
+        {% trans 'Apply' %}
       </button>
     </div>
   </form>

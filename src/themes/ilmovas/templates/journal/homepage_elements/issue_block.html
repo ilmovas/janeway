@@ -88,7 +88,7 @@
         <div class="stitch-card bg-white border border-border-rule gold-border-top p-5">
           <div class="flex items-center gap-2 mb-3">
             <span class="material-symbols-outlined text-gold text-base">auto_stories</span>
-            <h3 class="text-xs font-bold tracking-widest text-gold uppercase">{% trans 'العدد الحالي' %}</h3>
+            <h3 class="text-xs font-bold tracking-widest text-gold uppercase">{% trans 'Current Issue' %}</h3>
           </div>
           {% if issue.hero_image_url %}
             <a href="{{ issue.url }}">
@@ -108,7 +108,7 @@
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-gold text-base">newspaper</span>
-              <h3 class="text-xs font-bold tracking-widest text-gold uppercase">{% trans 'آخر الأخبار' %}</h3>
+              <h3 class="text-xs font-bold tracking-widest text-gold uppercase">{% trans 'Latest News' %}</h3>
             </div>
             <a href="{% url 'core_news_list' %}" class="text-xs text-text-muted hover:text-primary transition-colors">{% trans 'All' %}</a>
           </div>

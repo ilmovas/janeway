@@ -9,9 +9,9 @@
 
   <!-- Breadcrumb -->
   <nav class="text-xs text-text-muted mb-6 flex items-center gap-2">
-    <a href="{% url 'website_index' %}" class="hover:text-gold transition-colors">{% trans 'الرئيسية' %}</a>
+    <a href="{% url 'website_index' %}" class="hover:text-gold transition-colors">{% trans 'Home' %}</a>
     <span class="material-symbols-outlined text-sm">chevron_left</span>
-    <a href="{% url 'editorial_team' %}" class="hover:text-gold transition-colors">{% trans 'هيئة التحرير' %}</a>
+    <a href="{% url 'editorial_team' %}" class="hover:text-gold transition-colors">{% trans 'Editorial Team' %}</a>
     <span class="material-symbols-outlined text-sm">chevron_left</span>
     <span class="text-text-main font-medium">{{ user.full_name }}</span>
   </nav>
@@ -113,12 +113,12 @@
           <div class="grid grid-cols-2 gap-3">
             <div class="bg-white/10 p-3 text-center">
               <p class="text-2xl font-bold">{{ user.published_articles|length }}</p>
-              <p class="text-xs text-white/70">{% trans 'المنشورات' %}</p>
+              <p class="text-xs text-white/70">{% trans 'Posts' %}</p>
             </div>
             {% if roles %}
               <div class="bg-white/10 p-3 text-center">
                 <p class="text-2xl font-bold">{{ roles|length }}</p>
-                <p class="text-xs text-white/70">{% trans 'الأدوار' %}</p>
+                <p class="text-xs text-white/70">{% trans 'Roles' %}</p>
               </div>
             {% endif %}
           </div>
@@ -135,7 +135,7 @@
         <div class="bg-white border border-border-rule gold-border-top p-6">
           <h2 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
             <span class="material-symbols-outlined text-gold">info</span>
-            {% trans 'السيرة الذاتية' %}
+            {% trans 'Biography' %}
           </h2>
           <div class="text-sm text-text-soft leading-relaxed prose max-w-none">
             {{ user.biography|safe }}
@@ -176,7 +176,7 @@
         <div class="bg-white border border-border-rule gold-border-top p-6">
           <h2 class="text-lg font-bold text-primary mb-5 flex items-center gap-2">
             <span class="material-symbols-outlined text-gold">article</span>
-            {% trans 'المقالات المنشورة' %}
+            {% trans 'Published Articles' %}
             <span class="text-xs font-normal text-text-muted bg-ivory-dark px-2 py-0.5 mr-1">{{ user.published_articles|length }}</span>
           </h2>
 

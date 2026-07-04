@@ -9,7 +9,7 @@
 
   <!-- Page Header -->
   <header class="mb-10 border-r-4 border-gold pr-5">
-    <h1 class="text-4xl font-bold text-primary mb-2">{% trans 'أرشيف الأعداد' %}</h1>
+    <h1 class="text-4xl font-bold text-primary mb-2">{% trans 'Issue Archive' %}</h1>
     <p class="text-text-soft text-base leading-relaxed max-w-2xl">
       {% trans 'تصفح الأرشيف الكامل للأبحاث الأكاديمية المحكّمة، منظمةً حسب المجلد والسنة.' %}
     </p>
@@ -77,11 +77,11 @@
             <!-- Year heading -->
             <div class="flex items-center gap-4 mb-6">
               <h2 class="text-xl font-bold text-primary whitespace-nowrap">
-                {% trans 'المجلد' %} ({{ year_group.grouper }})
+                {% trans 'Volume' %} ({{ year_group.grouper }})
               </h2>
               <div class="flex-grow h-px bg-border-rule"></div>
               {% if forloop.first %}
-                <span class="text-xs bg-gold text-primary font-bold px-3 py-1 whitespace-nowrap">{% trans 'الحالي' %}</span>
+                <span class="text-xs bg-gold text-primary font-bold px-3 py-1 whitespace-nowrap">{% trans 'current' %}</span>
               {% endif %}
             </div>
 
@@ -109,7 +109,7 @@
                     {% endif %}
                     {% if forloop.first and forloop.parentloop.first %}
                       <div class="absolute top-2 right-2 bg-gold text-primary text-xs font-bold px-2 py-1">
-                        {% trans 'الأحدث' %}
+                        {% trans 'Latest' %}
                       </div>
                     {% endif %}
                   </a>
