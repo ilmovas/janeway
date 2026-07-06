@@ -1,0 +1,255 @@
+{% extends "admin/core/base.html" %}
+{% load i18n %}
+
+{% block css %}
+{{ block.super }}
+<style>
+  .sabar-loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 9999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.3rem;
+    gap: 1rem;
+  }
+  .sabar-loading-overlay.active { display: flex; }
+  .sabar-spinner {
+    width: 56px; height: 56px;
+    border: 6px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: sabar-spin 0.8s linear infinite;
+  }
+  @keyframes sabar-spin { to { transform: rotate(360deg); } }
+</style>
+{% endblock %}
+
+{% block title %}سبار — {{ article.title }}{% endblock %}
+
+{% block body %}
+
+<div class="sabar-loading-overlay" id="sabarOverlay">
+  <div class="sabar-spinner"></div>
+  <div id="sabarOverlayMsg">جارٍ الإرسال إلى سبار...</div>
+</div>
+
+<div class="row expanded">
+  <div class="large-12 columns">
+    <h1>{{ article.title }}</h1>
+    <p><a href="{% url 'sabar_articles' %}">← العودة إلى قائمة المقالات</a></p>
+
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="callout {% if msg.tags == 'error' %}alert{% elif msg.tags == 'warning' %}warning{% else %}success{% endif %}">
+      {{ msg }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if check %}
+    <div class="callout">
+      <h2>نتيجة فحص التكرار</h2>
+      <table class="small">
+        <tr>
+          <th>الحكم</th>
+          <td>
+            {% if check.verdict == 'confirmed' %}
+              <span class="label alert">تكرار مؤكد (≥ 0.98)</span>
+            {% elif check.verdict == 'suspected' %}
+              <span class="label warning">تكرار مشتبه به (≥ 0.95)</span>
+            {% elif check.verdict == 'similar' %}
+              <span class="label secondary">مشابه (≥ 0.90)</span>
+            {% elif check.verdict == 'clean' %}
+              <span class="label success">نظيف (< 0.90)</span>
+            {% else %}
+              <span class="label">{{ check.verdict|default:"—" }}</span>
+            {% endif %}
+            {% if check.verdict_ar %} — {{ check.verdict_ar }}{% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>هل هو تكرار؟</th>
+          <td>
+            {% if check.is_duplicate %}
+              <span class="label alert">نعم</span>
+            {% elif check.is_duplicate == False %}
+              <span class="label success">لا</span>
+            {% else %}—{% endif %}
+          </td>
+        </tr>
+        {% if check.confidence is not None %}
+        <tr>
+          <th>نسبة التشابه</th>
+          <td>{{ check.confidence_percent }}%</td>
+        </tr>
+        {% endif %}
+        {% if check.integrity_score is not None %}
+        <tr>
+          <th>درجة النزاهة</th>
+          <td>{{ check.integrity_score }}/100</td>
+        </tr>
+        {% endif %}
+        {% if check.recommendation %}
+        <tr>
+          <th>التوصية</th>
+          <td>
+            {% if check.recommendation == 'accept' %}قبول النشر
+            {% elif check.recommendation == 'reject' %}رفض النشر
+            {% elif check.recommendation == 'review' %}يحتاج مراجعة
+            {% else %}{{ check.recommendation }}{% endif %}
+          </td>
+        </tr>
+        {% endif %}
+        <tr>
+          <th>تاريخ الفحص</th>
+          <td>{{ check.date_submitted }}</td>
+        </tr>
+        {% if check.report_id %}
+        <tr>
+          <th>رقم التقرير</th>
+          <td><code>{{ check.report_id }}</code></td>
+        </tr>
+        {% endif %}
+      </table>
+    </div>
+
+    {% if check.matches %}
+    <div class="callout secondary">
+      <h3>المقالات المتطابقة ({{ check.matches|length }})</h3>
+      <table class="scroll small">
+        <thead>
+          <tr>
+            <th>العنوان</th>
+            <th>المجلة</th>
+            <th>نسبة التشابه</th>
+            <th>الحكم</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for match in check.matches %}
+          <tr>
+            <td>{{ match.title|default:"—" }}</td>
+            <td>{{ match.journal|default:"—" }}</td>
+            <td>{% if match.similarity %}{{ match.similarity|floatformat:2 }}{% else %}—{% endif %}</td>
+            <td>
+              {% if match.verdict == 'confirmed' %}<span class="label alert">مؤكد</span>
+              {% elif match.verdict == 'suspected' %}<span class="label warning">مشتبه</span>
+              {% elif match.verdict == 'similar' %}<span class="label secondary">مشابه</span>
+              {% elif match.verdict == 'clean' %}<span class="label success">نظيف</span>
+              {% else %}{{ match.verdict|default:"—" }}{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    {% if check.reasons %}
+    <div class="callout secondary">
+      <h3>أسباب الحكم</h3>
+      <ul>
+        {% for reason in check.reasons %}
+        <li>{{ reason }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if check.deep_analysis %}
+    <div class="callout">
+      <h3>نتيجة التحليل المعمّق (الطبقة الثانية)</h3>
+      <pre style="font-size:0.8em;overflow:auto;direction:ltr">{{ check.deep_analysis }}</pre>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="callout">
+      <p>لم يُجرَ أي فحص بعد على هذا المقال.</p>
+    </div>
+    {% endif %}
+
+    <div class="callout">
+      <h3>الإجراءات</h3>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:flex-end">
+
+        <form method="POST" action="{% url 'sabar_submit' article_id=article.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="button">
+            <i class="fa fa-search"></i>
+            {% if check %}إعادة الفحص{% else %}فحص المقال الآن{% endif %}
+          </button>
+        </form>
+
+        {% if check and check.report_id %}
+        <form method="POST" action="{% url 'sabar_refresh' article_id=article.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="button secondary" title="يجلب بيانات التقرير من سبار دون إعادة الفحص">
+            <i class="fa fa-refresh"></i> تحديث التقرير
+          </button>
+        </form>
+
+        <form method="POST" action="{% url 'sabar_analyze' article_id=article.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="button secondary"
+            title="تحليل معمّق: يكشف العبارات الملتوية، يتحقق من المراجع، فحص متعدد اللغات — يتطلب مفتاح API">
+            <i class="fa fa-flask"></i> تحليل معمّق
+          </button>
+        </form>
+        {% endif %}
+
+        <form method="POST" action="{% url 'sabar_complete' article_id=article.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="button success"
+            title="إنهاء مرحلة سبار وتحريك المقال إلى المرحلة التالية في سير العمل">
+            <i class="fa fa-check"></i> إنهاء المرحلة والمضي قدماً
+          </button>
+        </form>
+
+      </div>
+
+      <div class="callout secondary" style="margin-top:1rem;font-size:0.85em">
+        <strong>شرح الإجراءات:</strong>
+        <ul style="margin:0.5rem 0 0 0">
+          <li><strong>فحص المقال الآن</strong> — يرسل المقال لسبار ويعيد نتيجة فورية</li>
+          <li><strong>تحديث التقرير</strong> — يجلب بيانات التقرير من سبار (بدون إعادة الفحص)</li>
+          <li><strong>تحليل معمّق</strong> — يكشف العبارات الملتوية، التحقق من المراجع، الفحص متعدد اللغات</li>
+          <li><strong>إنهاء المرحلة والمضي قدماً</strong> — ينقل المقال للمرحلة التالية في سير العمل</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  var overlay = document.getElementById('sabarOverlay');
+  var overlayMsg = document.getElementById('sabarOverlayMsg');
+  var messages = {
+    'sabar_submit':   'جارٍ إرسال المقال إلى سبار للفحص...',
+    'sabar_refresh':  'جارٍ تحديث التقرير من سبار...',
+    'sabar_analyze':  'جارٍ التحليل المعمّق... قد يستغرق هذا بضع ثوانٍ',
+    'sabar_complete': 'جارٍ إنهاء المرحلة ونقل المقال...',
+  };
+  document.querySelectorAll('form').forEach(function (form) {
+    form.addEventListener('submit', function () {
+      var action = form.getAttribute('action') || '';
+      var msg = 'جارٍ المعالجة...';
+      Object.keys(messages).forEach(function (key) {
+        if (action.indexOf(key) !== -1) msg = messages[key];
+      });
+      overlayMsg.textContent = msg;
+      overlay.classList.add('active');
+      var btn = form.querySelector('button[type="submit"]');
+      if (btn) { btn.disabled = true; }
+    });
+  });
+})();
+</script>
+{% endblock %}

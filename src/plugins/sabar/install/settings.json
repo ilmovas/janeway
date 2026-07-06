@@ -1,0 +1,26 @@
+[
+    {
+        "group": {"name": "plugin:sabar"},
+        "setting": {
+            "name": "sabar_api_url",
+            "type": "text",
+            "pretty_name": "Sabar API Base URL",
+            "description": "Base URL for the Sabar duplication and integrity API, e.g. https://sibar.ilmovas.com",
+            "is_translatable": false
+        },
+        "value": {"default": "https://sibar.ilmovas.com"},
+        "editable_by": ["journal-manager"]
+    },
+    {
+        "group": {"name": "plugin:sabar"},
+        "setting": {
+            "name": "sabar_api_key",
+            "type": "text",
+            "pretty_name": "Sabar API Key",
+            "description": "Secret API key issued by Sabar for this journal/press.",
+            "is_translatable": false
+        },
+        "value": {"default": ""},
+        "editable_by": ["journal-manager"]
+    }
+]

@@ -1,0 +1,124 @@
+{% extends "admin/core/base.html" %}
+{% load i18n %}
+
+{% block title %}سبار — الإعدادات{% endblock %}
+
+{% block body %}
+<div class="row expanded">
+  <div class="large-12 columns">
+
+    <h1><i class="fa fa-search"></i> سبار — كشف التكرار وسلامة النشر</h1>
+
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="callout {% if msg.tags == 'error' %}alert{% else %}success{% endif %}">
+      {{ msg }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- حالة الاتصال -->
+    <div class="callout {% if api_healthy %}success{% else %}alert{% endif %}">
+      {% if api_healthy %}
+        <i class="fa fa-check-circle"></i>
+        <strong>الاتصال بسبار يعمل</strong> — الخادم متاح وجاهز للاستقبال.
+      {% else %}
+        <i class="fa fa-exclamation-triangle"></i>
+        <strong>لا يمكن الوصول إلى سبار</strong> — تحقق من رابط API والمفتاح أدناه.
+      {% endif %}
+    </div>
+
+    <!-- إعدادات الاتصال -->
+    <div class="callout">
+      <h2><i class="fa fa-cog"></i> إعدادات الاتصال</h2>
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <div class="row">
+          <div class="large-12 columns">
+            <label>
+              رابط API
+              <small style="color:#777">(الرابط الأساسي لخادم سبار)</small>
+              <input type="url" name="sabar_api_url"
+                     value="{{ current.sabar_api_url|default:'https://sibar.ilmovas.com' }}"
+                     placeholder="https://sibar.ilmovas.com">
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-12 columns">
+            <label>
+              مفتاح API
+              <small style="color:#777">(المفتاح السري — لا تشاركه مع أحد)</small>
+              <input type="password" name="sabar_api_key"
+                     value=""
+                     placeholder="أدخل مفتاح API الخاص بك"
+                     autocomplete="off">
+            </label>
+            {% if current.sabar_api_key %}
+            <p style="color:#3adb76;font-size:0.85em">
+              <i class="fa fa-check"></i> المفتاح مُدخل
+              ({{ current.sabar_api_key|slice:":6" }}••••••)
+            </p>
+            {% else %}
+            <p style="color:#cc4b37;font-size:0.85em">
+              <i class="fa fa-exclamation-triangle"></i> لم يُدخَل مفتاح بعد
+            </p>
+            {% endif %}
+          </div>
+        </div>
+
+        <button type="submit" class="button">
+          <i class="fa fa-save"></i> حفظ الإعدادات
+        </button>
+      </form>
+    </div>
+
+    <!-- روابط سريعة -->
+    <div class="callout secondary">
+      <h3>روابط سريعة</h3>
+      <a class="button" href="{% url 'sabar_articles' %}">
+        <i class="fa fa-list"></i> عرض المقالات
+      </a>
+      <a class="button secondary" href="https://sibar.ilmovas.com/docs" target="_blank">
+        <i class="fa fa-external-link"></i> توثيق API
+      </a>
+    </div>
+
+    <!-- شرح مستويات الحكم -->
+    <div class="callout">
+      <h3>مستويات الحكم في سبار</h3>
+      <table class="small">
+        <thead>
+          <tr><th>الحكم</th><th>نسبة التشابه</th><th>المعنى</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="label success">نظيف</span></td>
+            <td>أقل من 0.90</td>
+            <td>المقال أصيل ويُنصح بقبوله</td>
+          </tr>
+          <tr>
+            <td><span class="label secondary">مشابه</span></td>
+            <td>0.90 – 0.95</td>
+            <td>يوجد تشابه — يحتاج مراجعة</td>
+          </tr>
+          <tr>
+            <td><span class="label warning">مشتبه به</span></td>
+            <td>0.95 – 0.98</td>
+            <td>تكرار مشتبه به — يحتاج تحقيقاً</td>
+          </tr>
+          <tr>
+            <td><span class="label alert">مؤكد</span></td>
+            <td>0.98 فأعلى</td>
+            <td>تكرار مؤكد — يُنصح بالرفض</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

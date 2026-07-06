@@ -1,0 +1,11 @@
+{% load i18n %}
+<div class="kanban-card">
+  <a href="{% url 'sabar_article' article_id=article.pk %}">{{ article.title }}</a>
+  {% with check=article.sabar_checks.first %}
+  {% if check %}
+    <small>{{ check.get_status_display }}
+      {% if check.confidence is not None %}— {{ check.confidence_percent }}%{% endif %}
+    </small>
+  {% endif %}
+  {% endwith %}
+</div>

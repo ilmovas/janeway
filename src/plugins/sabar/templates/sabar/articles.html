@@ -1,0 +1,193 @@
+{% extends "admin/core/base.html" %}
+{% load i18n %}
+
+{% block css %}
+{{ block.super }}
+<style>
+  .sabar-loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 9999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.3rem;
+    gap: 1rem;
+  }
+  .sabar-loading-overlay.active { display: flex; }
+  .sabar-spinner {
+    width: 56px; height: 56px;
+    border: 6px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: sabar-spin 0.8s linear infinite;
+  }
+  @keyframes sabar-spin { to { transform: rotate(360deg); } }
+</style>
+{% endblock %}
+
+{% block title %}سبار — جميع المقالات{% endblock %}
+
+{% block body %}
+
+<div class="sabar-loading-overlay" id="sabarOverlay">
+  <div class="sabar-spinner"></div>
+  <div id="sabarOverlayMsg">جارٍ إرسال المقال إلى سبار...</div>
+</div>
+
+<div class="row expanded">
+  <div class="large-12 columns">
+
+    <div class="row">
+      <div class="large-8 columns">
+        <h1><i class="fa fa-search"></i> {% trans "Sibar — Duplication & Integrity Check" %}</h1>
+      </div>
+      <div class="large-4 columns text-right" style="padding-top:1rem">
+        <form method="POST" action="{% url 'sabar_submit_all' %}"
+              onsubmit="return confirm('{% trans "Submit ALL articles to Sibar? This may take a moment." %}')">
+          {% csrf_token %}
+          <button type="submit" class="button warning">
+            <i class="fa fa-bolt"></i> {% trans "فحص جميع المقالات دفعة واحدة" %}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="callout {% if msg.tags == 'error' %}alert{% elif msg.tags == 'warning' %}warning{% else %}success{% endif %}">
+      {{ msg }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if articles %}
+    <table class="scroll hover stack">
+      <thead>
+        <tr>
+          <th>{% trans "المقال" %}</th>
+          <th>{% trans "المؤلف" %}</th>
+          <th style="text-align:center">{% trans "الحكم" %}</th>
+          <th style="text-align:center">{% trans "التشابه" %}</th>
+          <th style="text-align:center">{% trans "تكرار؟" %}</th>
+          <th style="text-align:center">{% trans "الإجراء" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for art in articles %}
+        {% with check=art.sabar_checks.first %}
+        <tr>
+          <td>
+            <strong>{{ art.title|truncatechars:60 }}</strong>
+          </td>
+          <td>{{ art.correspondence_author.full_name|default:"—" }}</td>
+
+          <td style="text-align:center">
+            {% if check %}
+              {% if check.verdict == 'confirmed' %}
+                <span class="label alert">مؤكد</span>
+              {% elif check.verdict == 'suspected' %}
+                <span class="label warning">مشتبه</span>
+              {% elif check.verdict == 'similar' %}
+                <span class="label secondary">مشابه</span>
+              {% elif check.verdict == 'clean' %}
+                <span class="label success">نظيف</span>
+              {% else %}
+                <span class="label">{{ check.verdict|default:"—" }}</span>
+              {% endif %}
+            {% else %}
+              <span style="color:#aaa">—</span>
+            {% endif %}
+          </td>
+
+          <td style="text-align:center">
+            {% if check and check.confidence is not None %}
+              {{ check.confidence_percent }}%
+            {% else %}
+              <span style="color:#aaa">—</span>
+            {% endif %}
+          </td>
+
+          <td style="text-align:center">
+            {% if check %}
+              {% if check.is_duplicate %}
+                <i class="fa fa-exclamation-circle" style="color:#cc4b37" title="نعم"></i>
+              {% elif check.is_duplicate == False %}
+                <i class="fa fa-check-circle" style="color:#3adb76" title="لا"></i>
+              {% else %}
+                <span style="color:#aaa">—</span>
+              {% endif %}
+            {% else %}
+              <span style="color:#aaa">لم يُفحص</span>
+            {% endif %}
+          </td>
+
+          <td style="text-align:center">
+            <form method="POST" action="{% url 'sabar_submit' article_id=art.pk %}" style="display:inline">
+              {% csrf_token %}
+              <button type="submit" class="button tiny {% if check %}secondary{% endif %}" title="{% if check %}إعادة الفحص{% else %}فحص الآن{% endif %}">
+                <i class="fa fa-{% if check %}refresh{% else %}search{% endif %}"></i>
+                {% if check %}{% trans "إعادة" %}{% else %}{% trans "فحص" %}{% endif %}
+              </button>
+            </form>
+            {% if check %}
+            <a class="button tiny secondary" href="{% url 'sabar_article' article_id=art.pk %}" title="{% trans 'عرض التفاصيل' %}">
+              <i class="fa fa-eye"></i>
+            </a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endwith %}
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="callout secondary" style="margin-top:1rem;font-size:0.85em">
+      <strong>{% trans "مفتاح الحكم:" %}</strong>
+      <span class="label success">نظيف</span> &lt; 0.90 &nbsp;|&nbsp;
+      <span class="label secondary">مشابه</span> ≥ 0.90 &nbsp;|&nbsp;
+      <span class="label warning">مشتبه</span> ≥ 0.95 &nbsp;|&nbsp;
+      <span class="label alert">مؤكد</span> ≥ 0.98
+    </div>
+
+    {% else %}
+    <div class="callout">
+      <p>لا توجد مقالات في هذه المجلة.</p>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<script>
+(function () {
+  var overlay = document.getElementById('sabarOverlay');
+  var overlayMsg = document.getElementById('sabarOverlayMsg');
+
+  // Single article check forms
+  document.querySelectorAll('form[action*="submit"]').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      var btn = form.querySelector('button[type="submit"]');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> جارٍ الفحص...';
+      }
+      overlayMsg.textContent = 'جارٍ إرسال المقال إلى سبار...';
+      overlay.classList.add('active');
+    });
+  });
+
+  // Submit-all form
+  var allForm = document.querySelector('form[action*="submit-all"]');
+  if (allForm) {
+    allForm.addEventListener('submit', function (e) {
+      overlayMsg.textContent = 'جارٍ فحص جميع المقالات... قد يستغرق هذا بضع ثوانٍ';
+      overlay.classList.add('active');
+    });
+  }
+})();
+</script>
+{% endblock %}
