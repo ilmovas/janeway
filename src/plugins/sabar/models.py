@@ -18,6 +18,7 @@ VERDICT_SUSPECTED = "suspected"
 VERDICT_SIMILAR = "similar"
 VERDICT_CLEAN = "clean"
 
+# Threshold labels mirror GET /api/v1/check/verdicts (confirmed 0.98, suspected 0.95, similar 0.90).
 VERDICT_CHOICES = [
     (VERDICT_CONFIRMED, "Confirmed Duplicate (≥ 0.98)"),
     (VERDICT_SUSPECTED, "Suspected Duplicate (≥ 0.95)"),
@@ -91,3 +92,13 @@ class SabarCheck(models.Model):
             VERDICT_SIMILAR: "secondary",
             VERDICT_CLEAN: "success",
         }.get(self.verdict, "secondary")
+
+    @property
+    def online_matches(self):
+        raw = self.raw_response or {}
+        sig = raw.get("layer0_signals") or {}
+        return sig.get("results") or []
+
+    @property
+    def has_online_similarity(self):
+        return len(self.online_matches) > 0

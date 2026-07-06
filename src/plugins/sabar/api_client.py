@@ -5,7 +5,7 @@ Docs:   https://sibar.ilmovas.com/docs
 
 Endpoint auth summary:
   Public  (no key): POST /api/v1/check, GET /api/v1/reports/{id}/data,
-                    POST /api/v1/verify/doi, GET /api/v1/health
+                    POST /api/v1/verify/dois, GET /api/v1/health
   Protected (X-API-Key header): POST /api/v1/analyze, POST /api/v1/publications,
                                  DELETE /api/v1/publications/{id}
 """
@@ -94,20 +94,30 @@ def submit_article(article):
     journal = article.journal
     base_url, _ = _settings(journal)
 
-    # Gather DOIs from article references if available
     dois = []
     try:
-        for ref in article.reference_set.filter(doi__isnull=False).exclude(doi=""):
-            dois.append(ref.doi)
+        # article's own DOI
+        art_doi = article.get_doi()
+        if art_doi:
+            dois.append(art_doi)
+        # any additional doi-type identifiers on the article
+        for ident in article.identifier_set.filter(id_type='doi').exclude(identifier=''):
+            if ident.identifier and ident.identifier not in dois:
+                dois.append(ident.identifier)
     except Exception:
         pass
 
-    # Gather ORCID from corresponding author if available
     orcid = None
     try:
-        author = article.correspondence_author
-        if hasattr(author, "orcid") and author.orcid:
-            orcid = author.orcid
+        ca = article.correspondence_author
+        if ca and getattr(ca, 'orcid', None):
+            orcid = ca.orcid
+        if not orcid:
+            fa = article.frozenauthor_set.first()
+            if fa and getattr(fa, 'orcid', None):
+                orcid = fa.orcid
+        if not orcid and article.owner and getattr(article.owner, 'orcid', None):
+            orcid = article.owner.orcid
     except Exception:
         pass
 
@@ -211,7 +221,7 @@ def run_deep_analysis(journal, article):
 
 def verify_dois(journal, dois):
     """
-    POST /api/v1/verify/doi — verify a list of DOIs via Crossref.
+    POST /api/v1/verify/dois — verify a list of DOIs via Crossref.
     PUBLIC — no API key required.
 
     Returns list of verification results.
@@ -220,7 +230,7 @@ def verify_dois(journal, dois):
 
     try:
         resp = requests.post(
-            "{}/api/v1/verify/doi".format(base_url),
+            "{}/api/v1/verify/dois".format(base_url),
             json={"dois": dois},
             timeout=30,
         )
@@ -229,7 +239,7 @@ def verify_dois(journal, dois):
 
     if not resp.ok:
         raise SibarAPIError(
-            "Sibar verify/doi returned {}: {}".format(resp.status_code, resp.text[:200].encode("ascii", errors="replace").decode())
+            "Sibar verify/dois returned {}: {}".format(resp.status_code, resp.text[:200].encode("ascii", errors="replace").decode())
         )
 
     return _parse_json_response(resp)

@@ -52,6 +52,34 @@
     {% endif %}
 
     {% if check %}
+    {% if check.integrity_score is not None or check.recommendation %}
+    <div class="callout {% if check.integrity_score is not None and check.integrity_score < 60 %}alert{% elif check.integrity_score is not None and check.integrity_score < 80 %}warning{% else %}success{% endif %}">
+      <h2>درجة النزاهة والتوصية</h2>
+      <div class="row">
+        {% if check.integrity_score is not None %}
+        <div class="large-4 columns text-center">
+          <div style="font-size:2.5rem;font-weight:bold;line-height:1">{{ check.integrity_score|floatformat:0 }}</div>
+          <div style="font-size:0.9rem;opacity:0.85">من 100</div>
+        </div>
+        {% endif %}
+        {% if check.recommendation %}
+        <div class="{% if check.integrity_score is not None %}large-8{% else %}large-12{% endif %} columns">
+          <strong>التوصية:</strong>
+          {% if check.recommendation == 'accept' %}
+            <span class="label success">قبول النشر</span>
+          {% elif check.recommendation == 'reject' %}
+            <span class="label alert">رفض النشر</span>
+          {% elif check.recommendation == 'review' %}
+            <span class="label warning">يحتاج مراجعة</span>
+          {% else %}
+            <span class="label secondary">{{ check.recommendation }}</span>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
     <div class="callout">
       <h2>نتيجة فحص التكرار</h2>
       <table class="small">
@@ -118,6 +146,54 @@
       </table>
     </div>
 
+    {% if check.online_matches %}
+    <div class="callout secondary">
+      <h3>المصادر المرصودة على الإنترنت ({{ check.online_matches|length }})</h3>
+      <p style="font-size:0.9em;margin-bottom:1rem">
+        رصدت المنصة تشابهاً مع هذه المصادر. يرجى فتح كل رابط للتحقق اليدوي.
+      </p>
+      <table class="scroll small">
+        <thead>
+          <tr>
+            <th>نسبة التشابه</th>
+            <th>العنوان</th>
+            <th>المصدر</th>
+            <th>مقتطف</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for match in check.online_matches %}
+          <tr>
+            <td style="white-space:nowrap">
+              {% if match.similarity is not None %}
+                {% widthratio match.similarity 1 100 as sim_pct %}
+                {% if match.similarity >= 0.92 %}
+                  <span class="label alert">{{ sim_pct }}%</span>
+                {% elif match.similarity >= 0.85 %}
+                  <span class="label warning">{{ sim_pct }}%</span>
+                {% else %}
+                  <span class="label secondary">{{ sim_pct }}%</span>
+                {% endif %}
+              {% else %}—{% endif %}
+            </td>
+            <td>{{ match.title|default:"—" }}</td>
+            <td>
+              {% if match.url %}
+                <a href="{{ match.url }}" target="_blank" rel="noopener noreferrer">{{ match.source|default:match.url|truncatechars:50 }}</a>
+              {% elif match.link %}
+                <a href="{{ match.link }}" target="_blank" rel="noopener noreferrer">{{ match.source|default:match.link|truncatechars:50 }}</a>
+              {% elif match.source %}
+                {{ match.source }}
+              {% else %}—{% endif %}
+            </td>
+            <td style="font-size:0.85em">{{ match.snippet|default:"—"|truncatechars:200 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
     {% if check.matches %}
     <div class="callout secondary">
       <h3>المقالات المتطابقة ({{ check.matches|length }})</h3>
@@ -151,11 +227,11 @@
     {% endif %}
 
     {% if check.reasons %}
-    <div class="callout secondary">
-      <h3>أسباب الحكم</h3>
-      <ul>
+    <div class="callout">
+      <h3>أسباب الحكم ({{ check.reasons|length }})</h3>
+      <ul style="margin-bottom:0">
         {% for reason in check.reasons %}
-        <li>{{ reason }}</li>
+        <li style="margin-bottom:0.4rem">{{ reason }}</li>
         {% endfor %}
       </ul>
     </div>

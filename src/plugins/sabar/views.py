@@ -151,6 +151,16 @@ def refresh_check(request, article_id):
         try:
             data = fetch_result(request.journal, check.report_id)
             check.raw_response = data
+            check.is_duplicate = data.get("is_duplicate", check.is_duplicate)
+            if data.get("confidence") is not None:
+                check.confidence = data.get("confidence")
+            check.verdict = data.get("verdict", check.verdict)
+            if data.get("integrity_score") is not None:
+                check.integrity_score = data.get("integrity_score")
+            check.recommendation = data.get("recommendation", check.recommendation)
+            check.verdict_ar = data.get("verdict_ar", check.verdict_ar)
+            check.verdict_en = data.get("verdict_en", check.verdict_en)
+            check.reasons = data.get("reasons", check.reasons)
             check.save()
             messages.success(request, "Report data refreshed from Sibar.")
         except SibarAPIError as exc:
