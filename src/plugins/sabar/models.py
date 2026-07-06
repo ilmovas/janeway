@@ -63,6 +63,7 @@ class SabarCheck(models.Model):
     deep_analysis = models.JSONField(blank=True, null=True)
 
     raw_response = models.JSONField(blank=True, null=True)
+    researcher_profile = models.JSONField(blank=True, null=True)
     error_message = models.TextField(blank=True, null=True)
 
     date_submitted = models.DateTimeField(default=timezone.now)
@@ -102,3 +103,9 @@ class SabarCheck(models.Model):
     @property
     def has_online_similarity(self):
         return len(self.online_matches) > 0
+
+    @property
+    def researcher(self):
+        raw = self.raw_response or {}
+        # prefer explicitly stored field, fall back to raw_response embed
+        return self.researcher_profile or raw.get("researcher_profile") or None

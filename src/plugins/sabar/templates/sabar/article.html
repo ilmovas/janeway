@@ -194,6 +194,85 @@
     </div>
     {% endif %}
 
+    {% if check.researcher %}
+    <div class="callout">
+      <h3>السجل البحثي للمؤلف</h3>
+      <table class="small">
+        {% if check.researcher.name %}
+        <tr>
+          <th>الاسم</th>
+          <td>{{ check.researcher.name }}</td>
+        </tr>
+        {% endif %}
+        {% if check.researcher.orcid %}
+        <tr>
+          <th>ORCID</th>
+          <td><code>{{ check.researcher.orcid }}</code></td>
+        </tr>
+        {% endif %}
+        {% if check.researcher.total_publications is not None %}
+        <tr>
+          <th>عدد المنشورات</th>
+          <td>{{ check.researcher.total_publications }}</td>
+        </tr>
+        {% endif %}
+        {% if check.researcher.annual_pub_rate is not None %}
+        <tr>
+          <th>معدل النشر السنوي</th>
+          <td>{{ check.researcher.annual_pub_rate|floatformat:2 }}</td>
+        </tr>
+        {% endif %}
+        {% if check.researcher.retraction_count is not None %}
+        <tr>
+          <th>الأبحاث المسحوبة</th>
+          <td>
+            {% if check.researcher.retraction_count > 0 %}
+              <span class="label alert">{{ check.researcher.retraction_count }}</span>
+            {% else %}
+              <span class="label success">0</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endif %}
+        {% if check.researcher.salami_risk %}
+        <tr>
+          <th>مخاطر التقطيع البحثي</th>
+          <td>
+            {% if check.researcher.salami_risk == 'high' %}
+              <span class="label alert">عالية</span>
+            {% elif check.researcher.salami_risk == 'medium' %}
+              <span class="label warning">متوسطة</span>
+            {% elif check.researcher.salami_risk == 'low' %}
+              <span class="label success">منخفضة</span>
+            {% else %}
+              <span class="label secondary">{{ check.researcher.salami_risk }}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endif %}
+      </table>
+      {% if check.researcher.salami_signals %}
+      <h4 style="margin-top:1rem">مؤشرات التقطيع البحثي</h4>
+      <ul style="margin-bottom:0">
+        {% for signal in check.researcher.salami_signals %}
+        <li style="margin-bottom:0.4rem">
+          {{ signal.description|default:"—" }}
+          {% if signal.severity == 'high' %}
+            <span class="label alert">عالية</span>
+          {% elif signal.severity == 'medium' %}
+            <span class="label warning">متوسطة</span>
+          {% elif signal.severity == 'low' %}
+            <span class="label success">منخفضة</span>
+          {% elif signal.severity %}
+            <span class="label secondary">{{ signal.severity }}</span>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% endif %}
+
     {% if check.matches %}
     <div class="callout secondary">
       <h3>المقالات المتطابقة ({{ check.matches|length }})</h3>

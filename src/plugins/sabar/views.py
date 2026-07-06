@@ -96,6 +96,7 @@ def submit_all(request):
                     verdict_en=data.get("verdict_en"),
                     matches=data.get("matches"),
                     reasons=data.get("reasons"),
+                    researcher_profile=data.get("researcher_profile"),
                     raw_response=data,
                     date_completed=timezone.now(),
                 )
@@ -128,6 +129,7 @@ def submit_check(request, article_id):
                 verdict_en=data.get("verdict_en"),
                 matches=data.get("matches"),
                 reasons=data.get("reasons"),
+                researcher_profile=data.get("researcher_profile"),
                 raw_response=data,
                 date_completed=timezone.now(),
             )
@@ -161,6 +163,9 @@ def refresh_check(request, article_id):
             check.verdict_ar = data.get("verdict_ar", check.verdict_ar)
             check.verdict_en = data.get("verdict_en", check.verdict_en)
             check.reasons = data.get("reasons", check.reasons)
+            l1 = data.get("layer1_signals")
+            if l1 and not check.researcher_profile:
+                check.researcher_profile = l1
             check.save()
             messages.success(request, "Report data refreshed from Sibar.")
         except SibarAPIError as exc:

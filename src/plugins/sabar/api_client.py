@@ -5,7 +5,8 @@ Docs:   https://sibar.ilmovas.com/docs
 
 Endpoint auth summary:
   Public  (no key): POST /api/v1/check, GET /api/v1/reports/{id}/data,
-                    POST /api/v1/verify/dois, GET /api/v1/health
+                    GET /api/v1/researcher/{orcid}, POST /api/v1/verify/dois,
+                    GET /api/v1/health
   Protected (X-API-Key header): POST /api/v1/analyze, POST /api/v1/publications,
                                  DELETE /api/v1/publications/{id}
 """
@@ -61,6 +62,16 @@ def _parse_json_response(resp):
         raise SibarAPIError(
             "Sibar API returned HTTP {} with a non-JSON response.".format(resp.status_code)
         ) from exc
+
+
+def _normalize_orcid(orcid):
+    if not orcid:
+        return None
+    o = orcid.strip()
+    for prefix in ("https://orcid.org/", "http://orcid.org/", "orcid.org/"):
+        if o.startswith(prefix):
+            o = o[len(prefix):]
+    return o.strip("/") or None
 
 
 def _protected_headers(journal):
@@ -152,7 +163,49 @@ def submit_article(article):
             "Sibar API response missing report_id/id: {}".format(data)
         )
 
+    try:
+        if orcid:
+            profile = fetch_researcher(journal, orcid)
+            if profile:
+                data["researcher_profile"] = profile
+    except SibarAPIError:
+        pass  # researcher lookup is best-effort; never fail the whole check
+
     return report_id, data
+
+
+def fetch_researcher(journal, orcid):
+    """GET /api/v1/researcher/{orcid} — author record via OpenAlex. PUBLIC.
+
+    Returns profile dict, or None if not found / invalid (404/422) — never raises
+    for those; only raises SibarAPIError on network trouble.
+    """
+    base_url, _ = _settings(journal)
+    norm = _normalize_orcid(orcid)
+    if not norm:
+        return None
+    try:
+        resp = requests.get(
+            "{}/api/v1/researcher/{}".format(base_url, norm), timeout=30
+        )
+    except requests.RequestException as exc:
+        raise SibarAPIError(
+            "Network error contacting Sibar researcher API: {}".format(exc)
+        )
+    if resp.status_code in (404, 422):
+        return None
+    if not resp.ok:
+        raise SibarAPIError(
+            "Sibar researcher returned {}: {}".format(
+                resp.status_code,
+                resp.text[:200].encode("ascii", errors="replace").decode(),
+            )
+        )
+    data = _parse_json_response(resp)
+    # Drop the large works[] list to keep stored payload small; keep summary + signals
+    if isinstance(data, dict):
+        data.pop("works", None)
+    return data
 
 
 def fetch_result(journal, report_id):
