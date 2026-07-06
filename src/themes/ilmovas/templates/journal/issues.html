@@ -11,7 +11,7 @@
   <header class="mb-10 border-r-4 border-gold pr-5">
     <h1 class="text-4xl font-bold text-primary mb-2">{% trans 'Issue Archive' %}</h1>
     <p class="text-text-soft text-base leading-relaxed max-w-2xl">
-      {% trans 'تصفح الأرشيف الكامل للأبحاث الأكاديمية المحكّمة، منظمةً حسب المجلد والسنة.' %}
+      {% trans 'Browse the complete archive of peer-reviewed academic research, organized by volume and year.' %}
     </p>
   </header>
 
@@ -23,7 +23,7 @@
       <!-- Filter by year -->
       {% if issues %}
         <div class="bg-ivory-dark/70 border border-border-rule p-5">
-          <h3 class="text-xs font-bold tracking-widest text-primary uppercase mb-4">{% trans 'تصفية حسب السنة' %}</h3>
+          <h3 class="text-xs font-bold tracking-widest text-primary uppercase mb-4">{% trans 'Filter by Year' %}</h3>
           <ul class="space-y-1">
             {% regroup issues by date.year as issues_by_year %}
             {% for year_group in issues_by_year %}
@@ -41,15 +41,15 @@
 
       <!-- Subscribe CTA -->
       <div class="bg-primary p-5 text-white">
-        <h3 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-3">{% trans 'ابقَ على اطلاع' %}</h3>
-        <p class="text-sm text-white/75 leading-relaxed mb-4">{% trans 'اشترك لتلقي إشعارات عند نشر أعداد جديدة.' %}</p>
+        <h3 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-3">{% trans 'Stay Informed' %}</h3>
+        <p class="text-sm text-white/75 leading-relaxed mb-4">{% trans 'Subscribe to receive notifications when new issues are published.' %}</p>
         {% if not request.user.is_authenticated %}
           <a href="{% url 'core_register' %}"
              class="block w-full bg-gold text-primary text-sm font-bold py-2 text-center hover:bg-gold-light transition-colors">
-            {% trans 'اشترك الآن' %}
+            {% trans 'Subscribe Now' %}
           </a>
         {% else %}
-          <p class="text-xs text-white/50">{% trans 'تم اشتراكك.' %}</p>
+          <p class="text-xs text-white/50">{% trans 'You are subscribed.' %}</p>
         {% endif %}
       </div>
 
@@ -136,7 +136,7 @@
                   <div class="px-4 pb-4 pt-3 border-t border-border-rule flex justify-between items-center">
                     <a href="{% url 'journal_issue' issue.id %}"
                        class="text-sm font-bold text-primary flex items-center gap-1 hover:text-gold transition-colors">
-                      {% trans 'تصفح العدد' %}
+                      {% trans 'Browse Issue' %}
                       <span class="material-symbols-outlined text-base group-hover:translate-x-[-4px] transition-transform">arrow_back</span>
                     </a>
                     <span class="material-symbols-outlined text-primary/30">menu_book</span>
@@ -150,7 +150,7 @@
       {% else %}
         <div class="text-center py-20 text-text-muted">
           <span class="material-symbols-outlined text-6xl block mb-4 opacity-30">inbox</span>
-          <p class="text-lg">{% trans 'لم تُنشر أعداد في هذه المجلة بعد.' %}</p>
+          <p class="text-lg">{% trans 'No issues have been published in this journal yet.' %}</p>
         </div>
       {% endif %}
     </div>

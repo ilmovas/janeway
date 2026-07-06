@@ -147,7 +147,6 @@
             <div class="flex items-center gap-2">
               <div class="w-1 h-8 bg-gold"></div>
               <div class="leading-tight">
-                <span class="block text-xs font-bold text-gold tracking-widest uppercase">إلموفاس</span>
                 <span class="block text-sm font-bold text-primary leading-none">{{ request.journal.name|truncatechars:22 }}</span>
               </div>
             </div>
@@ -218,11 +217,15 @@
 
       {% if request.user.is_authenticated %}
         <div class="relative group">
-          <button class="flex items-center gap-2 bg-primary text-white text-sm font-bold px-4 py-2 hover:bg-primary-mid transition-colors border-b-2 border-gold">
+          <button type="button" class="flex items-center justify-center w-10 h-10 shrink-0 bg-primary text-white hover:bg-primary-mid transition-colors border-b-2 border-gold" aria-label="{% trans 'Account' %}">
             <span class="material-symbols-outlined text-base">account_circle</span>
-            <span class="hidden lg:inline">{{ request.user.full_name|truncatechars:16 }}</span>
           </button>
           <div class="absolute left-0 top-full bg-white border border-border-rule shadow-lg w-48 hidden group-hover:block z-50">
+            {% user_has_role request 'editor' as user_is_editor %}
+            {% if user_is_editor or request.user.is_staff %}
+            <a href="{% url 'core_manager_index' %}" class="block px-4 py-2 text-sm hover:bg-ivory text-right">{% trans 'Manager' %}</a>
+            <a href="{% url 'kanban' %}" class="block px-4 py-2 text-sm hover:bg-ivory text-right">{% trans 'Kanban' %}</a>
+            {% endif %}
             <a href="{% url 'core_dashboard' %}" class="block px-4 py-2 text-sm hover:bg-ivory text-right">{% trans 'Dashboard' %}</a>
             <a href="{% url 'core_edit_profile' %}" class="block px-4 py-2 text-sm hover:bg-ivory text-right">{% trans 'Profile' %}</a>
             <hr class="border-border-rule">
@@ -259,7 +262,16 @@
     {% if request.journal.nav_issues %}
       <a href="{% url 'journal_issues' %}" class="block text-sm font-medium text-text-soft">{% trans 'Issues' %}</a>
     {% endif %}
-    {% if not request.user.is_authenticated %}
+    {% if request.user.is_authenticated %}
+      <a href="{% url 'core_dashboard' %}" class="block text-sm font-medium text-text-soft">{% trans 'Dashboard' %}</a>
+      <a href="{% url 'core_edit_profile' %}" class="block text-sm font-medium text-text-soft">{% trans 'Profile' %}</a>
+      {% user_has_role request 'editor' as user_is_editor %}
+      {% if user_is_editor or request.user.is_staff %}
+      <a href="{% url 'core_manager_index' %}" class="block text-sm font-medium text-text-soft">{% trans 'Manager' %}</a>
+      <a href="{% url 'kanban' %}" class="block text-sm font-medium text-text-soft">{% trans 'Kanban' %}</a>
+      {% endif %}
+      <a href="{% url 'core_logout' %}" class="block text-sm font-medium text-text-soft">{% trans 'Logout' %}</a>
+    {% else %}
       <a href="{% url 'core_login' %}" class="block bg-primary text-white text-center py-2 font-bold">{% trans 'Log In' %}</a>
     {% endif %}
     <!-- Language switcher (mobile) -->
@@ -306,7 +318,7 @@
 
       <!-- Quick links -->
       <div>
-        <h4 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-4">{% trans 'روابط سريعة' %}</h4>
+        <h4 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-4">{% trans 'Quick Links' %}</h4>
         <ul class="space-y-2">
           {% if request.journal.nav_articles %}
             <li><a href="{% url 'journal_articles' %}" class="text-sm text-white/75 hover:text-white transition-colors">{% trans 'Articles' %}</a></li>
@@ -322,7 +334,7 @@
 
       <!-- Policies -->
       <div>
-        <h4 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-4">{% trans 'السياسات' %}</h4>
+        <h4 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-4">{% trans 'Policies' %}</h4>
         <ul class="space-y-2">
           {% if journal_settings.general.privacy_policy_url %}
             <li><a href="{{ journal_settings.general.privacy_policy_url }}" class="text-sm text-white/75 hover:text-white transition-colors">{% trans 'Privacy Policy' %}</a></li>
@@ -339,12 +351,11 @@
       <!-- Contact -->
       <div>
         <h4 class="text-xs font-bold tracking-widest text-gold-light uppercase mb-4">{% trans 'Contact us' %}</h4>
-        {% if request.journal.nav_contact %}
-          <a href="{% url 'contact' %}" class="inline-flex items-center gap-2 border border-white/20 px-3 py-2 text-sm text-white/75 hover:bg-white hover:text-primary transition-all">
-            <span class="material-symbols-outlined text-base">mail</span>
-            {% trans 'Contact us' %}
-          </a>
-        {% endif %}
+        <ul class="space-y-2">
+          {% if request.journal.nav_contact %}
+            <li><a href="{% url 'contact' %}" class="text-sm text-white/75 hover:text-white transition-colors">{% trans 'Contact us' %}</a></li>
+          {% endif %}
+        </ul>
         {% if journal_settings.general.publisher_name %}
           <p class="text-sm text-white/60 mt-3">{{ journal_settings.general.publisher_name }}</p>
         {% endif %}
@@ -353,9 +364,9 @@
 
     <!-- Bottom bar -->
     <div class="pt-4 text-center text-xs text-white/40">
-      © {% now "Y" %} {{ request.journal.name }}. {% trans 'جميع الحقوق محفوظة.' %}
+      © {% now "Y" %} {{ request.journal.name }}. {% trans 'All rights reserved.' %}
       &nbsp;·&nbsp;
-      <a href="https://janeway.systems" class="hover:text-white/70 transition-colors">Powered by Janeway</a>
+      <span class="text-white/40">{% trans 'Ilmovas Scientific Publishing Platform' %}</span>
     </div>
   </div>
 </footer>

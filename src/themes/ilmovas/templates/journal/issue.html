@@ -12,7 +12,7 @@
   <nav class="text-xs text-text-muted mb-6 flex items-center gap-2">
     <a href="{% url 'website_index' %}" class="hover:text-gold transition-colors">{% trans 'Home' %}</a>
     <span class="material-symbols-outlined text-sm">chevron_left</span>
-    <a href="{% url 'journal_issues' %}" class="hover:text-gold transition-colors">{% trans 'الأرشيف' %}</a>
+    <a href="{% url 'journal_issues' %}" class="hover:text-gold transition-colors">{% trans 'Archive' %}</a>
     <span class="material-symbols-outlined text-sm">chevron_left</span>
     <span class="text-text-main font-medium">{{ issue.display_title }}</span>
   </nav>
@@ -84,7 +84,7 @@
 
                 <div class="flex-grow min-w-0">
                   <div class="flex flex-wrap gap-2 mb-2">
-                    <span class="bg-ivory-dark text-primary text-xs font-bold px-2 py-0.5 uppercase tracking-wide">{% trans 'وصول مفتوح' %}</span>
+                    <span class="bg-ivory-dark text-primary text-xs font-bold px-2 py-0.5 uppercase tracking-wide">{% trans 'Open Access' %}</span>
                     {% if article.section %}
                       <span class="text-xs text-text-muted">{{ article.section.name }}</span>
                     {% endif %}
@@ -116,7 +116,7 @@
                   <div class="flex gap-3">
                     <a href="{% url 'article_view' 'id' article.pk %}"
                        class="text-xs font-bold text-primary flex items-center gap-1 hover:text-gold transition-colors">
-                      {% trans 'قراءة المقال' %}
+                      {% trans 'Read Article' %}
                       <span class="material-symbols-outlined text-sm">arrow_back</span>
                     </a>
                     {% with galley=article.pdfs.0 %}{% if galley %}
@@ -134,7 +134,7 @@
       {% empty %}
         <div class="text-center py-16 text-text-muted">
           <span class="material-symbols-outlined text-6xl block mb-4 opacity-30">article</span>
-          <p>{% trans 'لا توجد مقالات في هذا العدد بعد.' %}</p>
+          <p>{% trans 'No articles in this issue yet.' %}</p>
         </div>
       {% endfor %}
 
@@ -173,14 +173,14 @@
         <a href="{% url 'journal_issue_download_galley' issue.id issue.large_image.id %}"
            class="w-full bg-primary text-white font-bold py-3 flex items-center justify-center gap-2 hover:bg-primary-mid transition-colors border-b-2 border-gold text-sm">
           <span class="material-symbols-outlined text-base">download</span>
-          {% trans 'تنزيل العدد' %}
+          {% trans 'Download Issue' %}
         </a>
       {% endif %}
 
       <!-- Issue editors -->
       {% if editors %}
         <div class="bg-white border border-border-rule gold-border-top p-4">
-          <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-3">{% trans 'محررو العدد' %}</h3>
+          <h3 class="text-xs font-bold tracking-widest text-gold uppercase mb-3">{% trans 'Issue Editors' %}</h3>
           <ul class="space-y-2">
             {% for editor in editors %}
               <li class="flex items-center gap-2">
@@ -195,7 +195,7 @@
       <!-- Other Issues -->
       {% if issues %}
         <div class="bg-ivory-dark border border-border-rule p-4">
-          <h3 class="text-xs font-bold tracking-widest text-primary uppercase mb-3">{% trans 'أعداد أخرى' %}</h3>
+          <h3 class="text-xs font-bold tracking-widest text-primary uppercase mb-3">{% trans 'Other Issues' %}</h3>
           <ul class="space-y-1">
             {% for other_issue in issues|slice:":8" %}
               <li>

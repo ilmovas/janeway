@@ -19,10 +19,10 @@
       {% csrf_token %}
       <div class="flex flex-col md:flex-row gap-4 items-end">
         <div class="flex-grow">
-          <label class="block text-xs font-bold text-primary mb-2 uppercase tracking-wide">{% trans 'البحث في المقالات' %}</label>
+          <label class="block text-xs font-bold text-primary mb-2 uppercase tracking-wide">{% trans 'Search Articles' %}</label>
           <div class="relative">
             <input type="search" name="article_search"
-                   placeholder="{% trans 'الكلمات المفتاحية، المؤلفون، المواضيع...' %}"
+                   placeholder="{% trans 'Keywords, authors, topics...' %}"
                    class="w-full bg-white border border-border-rule p-3 text-sm outline-none focus:ring-1 focus:ring-gold">
             <span class="material-symbols-outlined absolute left-3 top-3 text-primary">search</span>
           </div>
@@ -55,7 +55,7 @@
                  style="background: linear-gradient(to left, #C4922A, #0D4F3C);"></div>
 
             <div class="flex flex-wrap gap-2 mb-3">
-              <span class="bg-ivory-dark text-primary text-xs font-bold px-2 py-0.5 uppercase tracking-wide">{% trans 'وصول مفتوح' %}</span>
+              <span class="bg-ivory-dark text-primary text-xs font-bold px-2 py-0.5 uppercase tracking-wide">{% trans 'Open Access' %}</span>
               {% if article.section %}
                 <span class="text-primary text-xs font-bold border-r border-border-rule pr-2 mr-1">{{ article.section.name }}</span>
               {% endif %}
@@ -87,7 +87,7 @@
             <div class="flex items-center gap-3">
               <a href="{% url 'article_view' 'id' article.pk %}"
                  class="bg-primary text-white px-4 py-2 text-sm font-bold flex items-center gap-2 hover:bg-primary-mid transition-colors">
-                {% trans 'عرض المقال' %}
+                {% trans 'View Article' %}
                 <span class="material-symbols-outlined text-sm">arrow_back</span>
               </a>
               {% with galley=article.pdfs.0 %}{% if galley %}
@@ -101,7 +101,7 @@
         {% empty %}
           <div class="text-center py-16 text-text-muted">
             <span class="material-symbols-outlined text-6xl block mb-4 opacity-30">article</span>
-            <p>{% trans 'لم تُنشر مقالات بعد.' %}</p>
+            <p>{% trans 'No articles have been published yet.' %}</p>
           </div>
         {% endfor %}
       </div>
@@ -115,12 +115,12 @@
 
       <!-- Submit CTA -->
       <div class="bg-primary p-5 text-white border-b-4 border-gold">
-        <h3 class="text-base font-bold mb-2">{% trans 'شارك بحثك' %}</h3>
-        <p class="text-sm text-white/80 leading-relaxed mb-4">{% trans 'نرحب بالمساهمات الأكاديمية في جميع المجالات.' %}</p>
+        <h3 class="text-base font-bold mb-2">{% trans 'Share Your Research' %}</h3>
+        <p class="text-sm text-white/80 leading-relaxed mb-4">{% trans 'We welcome academic contributions in all fields.' %}</p>
         <a href="{% url 'submission_start' %}"
            class="w-full bg-gold text-primary font-bold py-3 flex items-center justify-center gap-2 hover:bg-gold-light transition-colors text-sm">
           <span class="material-symbols-outlined text-base">upload_file</span>
-          {% trans 'تقديم مقال' %}
+          {% trans 'Submit an Article' %}
         </a>
       </div>
 

@@ -8284,3 +8284,106 @@ msgstr "نرحب بتقديمات الأبحاث الأصيلة."
 
 msgid "Submit Now"
 msgstr "قدّم الآن"
+
+# ilmovas Batch-2d nav pages
+msgid "Search Articles"
+msgstr "البحث في المقالات"
+
+msgid "Keywords, authors, topics..."
+msgstr "الكلمات المفتاحية، المؤلفون، المواضيع..."
+
+msgid "View Article"
+msgstr "عرض المقال"
+
+msgid "No articles have been published yet."
+msgstr "لم تُنشر مقالات بعد."
+
+msgid "Share Your Research"
+msgstr "شارك بحثك"
+
+msgid "We welcome academic contributions in all fields."
+msgstr "نرحب بالمساهمات الأكاديمية في جميع المجالات."
+
+msgid "Browse the complete archive of peer-reviewed academic research, organized by volume and year."
+msgstr "تصفح الأرشيف الكامل للأبحاث الأكاديمية المحكّمة، منظمةً حسب المجلد والسنة."
+
+msgid "Filter by Year"
+msgstr "تصفية حسب السنة"
+
+msgid "Stay Informed"
+msgstr "ابقَ على اطلاع"
+
+msgid "Subscribe to receive notifications when new issues are published."
+msgstr "اشترك لتلقي إشعارات عند نشر أعداد جديدة."
+
+msgid "Subscribe Now"
+msgstr "اشترك الآن"
+
+msgid "You are subscribed."
+msgstr "تم اشتراكك."
+
+msgid "No issues have been published in this journal yet."
+msgstr "لم تُنشر أعداد في هذه المجلة بعد."
+
+msgid "Archive"
+msgstr "الأرشيف"
+
+msgid "Read Article"
+msgstr "قراءة المقال"
+
+msgid "No articles in this issue yet."
+msgstr "لا توجد مقالات في هذا العدد بعد."
+
+msgid "Download Issue"
+msgstr "تنزيل العدد"
+
+msgid "Issue Editors"
+msgstr "محررو العدد"
+
+msgid "Other Issues"
+msgstr "أعداد أخرى"
+
+msgid "The editorial team is committed to scientific integrity and academic quality in all published research."
+msgstr "تلتزم هيئة التحرير بالنزاهة العلمية والجودة الأكاديمية في جميع الأبحاث المنشورة."
+
+msgid "We are here to support the academic community. Whether you have questions about submissions, publication, or technical support, we would love to hear from you."
+msgstr "نحن هنا لدعم المجتمع الأكاديمي. سواء كانت لديك أسئلة حول التقديمات أو النشر أو الدعم التقني، يسعدنا سماعك."
+
+msgid "Your name and email"
+msgstr "اسمك وبريدك الإلكتروني"
+
+msgid "Your name and email address"
+msgstr "اسمك وعنوان بريدك الإلكتروني"
+
+msgid "Message subject"
+msgstr "موضوع الرسالة"
+
+msgid "Message"
+msgstr "الرسالة"
+
+msgid "Write your message here..."
+msgstr "اكتب رسالتك هنا..."
+
+msgid "Office Hours"
+msgstr "ساعات العمل"
+
+msgid "Monday – Friday"
+msgstr "الاثنين – الجمعة"
+
+msgid "Saturday – Sunday"
+msgstr "السبت – الأحد"
+
+msgid "Closed"
+msgstr "مغلق"
+
+msgid "Quick Links"
+msgstr "روابط سريعة"
+
+msgid "Policies"
+msgstr "السياسات"
+
+msgid "All rights reserved."
+msgstr "جميع الحقوق محفوظة."
+
+msgid "Ilmovas Scientific Publishing Platform"
+msgstr "منصة إلموفاس للنشر العلمي"
