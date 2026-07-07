@@ -4,7 +4,7 @@
 {% block css %}
 {{ block.super }}
 <style>
-  .sabar-loading-overlay {
+  .sibar-loading-overlay {
     display: none;
     position: fixed;
     inset: 0;
@@ -17,15 +17,15 @@
     font-size: 1.3rem;
     gap: 1rem;
   }
-  .sabar-loading-overlay.active { display: flex; }
-  .sabar-spinner {
+  .sibar-loading-overlay.active { display: flex; }
+  .sibar-spinner {
     width: 56px; height: 56px;
     border: 6px solid rgba(255,255,255,0.3);
     border-top-color: #fff;
     border-radius: 50%;
-    animation: sabar-spin 0.8s linear infinite;
+    animation: sibar-spin 0.8s linear infinite;
   }
-  @keyframes sabar-spin { to { transform: rotate(360deg); } }
+  @keyframes sibar-spin { to { transform: rotate(360deg); } }
 </style>
 {% endblock %}
 
@@ -33,9 +33,9 @@
 
 {% block body %}
 
-<div class="sabar-loading-overlay" id="sabarOverlay">
-  <div class="sabar-spinner"></div>
-  <div id="sabarOverlayMsg">جارٍ إرسال المقال إلى سبار...</div>
+<div class="sibar-loading-overlay" id="sibarOverlay">
+  <div class="sibar-spinner"></div>
+  <div id="sibarOverlayMsg">جارٍ إرسال المقال إلى سبار...</div>
 </div>
 
 <div class="row expanded">
@@ -46,7 +46,7 @@
         <h1><i class="fa fa-search"></i> {% trans "Sibar — Duplication & Integrity Check" %}</h1>
       </div>
       <div class="large-4 columns text-right" style="padding-top:1rem">
-        <form method="POST" action="{% url 'sabar_submit_all' %}"
+        <form method="POST" action="{% url 'sibar_submit_all' %}"
               onsubmit="return confirm('{% trans "Submit ALL articles to Sibar? This may take a moment." %}')">
           {% csrf_token %}
           <button type="submit" class="button warning">
@@ -78,7 +78,7 @@
       </thead>
       <tbody>
         {% for art in articles %}
-        {% with check=art.sabar_checks.first %}
+        {% with check=art.sibar_checks.first %}
         <tr>
           <td>
             <strong>{{ art.title|truncatechars:60 }}</strong>
@@ -126,7 +126,7 @@
           </td>
 
           <td style="text-align:center">
-            <form method="POST" action="{% url 'sabar_submit' article_id=art.pk %}" style="display:inline">
+            <form method="POST" action="{% url 'sibar_submit' article_id=art.pk %}" style="display:inline">
               {% csrf_token %}
               <button type="submit" class="button tiny {% if check %}secondary{% endif %}" title="{% if check %}إعادة الفحص{% else %}فحص الآن{% endif %}">
                 <i class="fa fa-{% if check %}refresh{% else %}search{% endif %}"></i>
@@ -134,7 +134,7 @@
               </button>
             </form>
             {% if check %}
-            <a class="button tiny secondary" href="{% url 'sabar_article' article_id=art.pk %}" title="{% trans 'عرض التفاصيل' %}">
+            <a class="button tiny secondary" href="{% url 'sibar_article' article_id=art.pk %}" title="{% trans 'عرض التفاصيل' %}">
               <i class="fa fa-eye"></i>
             </a>
             {% endif %}
@@ -164,8 +164,8 @@
 
 <script>
 (function () {
-  var overlay = document.getElementById('sabarOverlay');
-  var overlayMsg = document.getElementById('sabarOverlayMsg');
+  var overlay = document.getElementById('sibarOverlay');
+  var overlayMsg = document.getElementById('sibarOverlayMsg');
 
   // Single article check forms
   document.querySelectorAll('form[action*="submit"]').forEach(function (form) {

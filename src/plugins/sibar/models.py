@@ -27,9 +27,9 @@ VERDICT_CHOICES = [
 ]
 
 
-class SabarCheck(models.Model):
+class SibarCheck(models.Model):
     article = models.ForeignKey(
-        Article, on_delete=models.CASCADE, related_name="sabar_checks"
+        Article, on_delete=models.CASCADE, related_name="sibar_checks"
     )
     status = models.CharField(
         max_length=16, choices=STATUS_CHOICES, default=STATUS_PENDING

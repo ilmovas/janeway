@@ -13,12 +13,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="SabarCheck",
+            name="SibarCheck",
             fields=[
                 ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
                 ("article", models.ForeignKey(
                     on_delete=django.db.models.deletion.CASCADE,
-                    related_name="sabar_checks",
+                    related_name="sibar_checks",
                     to="submission.article",
                 )),
                 ("status", models.CharField(

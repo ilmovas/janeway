@@ -40,8 +40,8 @@
             <label>
               رابط API
               <small style="color:#777">(الرابط الأساسي لخادم سبار)</small>
-              <input type="url" name="sabar_api_url"
-                     value="{{ current.sabar_api_url|default:'https://sibar.ilmovas.com' }}"
+              <input type="url" name="sibar_api_url"
+                     value="{{ current.sibar_api_url|default:'https://sibar.ilmovas.com' }}"
                      placeholder="https://sibar.ilmovas.com">
             </label>
           </div>
@@ -52,15 +52,15 @@
             <label>
               مفتاح API
               <small style="color:#777">(المفتاح السري — لا تشاركه مع أحد)</small>
-              <input type="password" name="sabar_api_key"
+              <input type="password" name="sibar_api_key"
                      value=""
                      placeholder="أدخل مفتاح API الخاص بك"
                      autocomplete="off">
             </label>
-            {% if current.sabar_api_key %}
+            {% if current.sibar_api_key %}
             <p style="color:#3adb76;font-size:0.85em">
               <i class="fa fa-check"></i> المفتاح مُدخل
-              ({{ current.sabar_api_key|slice:":6" }}••••••)
+              ({{ current.sibar_api_key|slice:":6" }}••••••)
             </p>
             {% else %}
             <p style="color:#cc4b37;font-size:0.85em">
@@ -79,7 +79,7 @@
     <!-- روابط سريعة -->
     <div class="callout secondary">
       <h3>روابط سريعة</h3>
-      <a class="button" href="{% url 'sabar_articles' %}">
+      <a class="button" href="{% url 'sibar_articles' %}">
         <i class="fa fa-list"></i> عرض المقالات
       </a>
       <a class="button secondary" href="https://sibar.ilmovas.com/docs" target="_blank">

@@ -4,12 +4,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("sabar", "0003_researcher_profile"),
+        ("sibar", "0003_researcher_profile"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name="sabarcheck",
+            model_name="sibarcheck",
             name="report_url",
         ),
     ]

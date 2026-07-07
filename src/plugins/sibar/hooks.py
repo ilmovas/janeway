@@ -7,11 +7,11 @@ def article_task_hook(context):
     if not article:
         return ""
 
-    check = article.sabar_checks.first()
+    check = article.sibar_checks.first()
     if not check:
         return ""
 
-    url = reverse("sabar_article", kwargs={"article_id": article.pk})
+    url = reverse("sibar_article", kwargs={"article_id": article.pk})
     label = "Sibar: {}".format(check.get_status_display())
     return format_html(
         '<li><a href="{}"><i class="fa fa-language"></i> {}</a></li>',

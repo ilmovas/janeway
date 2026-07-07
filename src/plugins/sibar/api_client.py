@@ -19,12 +19,12 @@ class SibarAPIError(Exception):
     pass
 
 # Keep old name as alias so existing imports don't break
-SabarAPIError = SibarAPIError
+SibarAPIError = SibarAPIError
 
 
 def _get_plugin():
     from utils import models as utils_models
-    return utils_models.Plugin.objects.get(name="sabar")
+    return utils_models.Plugin.objects.get(name="sibar")
 
 
 _ALLOWED_HOSTS = {"sibar.ilmovas.com", "api.sibar.ilmovas.com"}
@@ -45,10 +45,10 @@ def _validate_url(url):
 def _settings(journal):
     plugin = _get_plugin()
     base_url = setting_handler.get_plugin_setting(
-        plugin, "sabar_api_url", journal, create=True
+        plugin, "sibar_api_url", journal, create=True
     ).value
     api_key = setting_handler.get_plugin_setting(
-        plugin, "sabar_api_key", journal, create=True
+        plugin, "sibar_api_key", journal, create=True
     ).value
     base_url = (base_url or "https://sibar.ilmovas.com").rstrip("/")
     _validate_url(base_url)

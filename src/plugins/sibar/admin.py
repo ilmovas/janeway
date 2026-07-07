@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from plugins.sabar.models import SabarCheck
+from plugins.sibar.models import SibarCheck
 
 
-@admin.register(SabarCheck)
-class SabarCheckAdmin(admin.ModelAdmin):
+@admin.register(SibarCheck)
+class SibarCheckAdmin(admin.ModelAdmin):
     list_display = (
         "article",
         "status",

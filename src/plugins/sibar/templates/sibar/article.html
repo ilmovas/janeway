@@ -4,7 +4,7 @@
 {% block css %}
 {{ block.super }}
 <style>
-  .sabar-loading-overlay {
+  .sibar-loading-overlay {
     display: none;
     position: fixed;
     inset: 0;
@@ -17,16 +17,16 @@
     font-size: 1.3rem;
     gap: 1rem;
   }
-  .sabar-loading-overlay.active { display: flex; }
-  .sabar-spinner {
+  .sibar-loading-overlay.active { display: flex; }
+  .sibar-spinner {
     width: 56px; height: 56px;
     border: 6px solid rgba(255,255,255,0.3);
     border-top-color: #fff;
     border-radius: 50%;
-    animation: sabar-spin 0.8s linear infinite;
+    animation: sibar-spin 0.8s linear infinite;
   }
-  @keyframes sabar-spin { to { transform: rotate(360deg); } }
-  .sabar-score-card {
+  @keyframes sibar-spin { to { transform: rotate(360deg); } }
+  .sibar-score-card {
     border-width: 3px;
     border-style: solid;
     border-radius: 12px;
@@ -34,33 +34,33 @@
     margin-bottom: 1.25rem;
     text-align: center;
   }
-  .sabar-score-card.score-success { border-color: #1B4D3E; background: #f4faf7; }
-  .sabar-score-card.score-warning { border-color: #C9A84C; background: #fffdf5; }
-  .sabar-score-card.score-alert { border-color: #C0392B; background: #fff8f8; }
-  .sabar-score-number {
+  .sibar-score-card.score-success { border-color: #1B4D3E; background: #f4faf7; }
+  .sibar-score-card.score-warning { border-color: #C9A84C; background: #fffdf5; }
+  .sibar-score-card.score-alert { border-color: #C0392B; background: #fff8f8; }
+  .sibar-score-number {
     font-size: 3.5rem;
     font-weight: 700;
     line-height: 1;
     margin-bottom: 0.35rem;
   }
-  .sabar-score-number span { font-size: 1.25rem; font-weight: 500; opacity: 0.75; }
-  .sabar-score-verdict-ar {
+  .sibar-score-number span { font-size: 1.25rem; font-weight: 500; opacity: 0.75; }
+  .sibar-score-verdict-ar {
     font-size: 1.35rem;
     font-weight: 700;
     margin: 0.75rem 0 0.25rem;
   }
-  .sabar-score-verdict-en {
+  .sibar-score-verdict-en {
     font-size: 0.95rem;
     opacity: 0.8;
     margin-bottom: 0.5rem;
   }
-  .sabar-score-reasons {
+  .sibar-score-reasons {
     list-style: none;
     margin: 1rem 0 0;
     padding: 0;
     text-align: right;
   }
-  .sabar-score-reasons li {
+  .sibar-score-reasons li {
     padding: 0.45rem 0.65rem;
     margin-bottom: 0.35rem;
     border-radius: 6px;
@@ -74,15 +74,15 @@
 
 {% block body %}
 
-<div class="sabar-loading-overlay" id="sabarOverlay">
-  <div class="sabar-spinner"></div>
-  <div id="sabarOverlayMsg">جارٍ الإرسال إلى سبار...</div>
+<div class="sibar-loading-overlay" id="sibarOverlay">
+  <div class="sibar-spinner"></div>
+  <div id="sibarOverlayMsg">جارٍ الإرسال إلى سبار...</div>
 </div>
 
 <div class="row expanded">
   <div class="large-12 columns">
     <h1>{{ article.title }}</h1>
-    <p><a href="{% url 'sabar_articles' %}">← العودة إلى قائمة المقالات</a></p>
+    <p><a href="{% url 'sibar_articles' %}">← العودة إلى قائمة المقالات</a></p>
 
     {% if messages %}
     {% for msg in messages %}
@@ -94,18 +94,18 @@
 
     {% if check %}
     {% if check.integrity_score is not None %}
-    <div class="sabar-score-card {% if check.integrity_score >= 75 %}score-success{% elif check.integrity_score >= 50 %}score-warning{% else %}score-alert{% endif %}">
+    <div class="sibar-score-card {% if check.integrity_score >= 75 %}score-success{% elif check.integrity_score >= 50 %}score-warning{% else %}score-alert{% endif %}">
       <h2 style="margin-bottom:1rem;font-size:1.1rem">🎯 درجة النزاهة البحثية</h2>
-      <div class="sabar-score-number" style="color:{% if check.integrity_score >= 75 %}#1B4D3E{% elif check.integrity_score >= 50 %}#C9A84C{% else %}#C0392B{% endif %}">
+      <div class="sibar-score-number" style="color:{% if check.integrity_score >= 75 %}#1B4D3E{% elif check.integrity_score >= 50 %}#C9A84C{% else %}#C0392B{% endif %}">
         {{ check.integrity_score|floatformat:0 }}<span>/100</span>
       </div>
       {% if check.verdict_ar %}
-      <div class="sabar-score-verdict-ar" style="color:{% if check.integrity_score >= 75 %}#1B4D3E{% elif check.integrity_score >= 50 %}#8B6914{% else %}#C0392B{% endif %}">
+      <div class="sibar-score-verdict-ar" style="color:{% if check.integrity_score >= 75 %}#1B4D3E{% elif check.integrity_score >= 50 %}#8B6914{% else %}#C0392B{% endif %}">
         {{ check.verdict_ar }}
       </div>
       {% endif %}
       {% if check.verdict_en %}
-      <div class="sabar-score-verdict-en">{{ check.verdict_en }}</div>
+      <div class="sibar-score-verdict-en">{{ check.verdict_en }}</div>
       {% endif %}
       {% if check.recommendation %}
       <div style="margin-top:0.5rem">
@@ -121,7 +121,7 @@
       </div>
       {% endif %}
       {% if check.reasons %}
-      <ul class="sabar-score-reasons">
+      <ul class="sibar-score-reasons">
         {% for reason in check.reasons %}
         <li>⚠ {{ reason }}</li>
         {% endfor %}
@@ -356,7 +356,7 @@
       <p style="font-size:0.9em;margin-bottom:1rem">
         أدخل معرّفات DOI لمراجع البحث (واحد في كل سطر) للتحقق من صحتها. اختياري.
       </p>
-      <form method="POST" action="{% url 'sabar_verify_refs' article_id=article.pk %}">
+      <form method="POST" action="{% url 'sibar_verify_refs' article_id=article.pk %}">
         {% csrf_token %}
         <textarea name="dois" rows="4" placeholder="10.xxxx/...&#10;10.yyyy/..." style="direction:ltr"></textarea>
         <button type="submit" class="button" style="margin-top:0.5rem">
@@ -417,7 +417,7 @@
       <h3>الإجراءات</h3>
       <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:flex-end">
 
-        <form method="POST" action="{% url 'sabar_submit' article_id=article.pk %}">
+        <form method="POST" action="{% url 'sibar_submit' article_id=article.pk %}">
           {% csrf_token %}
           <button type="submit" class="button">
             <i class="fa fa-search"></i>
@@ -426,14 +426,14 @@
         </form>
 
         {% if check and check.report_id %}
-        <form method="POST" action="{% url 'sabar_refresh' article_id=article.pk %}">
+        <form method="POST" action="{% url 'sibar_refresh' article_id=article.pk %}">
           {% csrf_token %}
           <button type="submit" class="button secondary" title="يجلب بيانات التقرير من سبار دون إعادة الفحص">
             <i class="fa fa-refresh"></i> تحديث التقرير
           </button>
         </form>
 
-        <form method="POST" action="{% url 'sabar_analyze' article_id=article.pk %}">
+        <form method="POST" action="{% url 'sibar_analyze' article_id=article.pk %}">
           {% csrf_token %}
           <button type="submit" class="button secondary"
             title="تحليل معمّق: يكشف العبارات الملتوية، يتحقق من المراجع، فحص متعدد اللغات — يتطلب مفتاح API">
@@ -443,14 +443,14 @@
         {% endif %}
 
         {% if check and check.integrity_score is not None %}
-        <form method="POST" action="{% url 'sabar_generate_report' article_id=article.pk %}">
+        <form method="POST" action="{% url 'sibar_generate_report' article_id=article.pk %}">
           {% csrf_token %}
           <button type="submit" class="button warning">
             <i class="fa fa-file-pdf-o"></i> إنشاء تقرير النزاهة الرسمي
           </button>
         </form>
         {% if check.report_file_id %}
-        <a href="{% url 'sabar_download_report' article_id=article.pk %}" class="button secondary">
+        <a href="{% url 'sibar_download_report' article_id=article.pk %}" class="button secondary">
           <i class="fa fa-download"></i> تحميل التقرير الرسمي (PDF)
         </a>
         <p style="font-size:0.85em;margin-top:0.5rem;width:100%;text-align:right">
@@ -459,7 +459,7 @@
         {% endif %}
         {% endif %}
 
-        <form method="POST" action="{% url 'sabar_complete' article_id=article.pk %}">
+        <form method="POST" action="{% url 'sibar_complete' article_id=article.pk %}">
           {% csrf_token %}
           <button type="submit" class="button success"
             title="إنهاء مرحلة سبار وتحريك المقال إلى المرحلة التالية في سير العمل">
@@ -486,14 +486,14 @@
 
 <script>
 (function () {
-  var overlay = document.getElementById('sabarOverlay');
-  var overlayMsg = document.getElementById('sabarOverlayMsg');
+  var overlay = document.getElementById('sibarOverlay');
+  var overlayMsg = document.getElementById('sibarOverlayMsg');
   var messages = {
-    'sabar_submit':   'جارٍ إرسال المقال إلى سبار للفحص...',
-    'sabar_refresh':  'جارٍ تحديث التقرير من سبار...',
-    'sabar_analyze':  'جارٍ التحليل المعمّق... قد يستغرق هذا بضع ثوانٍ',
-    'sabar_generate_report': 'جارٍ إنشاء تقرير النزاهة الرسمي...',
-    'sabar_complete': 'جارٍ إنهاء المرحلة ونقل المقال...',
+    'sibar_submit':   'جارٍ إرسال المقال إلى سبار للفحص...',
+    'sibar_refresh':  'جارٍ تحديث التقرير من سبار...',
+    'sibar_analyze':  'جارٍ التحليل المعمّق... قد يستغرق هذا بضع ثوانٍ',
+    'sibar_generate_report': 'جارٍ إنشاء تقرير النزاهة الرسمي...',
+    'sibar_complete': 'جارٍ إنهاء المرحلة ونقل المقال...',
   };
   document.querySelectorAll('form').forEach(function (form) {
     form.addEventListener('submit', function () {
