@@ -62,7 +62,8 @@ def manager(request):
 @editor_user_required
 def articles(request):
     article_list = Article.objects.filter(
-        journal=request.journal
+        journal=request.journal,
+        stage=plugin_settings.STAGE,
     ).prefetch_related("sabar_checks").order_by("-date_submitted")
     return render(request, "sabar/articles.html", {"articles": article_list})
 
@@ -220,15 +221,68 @@ def verify_references(request, article_id):
 
 
 @editor_user_required
+def generate_report(request, article_id):
+    art = get_object_or_404(Article, pk=article_id, journal=request.journal)
+    check = art.sabar_checks.first()
+    if request.method != "POST":
+        return redirect("sabar_article", article_id=article_id)
+    if not check or check.integrity_score is None:
+        messages.warning(request, "لا يوجد فحص مكتمل لإنشاء تقرير.")
+        return redirect("sabar_article", article_id=article_id)
+    try:
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        from core import files as core_files
+        from core import models as core_models
+        from plugins.sabar.report import generate_report_pdf
+
+        pdf_bytes = generate_report_pdf(check)
+        fname = "sibar_integrity_report_{}.pdf".format(art.pk)
+        upload = SimpleUploadedFile(fname, pdf_bytes, content_type="application/pdf")
+        new_file = core_files.save_file_to_article(
+            upload,
+            art,
+            request.user,
+            label="تقرير النزاهة البحثية",
+            description="تقرير سبار للنزاهة البحثية للمقال",
+        )
+        supp_file = core_models.SupplementaryFile.objects.create(file=new_file)
+        art.supplementary_files.add(supp_file)
+        check.report_file_id = new_file.pk
+        check.save()
+        messages.success(request, "تم إنشاء تقرير النزاهة البحثية بنجاح.")
+    except Exception as exc:
+        messages.error(request, "خطأ في إنشاء التقرير: {}".format(exc))
+    return redirect("sabar_article", article_id=article_id)
+
+
+@editor_user_required
+def download_report(request, article_id):
+    art = get_object_or_404(Article, pk=article_id, journal=request.journal)
+    check = art.sabar_checks.first()
+    if not check or not check.report_file_id:
+        messages.warning(request, "لا يوجد تقرير محفوظ.")
+        return redirect("sabar_article", article_id=article_id)
+    from core import files as core_files
+    from core import models as core_models
+
+    f = get_object_or_404(core_models.File, pk=check.report_file_id)
+    return core_files.serve_file(request, f, art)
+
+
+@editor_user_required
 def complete(request, article_id):
     art = get_object_or_404(Article, pk=article_id, journal=request.journal)
     if request.method == "POST":
-        events_logic.Events.raise_event(
+        workflow_kwargs = {
+            "handshake_url": plugin_settings.HANDSHAKE_URL,
+            "request": request,
+            "article": art,
+            "switch_stage": True,
+        }
+        return events_logic.Events.raise_event(
             events_logic.Events.ON_WORKFLOW_ELEMENT_COMPLETE,
-            handshake_url=plugin_settings.HANDSHAKE_URL,
-            article=art,
-            request=request,
-            user=request.user,
+            task_object=art,
+            **workflow_kwargs,
         )
-        return redirect("core_dashboard")
     return redirect("sabar_article", article_id=article_id)
