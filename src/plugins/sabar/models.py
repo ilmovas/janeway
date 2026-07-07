@@ -65,6 +65,7 @@ class SabarCheck(models.Model):
     raw_response = models.JSONField(blank=True, null=True)
     researcher_profile = models.JSONField(blank=True, null=True)
     doi_verifications = models.JSONField(blank=True, null=True)
+    report_file_id = models.IntegerField(blank=True, null=True)
     error_message = models.TextField(blank=True, null=True)
 
     date_submitted = models.DateTimeField(default=timezone.now)
