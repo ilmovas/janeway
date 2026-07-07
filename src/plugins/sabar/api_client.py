@@ -79,7 +79,7 @@ def _protected_headers(journal):
     if not api_key:
         raise SibarAPIError(
             "Sibar API key is not configured. "
-            "Set it in Manager → Settings → Plugins → Sabar."
+            "Set it in Manager → Settings → Plugins → Sibar."
         )
     return {"X-API-Key": api_key, "Content-Type": "application/json"}
 

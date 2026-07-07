@@ -2,8 +2,8 @@ from utils import plugins
 from utils.install import update_settings
 from events import logic as events_logic
 
-PLUGIN_NAME = "Sabar Language Check"
-DISPLAY_NAME = "Sabar"
+PLUGIN_NAME = "Sibar"
+DISPLAY_NAME = "Sibar"
 SHORT_NAME = "sabar"
 MANAGER_URL = "sabar_index"
 VERSION = "0.1"

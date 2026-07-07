@@ -12,7 +12,7 @@ def article_task_hook(context):
         return ""
 
     url = reverse("sabar_article", kwargs={"article_id": article.pk})
-    label = "Sabar: {}".format(check.get_status_display())
+    label = "Sibar: {}".format(check.get_status_display())
     return format_html(
         '<li><a href="{}"><i class="fa fa-language"></i> {}</a></li>',
         url,

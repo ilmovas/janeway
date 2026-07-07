@@ -75,7 +75,7 @@ class SabarCheck(models.Model):
         ordering = ["-date_submitted"]
 
     def __str__(self):
-        return "SibarCheck #{} — {}".format(self.pk, self.article)
+        return "Sibar Check #{} — {}".format(self.pk, self.article)
 
     @property
     def confidence_percent(self):
