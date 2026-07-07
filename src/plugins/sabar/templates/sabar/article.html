@@ -330,6 +330,68 @@
     {% endif %}
 
     <div class="callout">
+      <h3>التحقق من سلامة المراجع</h3>
+      <p style="font-size:0.9em;margin-bottom:1rem">
+        أدخل معرّفات DOI لمراجع البحث (واحد في كل سطر) للتحقق من صحتها. اختياري.
+      </p>
+      <form method="POST" action="{% url 'sabar_verify_refs' article_id=article.pk %}">
+        {% csrf_token %}
+        <textarea name="dois" rows="4" placeholder="10.xxxx/...&#10;10.yyyy/..." style="direction:ltr"></textarea>
+        <button type="submit" class="button" style="margin-top:0.5rem">
+          <i class="fa fa-link"></i> تحقق من المراجع
+        </button>
+      </form>
+      {% if check and check.reference_integrity %}
+      <div style="margin-top:1rem">
+        <p>
+          <strong>نسبة سلامة المراجع:</strong>
+          {% if check.reference_integrity.pct >= 90 %}
+            <span class="label success">{{ check.reference_integrity.pct }}%</span>
+          {% elif check.reference_integrity.pct >= 60 %}
+            <span class="label warning">{{ check.reference_integrity.pct }}%</span>
+          {% else %}
+            <span class="label alert">{{ check.reference_integrity.pct }}%</span>
+          {% endif %}
+          — موثّقة {{ check.reference_integrity.verified }} من {{ check.reference_integrity.total }}
+          {% if check.reference_integrity.retracted > 0 %}
+            <span class="label alert" style="margin-right:0.5rem">
+              {{ check.reference_integrity.retracted }} مرجع محذوف
+            </span>
+          {% endif %}
+        </p>
+        <table class="scroll small" style="margin-top:0.75rem">
+          <thead>
+            <tr>
+              <th>DOI</th>
+              <th>الحالة</th>
+              <th>العنوان</th>
+              <th>المجلة</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ref in check.reference_results %}
+            <tr>
+              <td style="direction:ltr;white-space:nowrap"><code>{{ ref.doi|default:"—" }}</code></td>
+              <td>
+                {% if ref.is_retracted %}
+                  <span class="label alert">محذوف</span>
+                {% elif ref.exists %}
+                  <span class="label success">موثّق</span>
+                {% else %}
+                  <span class="label alert">غير موجود</span>
+                {% endif %}
+              </td>
+              <td>{{ ref.title|default:"—" }}</td>
+              <td>{{ ref.journal|default:"—" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="callout">
       <h3>الإجراءات</h3>
       <div style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:flex-end">
 

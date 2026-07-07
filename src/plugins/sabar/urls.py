@@ -10,5 +10,6 @@ urlpatterns = [
     path("articles/<int:article_id>/submit/", views.submit_check, name="sabar_submit"),
     path("articles/<int:article_id>/refresh/", views.refresh_check, name="sabar_refresh"),
     path("articles/<int:article_id>/analyze/", views.deep_analysis, name="sabar_analyze"),
+    path("articles/<int:article_id>/verify-refs/", views.verify_references, name="sabar_verify_refs"),
     path("articles/<int:article_id>/complete/", views.complete, name="sabar_complete"),
 ]

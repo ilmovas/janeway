@@ -64,6 +64,7 @@ class SabarCheck(models.Model):
 
     raw_response = models.JSONField(blank=True, null=True)
     researcher_profile = models.JSONField(blank=True, null=True)
+    doi_verifications = models.JSONField(blank=True, null=True)
     error_message = models.TextField(blank=True, null=True)
 
     date_submitted = models.DateTimeField(default=timezone.now)
@@ -109,3 +110,23 @@ class SabarCheck(models.Model):
         raw = self.raw_response or {}
         # prefer explicitly stored field, fall back to raw_response embed
         return self.researcher_profile or raw.get("researcher_profile") or None
+
+    @property
+    def reference_results(self):
+        return self.doi_verifications or []
+
+    @property
+    def reference_integrity(self):
+        results = self.reference_results
+        if not results:
+            return None
+        total = len(results)
+        verified = sum(1 for r in results if r.get("exists"))
+        retracted = sum(1 for r in results if r.get("is_retracted"))
+        return {
+            "total": total,
+            "verified": verified,
+            "broken": total - verified,
+            "retracted": retracted,
+            "pct": round(verified / total * 100, 1) if total else 0,
+        }

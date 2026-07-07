@@ -9,6 +9,7 @@ from plugins.sabar.api_client import (
     health_check,
     run_deep_analysis,
     submit_article,
+    verify_dois,
 )
 from plugins.sabar.models import SabarCheck, STATUS_COMPLETE, STATUS_ERROR
 from security.decorators import editor_user_required
@@ -186,6 +187,35 @@ def deep_analysis(request, article_id):
             messages.success(request, "Deep analysis completed.")
         except SibarAPIError as exc:
             messages.error(request, "Sibar error: {}".format(exc))
+    return redirect("sabar_article", article_id=article_id)
+
+
+@editor_user_required
+def verify_references(request, article_id):
+    art = get_object_or_404(Article, pk=article_id, journal=request.journal)
+    check = art.sabar_checks.first()
+    if request.method == "POST":
+        raw = request.POST.get("dois", "") or ""
+        import re
+        parts = [p.strip() for p in re.split(r"[\n,]+", raw)]
+        dois = []
+        for p in parts:
+            if p and p not in dois:
+                dois.append(p)
+        if not dois:
+            messages.warning(request, "لم تُدخل أي DOI للتحقق.")
+            return redirect("sabar_article", article_id=article_id)
+        if not check:
+            check = SabarCheck.objects.create(
+                article=art, status=STATUS_COMPLETE, date_completed=timezone.now()
+            )
+        try:
+            results = verify_dois(request.journal, dois)
+            check.doi_verifications = results
+            check.save()
+            messages.success(request, "تم التحقق من {} مرجعاً.".format(len(results)))
+        except SibarAPIError as exc:
+            messages.error(request, "خطأ في التحقق من المراجع: {}".format(exc))
     return redirect("sabar_article", article_id=article_id)
 
 
