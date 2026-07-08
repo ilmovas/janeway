@@ -7,12 +7,9 @@ import html
 import os
 from decimal import Decimal
 
-_TAJAWAL_400 = (
-    "/vol/janeway/src/themes/ilmovas/assets/fonts/tajawal/tajawal-400.ttf"
-)
-_TAJAWAL_700 = (
-    "/vol/janeway/src/themes/ilmovas/assets/fonts/tajawal/tajawal-700.ttf"
-)
+_PLUGIN_DIR = os.path.dirname(os.path.abspath(__file__))
+_TAJAWAL_400 = os.path.join(_PLUGIN_DIR, "assets", "fonts", "tajawal-400.ttf")
+_TAJAWAL_700 = os.path.join(_PLUGIN_DIR, "assets", "fonts", "tajawal-700.ttf")
 
 _RECOMMENDATION_AR = {
     "accept": "قبول النشر",
@@ -97,6 +94,21 @@ def generate_report_pdf(check) -> bytes:
 
     font_400 = _load_font_b64(_TAJAWAL_400)
     font_700 = _load_font_b64(_TAJAWAL_700)
+    body_font_family = "Tajawal, sans-serif" if (font_400 and font_700) else "sans-serif"
+    font_css = ""
+    if font_400 and font_700:
+        font_css = """
+@font-face {{
+  font-family: Tajawal;
+  font-weight: 400;
+  src: url(data:font/ttf;base64,{font_400}) format('truetype');
+}}
+@font-face {{
+  font-family: Tajawal;
+  font-weight: 700;
+  src: url(data:font/ttf;base64,{font_700}) format('truetype');
+}}
+""".format(font_400=font_400, font_700=font_700)
 
     online = check.online_matches or []
     researcher = check.researcher
@@ -227,19 +239,10 @@ def generate_report_pdf(check) -> bytes:
 <head>
 <meta charset="UTF-8">
 <style>
-@font-face {{
-  font-family: Tajawal;
-  font-weight: 400;
-  src: url(data:font/ttf;base64,{font_400}) format('truetype');
-}}
-@font-face {{
-  font-family: Tajawal;
-  font-weight: 700;
-  src: url(data:font/ttf;base64,{font_700}) format('truetype');
-}}
+{font_css}
 @page {{ size: A4; margin: 18mm 16mm 22mm 16mm; }}
 body {{
-  font-family: Tajawal, sans-serif;
+  font-family: {body_font_family};
   font-size: 11pt;
   color: #0F1F1A;
   direction: rtl;
@@ -418,8 +421,8 @@ body {{
   </div>
 </body>
 </html>""".format(
-        font_400=font_400,
-        font_700=font_700,
+        font_css=font_css,
+        body_font_family=body_font_family,
         color=color,
         journal_name=_esc(journal.name),
         report_id=_esc(_report_id_short(check.report_id)),
