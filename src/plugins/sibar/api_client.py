@@ -84,6 +84,14 @@ def _protected_headers(journal):
     return {"X-API-Key": api_key, "Content-Type": "application/json"}
 
 
+def _check_headers(journal):
+    _, api_key = _settings(journal)
+    headers = {"Content-Type": "application/json"}
+    if api_key:
+        headers["X-API-Key"] = api_key
+    return headers
+
+
 def health_check(journal):
     """Returns True if Sibar service is reachable."""
     base_url, _ = _settings(journal)
@@ -144,6 +152,7 @@ def submit_article(article):
         resp = requests.post(
             "{}/api/v1/check".format(base_url),
             json=payload,
+            headers=_check_headers(journal),
             timeout=60,
         )
     except requests.RequestException as exc:
