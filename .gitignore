@@ -153,3 +153,7 @@ jenkins/test_results
 
 src/file_editor
 backups/
+
+# Local Ilmovas runtime overrides (not upstream)
+docker-compose.override.yml
+start.sh
